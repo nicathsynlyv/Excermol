@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5488/postgres
+    username: postgres
+    password: Nicat2005..
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+
+
+
