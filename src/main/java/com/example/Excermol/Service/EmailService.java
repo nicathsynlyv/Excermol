@@ -43,4 +43,5 @@ public class EmailService {
     public List<Email> getEmailsByFolder(EmailFolder folder) {
         return emailRepository.findByFolder(folder);
     }
+
 }

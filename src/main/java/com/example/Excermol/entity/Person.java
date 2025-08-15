@@ -69,11 +69,26 @@ public class Person {
     @Size(max = 255)
     @Column(name = "message_link", length = 255)
     private String messageLink;
-
+//organization ile
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
     private Organization organization;
-
+//email ile
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Email> emails;
+
+//campaigns lle
+    @ManyToMany(mappedBy = "persons")
+    private List<Campaign> campaigns;
+
+//company ile
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
+//company ile
+
+    @OneToMany(mappedBy = "lead")
+    private List<Company> leadCompanies;
+
+
 }

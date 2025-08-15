@@ -59,6 +59,11 @@ public class Email {
     @JoinColumn(name = "person_id")
     private Person person;
 
+//email ile campaigns
+    @ManyToOne
+    @JoinColumn(name = "campaign_id")
+    private Campaign campaign;
+
 
     // Orijinal email ID (Reply/Forward üçün)
     private Long parentEmailId;

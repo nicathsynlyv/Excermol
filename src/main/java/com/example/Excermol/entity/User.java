@@ -13,6 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -84,4 +85,13 @@ public class User {
     public boolean isAdmin() {
         return role == UserRole.ADMIN;
     }
+
+//compagins ile elaqe
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    private List<Campaign> campaigns;
+//company ile
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Company> companies;
+
+
 }
