@@ -6,44 +6,66 @@ import com.example.Excermol.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class TaskService {
 
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
+
+    // Bütün task-ları gətir
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
-    public Task getTaskById(Long id) {
-        return taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+    // Statusa görə task-ları gətir
+    public List<Task> getTasksByStatus(TaskStatus status) {
+        return taskRepository.findByStatus(status);
     }
 
+    // User-ə görə task-ları gətir
+    public List<Task> getTasksByUser(Long userId) {
+        return taskRepository.findByAssignees_Id(userId);
+    }
+
+    // Tag-ə görə task-ları gətir
+    public List<Task> getTasksByTag(Long tagId) {
+        return taskRepository.findByTags_Id(tagId);
+    }
+
+    // Tarix aralığına görə (Upcoming Tasks üçün)
+    public List<Task> getTasksByDueDateRange(LocalDate start, LocalDate end) {
+        return taskRepository.findByDueDateBetween(start, end);
+    }
+
+    // Yeni task yaratmaq
     public Task createTask(Task task) {
         return taskRepository.save(task);
     }
 
-    public Task updateTask(Long id, Task taskDetails) {
-        Task task = getTaskById(id);
-        task.setTitle(taskDetails.getTitle());
-        task.setDescription(taskDetails.getDescription());
-        task.setStatus(taskDetails.getStatus());
-        task.setTags(taskDetails.getTags());
-        task.setDueDate(taskDetails.getDueDate());
-        task.setProgress(taskDetails.getProgress());
-        task.setAssignedUsers(taskDetails.getAssignedUsers());
+    // Task update
+    public Task updateTask(Long id, Task updatedTask) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task tapılmadı!"));
+
+        task.setTitle(updatedTask.getTitle());
+        task.setDescription(updatedTask.getDescription());
+        task.setDueDate(updatedTask.getDueDate());
+        task.setProgress(updatedTask.getProgress());
+        task.setStatus(updatedTask.getStatus());
+        task.setTags(updatedTask.getTags());
+        task.setAssignees(updatedTask.getAssignees());
+
         return taskRepository.save(task);
     }
 
+    // Task silmək
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
-    }
-
-    public List<Task> getTasksByStatus(TaskStatus status) {
-        return taskRepository.findByStatus(status);
     }
 }

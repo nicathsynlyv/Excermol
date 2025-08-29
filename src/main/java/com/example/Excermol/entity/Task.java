@@ -1,16 +1,13 @@
 package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.TaskStatus;
-import jakarta.annotation.Priority;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,6 +15,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,55 +23,61 @@ public class Task {
 
     private String title;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    private LocalDate dueDate;
+    private String priority; // Urgent, Low, Normal və s.
+
+    @Column(name = "lead")
+    private String lead;
+
+    private int progress; // 0-100%
 
     @Enumerated(EnumType.STRING)
     private TaskStatus status; // TODO, IN_PROGRESS, DONE
 
-    @ElementCollection
-    @CollectionTable(name = "task_tags", joinColumns = @JoinColumn(name = "task_id"))
-    @Column(name = "tag")
-    private List<String> tags;
-
-    private LocalDate dueDate;
-
-    private int progress; // %
-
+    // Bir task-ın çoxlu "tag"ı ola bilər
     @ManyToMany
     @JoinTable(
-            name = "task_assigned_users",
+            name = "task_tags",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;
+
+    // Bir task-ın bir neçə user-i ola bilər
+    @ManyToMany
+    @JoinTable(
+            name = "task_users",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<User> assignedUsers;
-//task ile email arasinda elaqe
+    private Set<User> assignees;
+
+
+    //comments ile elaqe
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Email> emails = new ArrayList<>();
-//task ve organization ile elaqe
+    private Set<Comment> comments;
+
+    //attachments ile elaqe
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Attachment> attachments;
+
+    private LocalDate createdAt;
+    private LocalDate updatedAt;
+
+
+    // 🔗 Company ilə əlaqə
     @ManyToOne
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
-
-
-
-    private int commentCount;
-    private int fileCount;
-    private int likeCount;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
+    @JoinColumn(name = "company_id")
+    private Company company;
 
 }
+//task ile email arasinda elaqe
+//    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Email> emails = new ArrayList<>();
+//task ve organization ile elaqe
+//    @ManyToOne
+//    @JoinColumn(name = "organization_id")
+//    private Organization organization;

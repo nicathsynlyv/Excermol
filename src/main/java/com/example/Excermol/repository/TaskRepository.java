@@ -12,9 +12,16 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
 
+    // Status-a görə tapmaq
     List<Task> findByStatus(TaskStatus status);
 
-    List<Task> findByTagsContaining(String tag);
+    // User-id-ə görə (assignee olan task-lar)
+    List<Task> findByAssignees_Id(Long userId);
 
-    List<Task> findByDueDateBefore(LocalDate date);
+    // Tag-id-ə görə
+    List<Task> findByTags_Id(Long tagId);
+
+    List<Task> findByDueDateBetween(LocalDate start, LocalDate end);
+
+
 }

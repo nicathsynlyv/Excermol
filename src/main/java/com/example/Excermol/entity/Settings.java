@@ -1,4 +1,4 @@
-package com.example.Excermol.entity;
-
-public class Settings {
-}
+//package com.example.Excermol.entity;
+//
+//public class Settings {
+//}

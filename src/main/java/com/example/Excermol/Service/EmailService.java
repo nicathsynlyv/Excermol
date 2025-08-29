@@ -1,7 +1,8 @@
 package com.example.Excermol.Service;
 
 import com.example.Excermol.entity.Email;
-import com.example.Excermol.enums.EmailFolder;
+
+import com.example.Excermol.enums.EmailStatus;
 import com.example.Excermol.repository.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,38 +11,59 @@ import java.util.List;
 
 @Service
 public class EmailService {
-    @Autowired
-    private EmailRepository emailRepository;
+    private final EmailRepository emailRepository;
 
+    public EmailService(EmailRepository emailRepository) {
+        this.emailRepository = emailRepository;
+    }
+
+    // Bütün emailləri gətir
     public List<Email> getAllEmails() {
         return emailRepository.findAll();
     }
 
-    public Email getEmailById(Long id) {
-        return emailRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Email not found"));
+    // Status-a görə emaillər
+    public List<Email> getEmailsByStatus(EmailStatus status) {
+        return emailRepository.findByStatus(status);
     }
 
+    // Oxunma statusuna görə
+    public List<Email> getUnreadEmails(boolean isRead) {
+        return emailRepository.findByIsRead(isRead);
+    }
+
+    // Göndəriciyə görə
+    public List<Email> getEmailsBySender(String sender) {
+        return emailRepository.findBySender(sender);
+    }
+
+    // Alıcıya görə
+    public List<Email> getEmailsByRecipient(String recipient) {
+        return emailRepository.findByRecipientsContaining(recipient);
+    }
+
+    // Yeni email yaratmaq
     public Email createEmail(Email email) {
         return emailRepository.save(email);
     }
 
-    public Email updateEmail(Long id, Email emailDetails) {
-        Email email = getEmailById(id);
-        email.setSubject(emailDetails.getSubject());
-        email.setContent(emailDetails.getContent());
-        email.setFolder(emailDetails.getFolder());
-        email.setLabels(emailDetails.getLabels());
-        email.setRead(emailDetails.isRead());
+    // Email update
+    public Email updateEmail(Long id, Email updatedEmail) {
+        Email email = emailRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Email tapılmadı!"));
+
+        email.setSubject(updatedEmail.getSubject());
+        email.setBody(updatedEmail.getBody());
+        email.setRecipients(updatedEmail.getRecipients());
+        email.setStatus(updatedEmail.getStatus());
+        email.setRead(updatedEmail.isRead());
+        email.setAttachments(updatedEmail.getAttachments());
+
         return emailRepository.save(email);
     }
 
+    // Email silmək
     public void deleteEmail(Long id) {
         emailRepository.deleteById(id);
     }
-
-    public List<Email> getEmailsByFolder(EmailFolder folder) {
-        return emailRepository.findByFolder(folder);
-    }
-
 }

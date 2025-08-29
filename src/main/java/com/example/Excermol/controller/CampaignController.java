@@ -16,36 +16,26 @@ public class CampaignController {
 
     @PostMapping
     public Campaign create(@RequestBody Campaign campaign) {
-        return campaignService.create(campaign);
+        return campaignService.createCampaign(campaign);
     }
 
-    @PutMapping("/{id}")
-    public Campaign update(@PathVariable Long id, @RequestBody Campaign campaign) {
-        return campaignService.update(id, campaign);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        campaignService.delete(id);
+    @GetMapping
+    public List<Campaign> getAll() {
+        return campaignService.getAllCampaigns();
     }
 
     @GetMapping("/{id}")
     public Campaign getById(@PathVariable Long id) {
-        return campaignService.getById(id);
+        return campaignService.getCampaignById(id);
     }
 
-    @GetMapping
-    public List<Campaign> getAll(@RequestParam(defaultValue = "name") String sortBy) {
-        return campaignService.getAll(sortBy);
+    @PutMapping("/{id}")
+    public Campaign update(@PathVariable Long id, @RequestBody Campaign campaign) {
+        return campaignService.updateCampaign(id, campaign);
     }
 
-    @GetMapping("/status/{status}")
-    public List<Campaign> getByStatus(@PathVariable CampaignStatus status) {
-        return campaignService.getByStatus(status);
-    }
-
-    @GetMapping("/search")
-    public List<Campaign> search(@RequestParam String keyword) {
-        return campaignService.searchByName(keyword);
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        campaignService.deleteCampaign(id);
     }
 }

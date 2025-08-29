@@ -13,7 +13,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -72,6 +74,16 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+//task entitysi ile elaqe
+    @ManyToMany(mappedBy = "assignees")
+    private Set<Task> tasks;
+//comments entitysi ile elaqe
+    @OneToMany(mappedBy = "author")
+    private Set<Comment> comments;
+//attachments entitysi ile elaqe
+    @OneToMany(mappedBy = "uploadedBy")
+    private Set<Attachment> attachments;
+
 
     // Utility methods
     public String getFullName() {
@@ -87,11 +99,14 @@ public class User {
     }
 
 //compagins ile elaqe
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
-    private List<Campaign> campaigns;
-//company ile
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Company> companies;
+//    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+//    private List<Campaign> campaigns;
+////company ile
+//    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Company> companies;
+////form ile
+//    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Form> forms = new ArrayList<>();
 
 
 }

@@ -2,6 +2,7 @@ package com.example.Excermol.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,38 +12,49 @@ import java.util.List;
 @Entity
 @Table(name = "organizations")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Organization adı
+    @Column(nullable = false)
     private String name;
 
-    private String domains;
+    // Domain (website)
+    @Column(nullable = false, unique = true)
+    private String domain;
 
-    @ManyToOne
+    // Təsvir
+    @Column(length = 250)
+    private String description;
+
+    // Manager (User ilə əlaqə)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private User manager;
 
+    // Son əlaqə vaxtı
     private LocalDateTime lastInteractedAt;
 
+    // List adı (Clients, Customer və s.)
     private String listName;
 
+    // Deal sayı
     private Integer numberOfDeals;
 
-    @Column(length = 1000)
-    private String description;
-
+    // İşçi sayı
     private Integer employeesRange;
-
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-    private List<Person> people;
-
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-    private List<Task> tasks;
-
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-    private List<Email> emails;
+//person ile elaqe
+//    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+//    private List<Person> people;
+//tasks ile elaqe
+//    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+//    private List<Task> tasks;
+//email ile elaqe
+//    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+//    private List<Email> emails;
 }

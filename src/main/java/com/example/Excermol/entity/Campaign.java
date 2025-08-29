@@ -3,6 +3,7 @@ package com.example.Excermol.entity;
 import com.example.Excermol.enums.CampaignStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.example.Excermol.entity.Company;
@@ -15,62 +16,48 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Campaign {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Kampaniya adı
+    // Kampaniyanın adı
     @Column(nullable = false)
-    private String campaignName;
+    private String name;
 
-    // Şirkət adı
-    @Column(nullable = false)
-    private String companyName;
+    // Statistikalar
+    private Integer sequenceStarted;   // 435
+    private Double openRate;           // 32.1%
+    private Double replyRate;          // 27.9%
+    private Double bounceRate;         // 18.6%
 
-    // Kampaniyaya aid əlaqə email
-    @Column(nullable = false)
-    private String contactEmail;
+    private LocalDate createdAt;
 
-    // Başlama tarixi
-    private LocalDate startDate;
 
-    // Bitmə tarixi
-    private LocalDate endDate;
-
-    // Proqres (faiz olaraq)
-    private Double progress;
-
-    // Status (Sent, Opened, Clicked, Replied və s.)
     @Enumerated(EnumType.STRING)
-    private CampaignStatus status;
+    private CampaignStatus status;  // DRAFT, ACTIVE, COMPLETED, PAUSED
 
-    // Son aktivlik tarixi
-    private LocalDateTime lastActive;
+    // 1 kampaniyada çox lead ola bilər
+    @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CampaignLead> leads;
 
-    // Email statistikaları
-    private Integer sentEmails;
-    private Integer openedEmails;
-    private Integer repliedEmails;
-    private Integer bouncedEmails;
+
+   //email ile
+   @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Email> emails;
 
     // İstifadəçi ilə əlaqə (hansı user yaratdı)
-    @ManyToOne
-    @JoinColumn(name = "created_by")
-    private User createdBy;
-//company ile
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
-    private Company company;
+//    @ManyToOne
+//    @JoinColumn(name = "created_by")
+//    private User createdBy;
 
-    @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL)
-    private List<Email> emails;
 
-    @ManyToMany
-    @JoinTable(
-            name = "campaign_person",
-            joinColumns = @JoinColumn(name = "campaign_id"),
-            inverseJoinColumns = @JoinColumn(name = "person_id")
-    )
-    private List<Person> persons;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "campaign_person",
+//            joinColumns = @JoinColumn(name = "campaign_id"),
+//            inverseJoinColumns = @JoinColumn(name = "person_id")
+//    )
+//    private List<Person> persons;
 }

@@ -1,11 +1,10 @@
 package com.example.Excermol.Service;
 
 import com.example.Excermol.entity.Campaign;
-import com.example.Excermol.enums.CampaignStatus;
+
 import com.example.Excermol.repository.CampaignRepository;
-import jakarta.persistence.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,38 +15,45 @@ public class CampaignService {
 
     private final CampaignRepository campaignRepository;
 
-    public Campaign create(Campaign campaign) {
+    public Campaign createCampaign(Campaign campaign) {
         return campaignRepository.save(campaign);
     }
 
-    public Campaign update(Long id, Campaign updatedCampaign) {
-        Campaign existing = getById(id);
-        existing.setCampaignName(updatedCampaign.getCampaignName());
-        existing.setStatus(updatedCampaign.getStatus());
-        existing.setStartDate(updatedCampaign.getStartDate());
-        existing.setEndDate(updatedCampaign.getEndDate());
-//        existing.setCompany(updatedCampaign.getCompany());
-        return campaignRepository.save(existing);
+    public List<Campaign> getAllCampaigns() {
+        return campaignRepository.findAll();
     }
 
-    public void delete(Long id) {
-        campaignRepository.deleteById(id);
-    }
-
-    public Campaign getById(Long id) {
+    public Campaign getCampaignById(Long id) {
         return campaignRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Campaign not found"));
+                .orElseThrow(() -> new RuntimeException("Campaign not found"));
     }
 
-    public List<Campaign> getAll(String sortBy) {
-        return campaignRepository.findAll(Sort.by(sortBy).ascending());
+    public Campaign updateCampaign(Long id, Campaign updatedCampaign) {
+        Campaign campaign = getCampaignById(id);
+        campaign.setSequenceStarted(updatedCampaign.getSequenceStarted()); // 🔹 əlavə et
+        campaign.setName(updatedCampaign.getName());
+        campaign.setOpenRate(updatedCampaign.getOpenRate());
+        campaign.setReplyRate(updatedCampaign.getReplyRate());
+        campaign.setBounceRate(updatedCampaign.getBounceRate());
+        campaign.setStatus(updatedCampaign.getStatus());
+
+        // Leads update
+//        campaign.getLeads().clear();
+//        if (updatedCampaign.getLeads() != null) {
+//            campaign.getLeads().addAll(updatedCampaign.getLeads());
+//        }
+//
+//        // Emails update
+//        campaign.getEmails().clear();
+//        if (updatedCampaign.getEmails() != null) {
+//            campaign.getEmails().addAll(updatedCampaign.getEmails());
+//        }
+
+
+        return campaignRepository.save(campaign);
     }
 
-    public List<Campaign> getByStatus(CampaignStatus status) {
-        return campaignRepository.findByStatus(status);
-    }
-
-    public List<Campaign> searchByName(String keyword) {
-        return campaignRepository.findByCampaignNameContainingIgnoreCase(keyword);
+    public void deleteCampaign(Long id) {
+        campaignRepository.deleteById(id);
     }
 }

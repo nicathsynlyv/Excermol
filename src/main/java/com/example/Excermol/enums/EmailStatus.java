@@ -1,6 +1,6 @@
 package com.example.Excermol.enums;
 
-public enum EmailFolder {
+public enum EmailStatus {
     INBOX,
     IMPORTANT,
     SENT,

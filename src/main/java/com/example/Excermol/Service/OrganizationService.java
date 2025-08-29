@@ -12,33 +12,35 @@ import java.util.List;
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
 
-    public List<Organization> getAll() {
+    public Organization createOrganization(Organization organization) {
+        return organizationRepository.save(organization);
+    }
+
+    public List<Organization> getAllOrganizations() {
         return organizationRepository.findAll();
     }
 
-    public Organization getById(Long id) {
+    public Organization getOrganizationById(Long id) {
         return organizationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Organization not found"));
     }
 
-    public Organization create(Organization organization) {
-        return organizationRepository.save(organization);
-    }
+    public Organization updateOrganization(Long id, Organization updatedOrg) {
+        Organization org = getOrganizationById(id);
 
-    public Organization update(Long id, Organization updated) {
-        Organization org = getById(id);
-        org.setName(updated.getName());
-        org.setDomains(updated.getDomains());
-        org.setManager(updated.getManager());
-        org.setLastInteractedAt(updated.getLastInteractedAt());
-        org.setListName(updated.getListName());
-        org.setNumberOfDeals(updated.getNumberOfDeals());
-        org.setDescription(updated.getDescription());
-        org.setEmployeesRange(updated.getEmployeesRange());
+        org.setName(updatedOrg.getName());
+        org.setDomain(updatedOrg.getDomain());
+        org.setDescription(updatedOrg.getDescription());
+        org.setManager(updatedOrg.getManager());
+        org.setLastInteractedAt(updatedOrg.getLastInteractedAt());
+        org.setListName(updatedOrg.getListName());
+        org.setNumberOfDeals(updatedOrg.getNumberOfDeals());
+        org.setEmployeesRange(updatedOrg.getEmployeesRange());
+
         return organizationRepository.save(org);
     }
 
-    public void delete(Long id) {
+    public void deleteOrganization(Long id) {
         organizationRepository.deleteById(id);
     }
 }
