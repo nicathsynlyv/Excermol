@@ -1,110 +1,37 @@
 package com.example.Excermol.Service;
 
 import com.example.Excermol.entity.User;
+import com.example.Excermol.enums.UserRole;
 import com.example.Excermol.enums.UserStatus;
-import com.example.Excermol.repository.UserRepository;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-@Slf4j
-@Transactional
-public class UserService {
-    private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
+public interface UserService extends BaseService<User,Long>{
+    Optional<User> findByEmail(String email);
 
-    public User createUser(User user) {
-        log.info("Yeni istifadəçi yaradılır: {}", user.getEmail());
+    boolean existsByEmail(String email);
 
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Bu email artıq istifadə edilib: " + user.getEmail());
-        }
+    List<User> findByStatus(UserStatus status);
 
-        // Şifrəni encode et
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    List<User> findByRole(UserRole role);
 
-        return userRepository.save(user);
-    }
+    //  fullName istifadə edirem
+    @Query("SELECT u FROM User u " +
+            "WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "   OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<User> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-    @Transactional
-    public Optional<User> findById(Integer id) {
-        return userRepository.findById(id);
-    }
+    @Query("SELECT u FROM User u WHERE u.createdAt BETWEEN :startDate AND :endDate")
+    List<User> findByCreatedAtBetween(@Param("startDate") LocalDateTime startDate,
+                                      @Param("endDate") LocalDateTime endDate);
 
-    @Transactional
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
+    @Query("SELECT COUNT(u) FROM User u WHERE u.status = :status")
+    Long countByStatus(@Param("status") UserStatus status);
 
-    @Transactional
-    public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
-    }
-
-    @Transactional
-    public Page<User> searchUsers(String keyword, Pageable pageable) {
-        return userRepository.findByKeyword(keyword, pageable);
-    }
-
-    public User updateUser(Integer id, User updatedUser) {
-        log.info("İstifadəçi yenilənir: {}", id);
-
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("İstifadəçi tapılmadı: " + id));
-
-        existingUser.setFirstName(updatedUser.getFirstName());
-        existingUser.setLastName(updatedUser.getLastName());
-        existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-        existingUser.setProfileImageUrl(updatedUser.getProfileImageUrl());
-        existingUser.setStatus(updatedUser.getStatus());
-        existingUser.setRole(updatedUser.getRole());
-
-        // Email dəyişdirilirsə, unique olduğunu yoxla
-        if (!existingUser.getEmail().equals(updatedUser.getEmail())) {
-            if (userRepository.existsByEmail(updatedUser.getEmail())) {
-                throw new RuntimeException("Bu email artıq istifadə edilib: " + updatedUser.getEmail());
-            }
-            existingUser.setEmail(updatedUser.getEmail());
-        }
-
-        return userRepository.save(existingUser);
-    }
-
-    public void deleteUser(Integer id) {
-        log.info("İstifadəçi silinir: {}", id);
-
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("İstifadəçi tapılmadı: " + id);
-        }
-
-        userRepository.deleteById(id);
-    }
-
-    public void updateLastLogin(String email) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        userOpt.ifPresent(user -> {
-            user.setLastLogin(LocalDateTime.now());
-            userRepository.save(user);
-        });
-    }
-
-    @Transactional
-    public List<User> findActiveUsers() {
-        return userRepository.findByStatus(UserStatus.ACTIVE);
-    }
-
-    @Transactional
-    public Long getActiveUserCount() {
-        return userRepository.countByStatus(UserStatus.ACTIVE);
-    }
 }

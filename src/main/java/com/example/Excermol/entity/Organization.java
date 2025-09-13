@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+//@Builder
 public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,6 +48,10 @@ public class Organization {
 
     // İşçi sayı
     private Integer employeesRange;
+
+    //pipeline ile
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    private List<Pipeline> pipelines;
 //person ile elaqe
 //    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
 //    private List<Person> people;

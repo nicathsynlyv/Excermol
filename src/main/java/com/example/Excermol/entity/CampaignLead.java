@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//@Builder
 public class CampaignLead {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

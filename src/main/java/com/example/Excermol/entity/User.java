@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,8 +21,9 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+//@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +31,9 @@ public class User {
 
     @NotBlank(message = "Ad boş ola bilmez")
     @Size(min = 2, max = 50, message = "Ad 2-50 simvol arasında olmalıdır")
-    @Column(name = "first_name", nullable = false, length = 50)
-    private String firstName;
+    @Column(name = "full_name", nullable = false, length = 50)
+    private String fullName;
 
-
-    @NotBlank(message = "Soyad boş ola bilməz")
-    @Size(min = 2, max = 50, message = "Soyad 2-50 simvol arasında olmalıdır")
-    @Column(name = "last_name", nullable = false, length = 50)
-    private String lastName;
 
     @Email(message = "Email formatı düzgün deyil")
     @NotBlank(message = "Email boş ola bilməz")
@@ -48,11 +45,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "phone_number", length = 20)
-    private String phoneNumber;
 
-    @Column(name = "profile_image_url")
-    private String profileImageUrl;
+
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -74,6 +68,16 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // Utility methods
+
+    public boolean isActive() {
+        return status == UserStatus.ACTIVE;
+    }
+
+    public boolean isAdmin() {
+        return role == UserRole.ADMIN;
+    }
+
 //task entitysi ile elaqe
     @ManyToMany(mappedBy = "assignees")
     private Set<Task> tasks;
@@ -84,19 +88,12 @@ public class User {
     @OneToMany(mappedBy = "uploadedBy")
     private Set<Attachment> attachments;
 
+//pipeline entitysi ile
+    @ManyToMany(mappedBy = "assignees")
+    private List<Pipeline> pipelines;
 
-    // Utility methods
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
 
-    public boolean isActive() {
-        return status == UserStatus.ACTIVE;
-    }
 
-    public boolean isAdmin() {
-        return role == UserRole.ADMIN;
-    }
 
 //compagins ile elaqe
 //    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)

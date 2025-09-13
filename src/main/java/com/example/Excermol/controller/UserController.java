@@ -1,98 +1,137 @@
 package com.example.Excermol.controller;
 
 import com.example.Excermol.entity.User;
-import com.example.Excermol.Service.UserService;
-import jakarta.validation.Valid;
+import com.example.Excermol.Service.impl.UserServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
 
-    // Yeni istifadəçi yaratmaq
+    private final UserServiceImpl userServiceImpl;
+
+    @Operation(summary = "Yeni istifadəçi yaratmaq", description = "Verilən məlumatlara əsasən yeni istifadəçi əlavə edir")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "İstifadəçi uğurla yaradıldı",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "400", description = "Yanlış request body", content = @Content)
+    })
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User createdUser = userServiceImpl.createUser(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    // İstifadəçini ID ilə əldə etmək
+    @Operation(summary = "ID üzrə istifadəçi tapmaq", description = "Verilən ID-yə görə istifadəçi qaytarır")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "İstifadəçi tapıldı",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", description = "İstifadəçi tapılmadı", content = @Content)
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-        Optional<User> userOpt = userService.findById(id);
-        return userOpt
-                .map(user -> ResponseEntity.ok(user))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return userServiceImpl.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // İstifadəçilərin səhifələnmiş siyahısı
+    @Operation(summary = "Email üzrə istifadəçi tapmaq", description = "Email ünvanına görə istifadəçi qaytarır")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "İstifadəçi tapıldı",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", description = "İstifadəçi tapılmadı", content = @Content)
+    })
+    @GetMapping("/email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        return userServiceImpl.findByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @Operation(summary = "Bütün istifadəçiləri səhifələmək", description = "Səhifələmə ilə bütün istifadəçiləri gətirir")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Siyahı qaytarıldı",
+                    content = @Content(schema = @Schema(implementation = Page.class)))
+    })
     @GetMapping
-    public ResponseEntity<Page<User>> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<User> users = userService.findAll(pageable);
-        return ResponseEntity.ok(users);
+    public ResponseEntity<Page<User>> getAllUsers(Pageable pageable) {
+        return ResponseEntity.ok(userServiceImpl.findAll(pageable));
     }
 
-    // İstifadəçiləri açar sözlə axtarmaq (səhifələnmiş)
+    @Operation(summary = "İstifadəçi axtarışı", description = "Keyword əsasında istifadəçiləri axtarır")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Axtarış nəticəsi qaytarıldı",
+                    content = @Content(schema = @Schema(implementation = Page.class)))
+    })
     @GetMapping("/search")
-    public ResponseEntity<Page<User>> searchUsers(
-            @RequestParam String keyword,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<User> users = userService.searchUsers(keyword, pageable);
-        return ResponseEntity.ok(users);
+    public ResponseEntity<Page<User>> searchUsers(@RequestParam String keyword, Pageable pageable) {
+        return ResponseEntity.ok(userServiceImpl.searchUsers(keyword, pageable));
     }
 
-    // İstifadəçini yeniləmək
+    @Operation(summary = "İstifadəçini yeniləmək", description = "Verilən ID-yə əsasən istifadəçi məlumatlarını yeniləyir")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "İstifadəçi uğurla yeniləndi",
+                    content = @Content(schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", description = "İstifadəçi tapılmadı", content = @Content)
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer id,
-                                           @Valid @RequestBody User user) {
-        try {
-            User updatedUser = userService.updateUser(id, user);
-            return ResponseEntity.ok(updatedUser);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        User user = userServiceImpl.updateUser(id, updatedUser);
+        return ResponseEntity.ok(user);
     }
 
-    // İstifadəçini silmək
+    @Operation(summary = "İstifadəçini silmək", description = "Verilən ID-yə əsasən istifadəçini silir")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Uğurla silindi", content = @Content),
+            @ApiResponse(responseCode = "404", description = "İstifadəçi tapılmadı", content = @Content)
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
-        try {
-            userService.deleteUser(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userServiceImpl.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
-    // Aktiv istifadəçilərin sayı
-    @GetMapping("/active/count")
-    public ResponseEntity<Long> getActiveUserCount() {
-        Long count = userService.getActiveUserCount();
-        return ResponseEntity.ok(count);
+    @Operation(summary = "Son login vaxtını yeniləmək", description = "Email əsasında istifadəçinin son login vaxtını yeniləyir")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Son login vaxtı uğurla yeniləndi", content = @Content),
+            @ApiResponse(responseCode = "404", description = "İstifadəçi tapılmadı", content = @Content)
+    })
+    @PutMapping("/last-login")
+    public ResponseEntity<Void> updateLastLogin(@RequestParam String email) {
+        userServiceImpl.updateLastLogin(email);
+        return ResponseEntity.ok().build();
     }
 
-    // Aktiv istifadəçilərin siyahısı
+    @Operation(summary = "Aktiv istifadəçiləri gətirmək", description = "Aktiv statuslu istifadəçiləri siyahı şəklində qaytarır")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Siyahı qaytarıldı",
+                    content = @Content(schema = @Schema(implementation = User.class)))
+    })
     @GetMapping("/active")
     public ResponseEntity<List<User>> getActiveUsers() {
-        List<User> activeUsers = userService.findActiveUsers();
-        return ResponseEntity.ok(activeUsers);
+        return ResponseEntity.ok(userServiceImpl.findActiveUsers());
+    }
+
+    @Operation(summary = "Aktiv istifadəçilərin sayını gətirmək", description = "Aktiv statuslu istifadəçilərin ümumi sayını qaytarır")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Say uğurla qaytarıldı",
+                    content = @Content(schema = @Schema(implementation = Long.class)))
+    })
+    @GetMapping("/active/count")
+    public ResponseEntity<Long> getActiveUserCount() {
+        return ResponseEntity.ok(userServiceImpl.getActiveUserCount());
     }
 }

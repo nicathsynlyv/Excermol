@@ -2,7 +2,6 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.CompanyStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "companies")
@@ -19,52 +20,43 @@ import java.util.List;
 @AllArgsConstructor
 public class Company {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//
-//    // Şirkət adı
-//    @NotBlank(message = "Company name is required")
-//    @Column(nullable = false)
-//    private String name;
-//
-//    // Email
-//    @Email(message = "Invalid email format")
-//    @Column(nullable = false, unique = true)
-//    private String emailAddress;
-//
-//    // Status (Closed, Interested, Engaged və s.)
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private CompanyStatus status;
-//
-//    // Şəhər
-//    private String city;
-//
-//    // Lead dəyəri
-//    @Column(precision = 15, scale = 2)
-//    private BigDecimal leadValue;
-//
-//    // CRM connection
-//    private String connection;
-//
-//    // Sahib (owner)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "owner_id", nullable = false)
-//    private User owner;
 
-    // Lead person
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "lead_id")
-//    private Person lead;
-//
-//    // Əlaqəli kampaniyalar
-//    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Campaign> campaigns;
-//
-//    // Əlaqəli şəxslər
-//    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Person> persons;
+    @Column(nullable = false, length = 120)
+    private String owner;
+
+    // Lead adi sadəcə string
+    @Column(nullable = false)
+    private String lead;
+    //email ile elaqe
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "email_id")
+    private Email emailAddress;
+
+
+    // Status enum
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private CompanyStatus status;
+
+    // Şəhər
+    private String city;
+
+    // Lead value
+    @Column(name = "lead_value", precision = 15, scale = 2)
+    private BigDecimal leadValue;
+
+    // Connection (məs: Zoho CRM, Pipedrive və s.)
+    private String connection;
+
+    @Column(nullable = false, length = 150)
+    private String companyName;
+
+    // Domain
+    private String domain;
 
 
     // 🔗 Task ilə əlaqə
@@ -75,6 +67,16 @@ public class Company {
     // Bir şirkətin çoxlu lead-i ola bilər compaign lead ile elaqe
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CampaignLead> leads;
+
+
+    // Bir şirkətə bir neçə şəxs aid ola bilər (One-to-Many)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Person> employees = new HashSet<>();
+
+
+    //pipeline ile
+    @OneToMany(mappedBy = "company")
+    private List<Pipeline> pipelines;
 }
 
 

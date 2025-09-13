@@ -17,7 +17,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+//@Builder
 public class Email {
 
 
@@ -49,22 +49,20 @@ public class Email {
 
     private LocalDateTime updatedAt;
 
-//attachments ile elaqe
+    //attachments ile elaqe
     @OneToMany(mappedBy = "email", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attachment> attachments = new ArrayList<>();
-//email ve compaign ile
-@ManyToOne(fetch = FetchType.LAZY)
-@JoinColumn(name = "campaign_id")
-private Campaign campaign;
 
+    //email ve compaign ile
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "campaign_id")
+    private Campaign campaign;
 
 
 //    @ElementCollection
 //    @CollectionTable(name = "email_labels", joinColumns = @JoinColumn(name = "email_id"))
 //    @Column(name = "label")
 //    private List<String> labels; // Client, Work, Contest, Social media
-
-
 
 
 //email ile task arasinda elaqe
@@ -78,24 +76,20 @@ private Campaign campaign;
 //    private Organization organization;
 
 
-//email person ile elaqe
-//    @ManyToOne
-//    @JoinColumn(name = "person_id")
-//    private Person person;
-
-
-
-//    formresponse ile
-// Əgər form cavabları ilə əks əlaqəni görmək istəyirsənsə
-//@OneToMany(mappedBy = "email")
-//private List<FormResponse> responses = new ArrayList<>();
-
-
-
+    //person ile elaqe
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+
+    //company ile
+    @OneToOne(mappedBy = "emailAddress", fetch = FetchType.LAZY)
+    private Company company;
+
 
 }

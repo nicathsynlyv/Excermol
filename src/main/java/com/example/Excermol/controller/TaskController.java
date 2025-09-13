@@ -1,10 +1,12 @@
 package com.example.Excermol.controller;
 
-import com.example.Excermol.Service.TaskService;
+import com.example.Excermol.Service.impl.TaskServiceImpl;
 import com.example.Excermol.entity.Task;
 import com.example.Excermol.enums.TaskStatus;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,63 +15,98 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
+@Tag(name = "Task Controller", description = "Task-larla əlaqəli bütün əməliyyatlar")
 public class TaskController {
 
-    private final TaskService taskService;
+    private final TaskServiceImpl taskServiceImpl;
 
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
+    public TaskController(TaskServiceImpl taskServiceImpl) {
+        this.taskServiceImpl = taskServiceImpl;
     }
 
-    // ✅ Bütün task-lar
+    @Operation(summary = "Bütün task-ları gətirir")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Bütün task-lar uğurla gətirildi")
+    })
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks() {
-        return ResponseEntity.ok(taskService.getAllTasks());
+        return ResponseEntity.ok(taskServiceImpl.getAll());
     }
 
-    // ✅ Status-a görə task-lar
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Task>> getTasksByStatus(@PathVariable TaskStatus status) {
-        return ResponseEntity.ok(taskService.getTasksByStatus(status));
+    @Operation(summary = "Task-ı ID-ə görə gətirir")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task tapıldı"),
+            @ApiResponse(responseCode = "404", description = "Task tapılmadı")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        return taskServiceImpl.getById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // ✅ User-ə görə task-lar
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> getTasksByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(taskService.getTasksByUser(userId));
-    }
-
-    // ✅ Tag-ə görə task-lar
-    @GetMapping("/tag/{tagId}")
-    public ResponseEntity<List<Task>> getTasksByTag(@PathVariable Long tagId) {
-        return ResponseEntity.ok(taskService.getTasksByTag(tagId));
-    }
-
-    // ✅ Tarix aralığına görə task-lar
-    @GetMapping("/due")
-    public ResponseEntity<List<Task>> getTasksByDueDate(@RequestParam LocalDate start,
-                                                        @RequestParam LocalDate end) {
-        return ResponseEntity.ok(taskService.getTasksByDueDateRange(start, end));
-    }
-
-    // ✅ Yeni task yaratmaq
+    @Operation(summary = "Yeni task yaradır")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Task uğurla yaradıldı")
+    })
     @PostMapping
-    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
-        Task createdTask = taskService.createTask(task);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        Task savedTask = taskServiceImpl.save(task);
+        return ResponseEntity.status(201).body(savedTask);
     }
 
-    // ✅ Task update
+    @Operation(summary = "Task-ı ID-ə görə update edir")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task uğurla update olundu"),
+            @ApiResponse(responseCode = "404", description = "Task tapılmadı")
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody Task task) {
-        Task updated = taskService.updateTask(id, task);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+        Task updatedTask = taskServiceImpl.updateTask(id, task);
+        return ResponseEntity.ok(updatedTask);
     }
 
-    // ✅ Task silmək
+
+    @Operation(summary = "Task-ı ID-ə görə silir")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Task uğurla silindi"),
+            @ApiResponse(responseCode = "404", description = "Task tapılmadı")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
-        return ResponseEntity.noContent().build();
+        if (taskServiceImpl.getById(id).isPresent()) {
+            taskServiceImpl.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "Status-a görə task-ları gətirir")
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<Task>> getTasksByStatus(@PathVariable TaskStatus status) {
+        return ResponseEntity.ok(taskServiceImpl.findByStatus(status));
+    }
+
+    @Operation(summary = "User ID-yə görə task-ları gətirir")
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Task>> getTasksByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(taskServiceImpl.findByAssignees_Id(userId));
+    }
+
+    @Operation(summary = "Tag ID-yə görə task-ları gətirir")
+    @GetMapping("/tag/{tagId}")
+    public ResponseEntity<List<Task>> getTasksByTag(@PathVariable Long tagId) {
+        return ResponseEntity.ok(taskServiceImpl.findByTags_Id(tagId));
+    }
+
+    @Operation(summary = "Tarix aralığına görə task-ları gətirir")
+    @GetMapping("/dueDate")
+    public ResponseEntity<List<Task>> getTasksByDueDateRange(
+            @RequestParam("start") String start,
+            @RequestParam("end") String end) {
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        return ResponseEntity.ok(taskServiceImpl.findByDueDateBetween(startDate, endDate));
     }
 }

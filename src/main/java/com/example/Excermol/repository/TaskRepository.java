@@ -24,4 +24,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByDueDateBetween(LocalDate start, LocalDate end);
 
 
+
+
 }

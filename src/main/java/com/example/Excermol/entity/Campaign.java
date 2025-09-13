@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//@Builder
 public class Campaign {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

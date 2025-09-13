@@ -13,8 +13,10 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
+
     Optional<User> findByEmail(String email);
 
     boolean existsByEmail(String email);
@@ -23,7 +25,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     List<User> findByRole(UserRole role);
 
-    @Query("SELECT u FROM User u WHERE u.firstName ILIKE %:keyword% OR u.lastName ILIKE %:keyword% OR u.email ILIKE %:keyword%")
+    //  fullName istifadə edirem
+    @Query("SELECT u FROM User u " +
+            "WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "   OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<User> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT u FROM User u WHERE u.createdAt BETWEEN :startDate AND :endDate")
@@ -32,5 +37,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.status = :status")
     Long countByStatus(@Param("status") UserStatus status);
-
 }
