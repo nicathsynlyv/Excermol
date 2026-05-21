@@ -1,5 +1,6 @@
 package com.example.Excermol.entity;
 
+import com.example.Excermol.enums.TaskPriority;
 import com.example.Excermol.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -27,7 +29,9 @@ public class Task {
     private String description;
 
     private LocalDate dueDate;
-    private String priority; // Urgent, Low, Normal və s.
+
+    @Enumerated(EnumType.STRING)
+    private TaskPriority priority;
 
     @Column(name = "lead")
     private String lead;
@@ -64,8 +68,8 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Attachment> attachments;
 
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 
     // 🔗 Company ilə əlaqə
@@ -74,10 +78,3 @@ public class Task {
     private Company company;
 
 }
-//task ile email arasinda elaqe
-//    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Email> emails = new ArrayList<>();
-//task ve organization ile elaqe
-//    @ManyToOne
-//    @JoinColumn(name = "organization_id")
-//    private Organization organization;

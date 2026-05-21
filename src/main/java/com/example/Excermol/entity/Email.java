@@ -88,8 +88,9 @@ public class Email {
 
 
     //company ile
-    @OneToOne(mappedBy = "emailAddress", fetch = FetchType.LAZY)
+    // Düzgünü:
+    @ManyToOne
+    @JoinColumn(name = "company_id")
     private Company company;
-
 
 }

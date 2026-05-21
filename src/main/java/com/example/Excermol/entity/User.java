@@ -2,19 +2,21 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.UserRole;
 import com.example.Excermol.enums.UserStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +29,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotBlank(message = "Ad boş ola bilmez")
     @Size(min = 2, max = 50, message = "Ad 2-50 simvol arasında olmalıdır")
@@ -43,9 +45,8 @@ public class User {
     @NotBlank(message = "Şifrə boş ola bilməz")
     @Size(min = 6, message = "Şifrə minimum 6 simvol olmalıdır")
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
-
-
 
 
     @Enumerated(EnumType.STRING)
@@ -78,21 +79,19 @@ public class User {
         return role == UserRole.ADMIN;
     }
 
-//task entitysi ile elaqe
+    //task entitysi ile elaqe
     @ManyToMany(mappedBy = "assignees")
     private Set<Task> tasks;
-//comments entitysi ile elaqe
+    //comments entitysi ile elaqe
     @OneToMany(mappedBy = "author")
     private Set<Comment> comments;
-//attachments entitysi ile elaqe
+    //attachments entitysi ile elaqe
     @OneToMany(mappedBy = "uploadedBy")
     private Set<Attachment> attachments;
 
-//pipeline entitysi ile
+    //pipeline entitysi ile
     @ManyToMany(mappedBy = "assignees")
     private List<Pipeline> pipelines;
-
-
 
 
 //compagins ile elaqe

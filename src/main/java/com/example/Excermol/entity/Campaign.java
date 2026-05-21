@@ -32,7 +32,7 @@ public class Campaign {
     private Double replyRate;          // 27.9%
     private Double bounceRate;         // 18.6%
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
 
     @Enumerated(EnumType.STRING)

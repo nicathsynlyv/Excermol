@@ -35,4 +35,5 @@ public class Attachment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "email_id", nullable = true)
     private Email email;
+
 }

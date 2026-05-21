@@ -52,13 +52,6 @@ public class Organization {
     //pipeline ile
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
     private List<Pipeline> pipelines;
-//person ile elaqe
-//    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-//    private List<Person> people;
-//tasks ile elaqe
-//    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-//    private List<Task> tasks;
-//email ile elaqe
-//    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-//    private List<Email> emails;
+
+
 }

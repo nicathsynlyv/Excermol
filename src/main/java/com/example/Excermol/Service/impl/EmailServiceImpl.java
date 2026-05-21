@@ -6,6 +6,8 @@ import com.example.Excermol.enums.EmailStatus;
 import com.example.Excermol.exception.EmailNotFoundException;
 import com.example.Excermol.repository.EmailRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

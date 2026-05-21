@@ -13,25 +13,26 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService extends BaseService<User,Long>{
+    User createUser(User user);
+
     Optional<User> findByEmail(String email);
+
+    Page<User> findAll(Pageable pageable);
+
+    Page<User> searchUsers(String keyword, Pageable pageable);
+
+    User updateUser(Long id, User updatedUser);
+
+    void updateLastLogin(String email);
+
+    List<User> findActiveUsers();
+
+    Long getActiveUserCount();
 
     boolean existsByEmail(String email);
 
     List<User> findByStatus(UserStatus status);
 
     List<User> findByRole(UserRole role);
-
-    //  fullName istifadə edirem
-    @Query("SELECT u FROM User u " +
-            "WHERE LOWER(u.fullName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "   OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    Page<User> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
-
-    @Query("SELECT u FROM User u WHERE u.createdAt BETWEEN :startDate AND :endDate")
-    List<User> findByCreatedAtBetween(@Param("startDate") LocalDateTime startDate,
-                                      @Param("endDate") LocalDateTime endDate);
-
-    @Query("SELECT COUNT(u) FROM User u WHERE u.status = :status")
-    Long countByStatus(@Param("status") UserStatus status);
 
 }
