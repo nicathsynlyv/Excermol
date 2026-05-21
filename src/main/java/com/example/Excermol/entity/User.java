@@ -3,6 +3,7 @@ package com.example.Excermol.entity;
 import com.example.Excermol.enums.UserRole;
 import com.example.Excermol.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -45,7 +46,7 @@ public class User {
     @NotBlank(message = "Şifrə boş ola bilməz")
     @Size(min = 6, message = "Şifrə minimum 6 simvol olmalıdır")
     @Column(nullable = false)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  // ← bunu yaz
     private String password;
 
 
