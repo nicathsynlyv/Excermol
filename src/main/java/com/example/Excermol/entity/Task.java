@@ -3,10 +3,12 @@ package com.example.Excermol.entity;
 import com.example.Excermol.enums.TaskPriority;
 import com.example.Excermol.enums.TaskStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +16,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 //@Builder
@@ -23,20 +26,46 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @NotBlank
     private String title;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
     private LocalDate dueDate;
+    // create ve update ayri ayri
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     @Enumerated(EnumType.STRING)
     private TaskPriority priority;
 
-    @Column(name = "lead")
-    private String lead;
+    // String lead → Person-a dəyişdirildi
+    @ManyToOne
+    @JoinColumn(name = "lead_id")
+    private Person lead;
 
+    @Max(100)
     private int progress; // 0-100%
+
+    // Kanban sütununda sıra üçün
+    private Integer sortOrder;
+
+    // UI-da "02/43" kimi göstərilir
+    private Integer totalSubtasks;
+    private Integer completedSubtasks;
+
 
     @Enumerated(EnumType.STRING)
     private TaskStatus status; // TODO, IN_PROGRESS, DONE
@@ -67,9 +96,6 @@ public class Task {
     //attachments ile elaqe
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Attachment> attachments;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
 
     // 🔗 Company ilə əlaqə

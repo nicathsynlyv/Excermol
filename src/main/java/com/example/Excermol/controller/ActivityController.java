@@ -1,10 +1,11 @@
 package com.example.Excermol.controller;
 
+import com.example.Excermol.Service.impl.PersonServiceImpl;
 import com.example.Excermol.entity.Activity;
 import com.example.Excermol.entity.Person;
 import com.example.Excermol.enums.ActivityAction;
 import com.example.Excermol.Service.impl.ActivityServiceImpl;
-import com.example.Excermol.service.PersonServiceImpl;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
