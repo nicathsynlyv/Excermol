@@ -18,25 +18,25 @@ public class ResponseServiceImpl implements ResponseService {
         this.responseRepository = responseRepository;
     }
 
-    @Override
-    public List<Response> getAll() {
-        return responseRepository.findAll();
-    }
-
-    @Override
-    public Optional<Response> getById(Long id) {
-        return responseRepository.findById(id);
-    }
-
-    @Override
-    public Response save(Response entity) {
-        return responseRepository.save(entity);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        responseRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Response> getAll() {
+//        return responseRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Response> getById(Long id) {
+//        return responseRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Response save(Response entity) {
+//        return responseRepository.save(entity);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        responseRepository.deleteById(id);
+//    }
 
     public long countByFormId(Long formId) {
         return responseRepository.countByFormId(formId);

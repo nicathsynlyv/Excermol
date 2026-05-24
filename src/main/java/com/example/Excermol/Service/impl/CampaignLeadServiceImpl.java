@@ -20,27 +20,27 @@ public class CampaignLeadServiceImpl implements CampaignLeadService {
     private final CampaignLeadRepository campaignLeadRepository;
     private final CampaignRepository campaignRepository;
 
-    // BaseService metodları
-    @Override
-    public List<CampaignLead> getAll() {
-        return campaignLeadRepository.findAll();
-    }
-
-    @Override
-    public Optional<CampaignLead> getById(Long id) {
-        return campaignLeadRepository.findById(id);
-    }
-
-    @Override
-    public CampaignLead save(CampaignLead lead) {
-        return campaignLeadRepository.save(lead);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        campaignLeadRepository.deleteById(id);
-    }
-
+//    // BaseService metodları
+//    @Override
+//    public List<CampaignLead> getAll() {
+//        return campaignLeadRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<CampaignLead> getById(Long id) {
+//        return campaignLeadRepository.findById(id);
+//    }
+//
+//    @Override
+//    public CampaignLead save(CampaignLead lead) {
+//        return campaignLeadRepository.save(lead);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        campaignLeadRepository.deleteById(id);
+//    }
+//
     // CampaignLead spesifik metod
     @Override
     public List<CampaignLead> findByCampaignId(Long campaignId) {

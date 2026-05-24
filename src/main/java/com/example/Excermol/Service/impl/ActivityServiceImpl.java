@@ -20,25 +20,25 @@ public class ActivityServiceImpl implements ActivityService {
 
     // ---- BaseService metodları ----
 
-    @Override
-    public List<Activity> getAll() {
-        return activityRepository.findAll();
-    }
-
-    @Override
-    public Optional<Activity> getById(Long id) {
-        return activityRepository.findById(id);
-    }
-
-    @Override
-    public Activity save(Activity entity) {
-        return activityRepository.save(entity);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        activityRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Activity> getAll() {
+//        return activityRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Activity> getById(Long id) {
+//        return activityRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Activity save(Activity entity) {
+//        return activityRepository.save(entity);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        activityRepository.deleteById(id);
+//    }
 
     // ---- Əlavə metodlar ----
 

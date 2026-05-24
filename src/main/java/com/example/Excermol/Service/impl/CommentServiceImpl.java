@@ -19,25 +19,25 @@ public class CommentServiceImpl implements CommentService {
     }
 
     // BaseService metodları
-    @Override
-    public List<Comment> getAll() {
-        return commentRepository.findAll();
-    }
-
-    @Override
-    public Optional<Comment> getById(Long id) {
-        return commentRepository.findById(id);
-    }
-
-    @Override
-    public Comment save(Comment comment) {
-        return commentRepository.save(comment);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        commentRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Comment> getAll() {
+//        return commentRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Comment> getById(Long id) {
+//        return commentRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Comment save(Comment comment) {
+//        return commentRepository.save(comment);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        commentRepository.deleteById(id);
+//    }
 
     // CommentService spesifik metod
     @Override

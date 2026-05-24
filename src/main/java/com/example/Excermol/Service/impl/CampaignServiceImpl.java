@@ -17,25 +17,25 @@ public class CampaignServiceImpl implements CampaignService {
     private final CampaignRepository campaignRepository;
 
     // BaseService metodları
-    @Override
-    public List<Campaign> getAll() {
-        return campaignRepository.findAll();
-    }
-
-    @Override
-    public Optional<Campaign> getById(Long id) {
-        return campaignRepository.findById(id);
-    }
-
-    @Override
-    public Campaign save(Campaign campaign) {
-        return campaignRepository.save(campaign);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        campaignRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Campaign> getAll() {
+//        return campaignRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Campaign> getById(Long id) {
+//        return campaignRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Campaign save(Campaign campaign) {
+//        return campaignRepository.save(campaign);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        campaignRepository.deleteById(id);
+//    }
 
     // Campaign update metodu
     public Campaign updateCampaign(Long id, Campaign updatedCampaign) {

@@ -19,25 +19,25 @@ public class BuilderServiceImpl implements BuilderService {
         this.builderRepository = builderRepository;
     }
 
-    @Override
-    public List<Builder> getAll() {
-        return builderRepository.findAll();
-    }
-
-    @Override
-    public Optional<Builder> getById(Long id) {
-        return builderRepository.findById(id);
-    }
-
-    @Override 
-    public Builder save(Builder entity) {
-        return builderRepository.save(entity);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        builderRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Builder> getAll() {
+//        return builderRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Builder> getById(Long id) {
+//        return builderRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Builder save(Builder entity) {
+//        return builderRepository.save(entity);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        builderRepository.deleteById(id);
+//    }
 
     public Optional<Builder> findByFormId(Long formId) {
         return builderRepository.findByFormId(formId);

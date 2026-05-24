@@ -36,53 +36,53 @@ public class FormServiceImpl implements FormService {
         this.routingRepository = routingRepository;
     }
 
-    @Override
-    public List<Form> getAll() {
-        return formRepository.findAllWithResponses();
-    }
-
-    @Override
-    public Optional<Form> getById(Long id) {
-        return formRepository.findById(id);
-    }
-
-    @Override
-    public Form save(Form form) {
-        // Form-u saxla
-        Form savedForm = formRepository.save(form);
-
-        // Əgər builder varsa saxla
-        Builder builder = form.getBuilder();
-        if (builder != null) {
-            builder.setForm(savedForm);
-            builderRepository.save(builder);
-        }
-
-        // Əgər routings varsa saxla
-        List<Routing> routings = form.getRoutings();
-        if (routings != null) {
-            for (Routing routing : routings) {
-                routing.setForm(savedForm);
-                routingRepository.save(routing);
-            }
-        }
-
-        // Responses-ləri saxla
-        List<Response> responses = form.getResponses();
-        if (responses != null) {
-            for (Response response : responses) {
-                response.setForm(savedForm);
-                responseRepository.save(response);
-            }
-        }
-
-        return savedForm;
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        formRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Form> getAll() {
+//        return formRepository.findAllWithResponses();
+//    }
+//
+//    @Override
+//    public Optional<Form> getById(Long id) {
+//        return formRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Form save(Form form) {
+//        // Form-u saxla
+//        Form savedForm = formRepository.save(form);
+//
+//        // Əgər builder varsa saxla
+//        Builder builder = form.getBuilder();
+//        if (builder != null) {
+//            builder.setForm(savedForm);
+//            builderRepository.save(builder);
+//        }
+//
+//        // Əgər routings varsa saxla
+//        List<Routing> routings = form.getRoutings();
+//        if (routings != null) {
+//            for (Routing routing : routings) {
+//                routing.setForm(savedForm);
+//                routingRepository.save(routing);
+//            }
+//        }
+//
+//        // Responses-ləri saxla
+//        List<Response> responses = form.getResponses();
+//        if (responses != null) {
+//            for (Response response : responses) {
+//                response.setForm(savedForm);
+//                responseRepository.save(response);
+//            }
+//        }
+//
+//        return savedForm;
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        formRepository.deleteById(id);
+//    }
 
     // əlavə metodlar
     public List<Form> findByName(String name) {

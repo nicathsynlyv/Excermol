@@ -5,7 +5,7 @@ import com.example.Excermol.enums.EmailStatus;
 
 import java.util.List;
 
-public interface EmailService extends BaseService<Email,Long> {
+public interface EmailService  {
     // Status-a görə emailləri gətir
     List<Email> findByStatus(EmailStatus status);
 

@@ -9,27 +9,26 @@ import com.example.Excermol.enums.TaskStatus;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface TaskService extends BaseService<Task, Long> {
-    // 1. Kanban sütunları üçün
-    List<Task> findByStatusOrderBySortOrderAsc(TaskStatus status);
-
-    // 2. User taskları
-    List<Task> findByAssignees_Id(Long userId);
-
-    // 3. Search
-    List<Task> findByTitleContainingIgnoreCase(String keyword);
-
-    // 4. Priority filter
-    List<Task> findByPriority(TaskPriority priority);
-
-    // 5. Tag filter
-    List<Task> findByTags_Id(Long tagId);
-
-    // CREATE
+public interface TaskService {
     TaskResponseDto createTask(TaskRequestDto dto);
 
-    // UPDATE
     TaskResponseDto updateTask(Long id, TaskRequestDto dto);
+
+    TaskResponseDto getById(Long id);
+
+    List<TaskResponseDto> getAll();
+
+    List<TaskResponseDto> findByStatus(TaskStatus status);
+
+    List<TaskResponseDto> findByUser(Long userId);
+
+    List<TaskResponseDto> search(String keyword);
+
+    List<TaskResponseDto> findByPriority(TaskPriority priority);
+
+    List<TaskResponseDto> findByTag(Long tagId);
+
+    void delete(Long id);
 
 
 }

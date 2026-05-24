@@ -16,26 +16,26 @@ import java.util.Optional;
 public class PipelineServiceImpl implements PipelineService {
 
     private final PipelineRepository pipelineRepository;
-
-    @Override
-    public List<Pipeline> getAll() {
-        return pipelineRepository.findAll();
-    }
-
-    @Override
-    public Optional<Pipeline> getById(Long id) {
-        return pipelineRepository.findById(id);
-    }
-
-    @Override
-    public Pipeline save(Pipeline entity) {
-        return pipelineRepository.save(entity);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        pipelineRepository.deleteById(id);
-    }
+//
+//    @Override
+//    public List<Pipeline> getAll() {
+//        return pipelineRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Pipeline> getById(Long id) {
+//        return pipelineRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Pipeline save(Pipeline entity) {
+//        return pipelineRepository.save(entity);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        pipelineRepository.deleteById(id);
+//    }
 
     @Override
     public List<Pipeline> findByStatus(PipelineStatus status) {

@@ -12,12 +12,8 @@ import com.example.Excermol.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-
 @Service
 @Transactional
 public class TaskServiceImpl implements TaskService {
@@ -28,7 +24,15 @@ public class TaskServiceImpl implements TaskService {
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
     private final TaskMapper taskMapper;
-    public TaskServiceImpl(TaskRepository taskRepository, CompanyRepository companyRepository, PersonRepository personRepository, UserRepository userRepository, TagRepository tagRepository, TaskMapper taskMapper) {
+
+    public TaskServiceImpl(
+            TaskRepository taskRepository,
+            CompanyRepository companyRepository,
+            PersonRepository personRepository,
+            UserRepository userRepository,
+            TagRepository tagRepository,
+            TaskMapper taskMapper
+    ) {
         this.taskRepository = taskRepository;
         this.companyRepository = companyRepository;
         this.personRepository = personRepository;
@@ -37,182 +41,155 @@ public class TaskServiceImpl implements TaskService {
         this.taskMapper = taskMapper;
     }
 
+    // =========================
+    // GET ALL
+    // =========================
     @Override
-    public List<Task> getAll() {
-        return taskRepository.findAll();
+    public List<TaskResponseDto> getAll() {
+        return taskRepository.findAll()
+                .stream()
+                .map(taskMapper::toResponse)
+                .toList();
     }
 
+    // =========================
+    // GET BY ID
+    // =========================
     @Override
-    public Optional<Task> getById(Long id) {
-        return taskRepository.findById(id);
+    public TaskResponseDto getById(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task tapılmadı: " + id));
+
+        return taskMapper.toResponse(task);
     }
 
-    @Override
-    public Task save(Task entity) {
-        return taskRepository.save(entity);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-
-        if (!taskRepository.existsById(id)) {
-            throw new TaskNotFoundException("Task tapılmadı: " + id);
-        }
-
-        taskRepository.deleteById(id);
-    }
-
-    @Override
-    public List<Task> findByStatusOrderBySortOrderAsc(TaskStatus status) {
-        return taskRepository.findByStatusOrderBySortOrderAsc(status);
-    }
-
-    @Override
-    public List<Task> findByAssignees_Id(Long userId) {
-        return taskRepository.findByAssignees_Id(userId);
-    }
-
-    @Override
-    public List<Task> findByTitleContainingIgnoreCase(String keyword) {
-        return taskRepository.findByTitleContainingIgnoreCase(keyword);
-    }
-
-    @Override
-    public List<Task> findByPriority(TaskPriority priority) {
-        return taskRepository.findByPriority(priority);
-    }
-
-    @Override
-    public List<Task> findByTags_Id(Long tagId) {
-        return taskRepository.findByTags_Id(tagId);
-    }
-
+    // =========================
+    // CREATE
+    // =========================
     @Override
     public TaskResponseDto createTask(TaskRequestDto dto) {
 
         Task task = taskMapper.toEntity(dto);
 
-        // COMPANY
-        if (dto.getCompanyId() != null) {
+        setRelations(task, dto);
 
-            Company company = companyRepository.findById(dto.getCompanyId())
-                    .orElseThrow(() ->
-                            new RuntimeException("Company not found"));
-
-            task.setCompany(company);
-        }
-
-        // LEAD
-        if (dto.getLeadId() != null) {
-
-            Person lead = personRepository.findById(dto.getLeadId())
-                    .orElseThrow(() ->
-                            new RuntimeException("Lead not found"));
-
-            task.setLead(lead);
-        }
-
-        // USERS
-        if (dto.getAssigneeIds() != null) {
-
-            Set<User> users = dto.getAssigneeIds()
-                    .stream()
-                    .map(id -> userRepository.findById(id)
-                            .orElseThrow(() ->
-                                    new RuntimeException("User not found")))
-                    .collect(Collectors.toSet());
-
-            task.setAssignees(users);
-        }
-
-        // TAGS
-        if (dto.getTagIds() != null) {
-
-            Set<Tag> tags = dto.getTagIds()
-                    .stream()
-                    .map(id -> tagRepository.findById(id)
-                            .orElseThrow(() ->
-                                    new RuntimeException("Tag not found")))
-                    .collect(Collectors.toSet());
-
-            task.setTags(tags);
-        }
-
-        Task savedTask = taskRepository.save(task);
-
-        return taskMapper.toResponse(savedTask);
+        return taskMapper.toResponse(taskRepository.save(task));
     }
 
+    // =========================
+    // UPDATE
+    // =========================
     @Override
     public TaskResponseDto updateTask(Long id, TaskRequestDto dto) {
 
-        Task existing = taskRepository.findById(id)
-                .orElseThrow(() ->
-                        new TaskNotFoundException("Task tapılmadı: " + id));
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task tapılmadı: " + id));
 
-        existing.setTitle(dto.getTitle());
-        existing.setDescription(dto.getDescription());
+        task.setTitle(dto.getTitle());
+        task.setDescription(dto.getDescription());
+        task.setDueDate(dto.getDueDate());
+        task.setPriority(dto.getPriority());
+        task.setStatus(dto.getStatus());
+        task.setProgress(dto.getProgress());
+        task.setSortOrder(dto.getSortOrder());
+        task.setTotalSubtasks(dto.getTotalSubtasks());
+        task.setCompletedSubtasks(dto.getCompletedSubtasks());
 
-        existing.setDueDate(dto.getDueDate());
+        setRelations(task, dto);
 
-        existing.setPriority(dto.getPriority());
-        existing.setStatus(dto.getStatus());
+        return taskMapper.toResponse(taskRepository.save(task));
+    }
 
-        existing.setProgress(dto.getProgress());
+    // =========================
+    // DELETE
+    // =========================
+    @Override
+    public void delete(Long id) {
+        if (!taskRepository.existsById(id)) {
+            throw new TaskNotFoundException("Task tapılmadı: " + id);
+        }
+        taskRepository.deleteById(id);
+    }
 
-        existing.setSortOrder(dto.getSortOrder());
+    // =========================
+    // FILTERS
+    // =========================
 
-        existing.setTotalSubtasks(dto.getTotalSubtasks());
-        existing.setCompletedSubtasks(dto.getCompletedSubtasks());
+    @Override
+    public List<TaskResponseDto> findByStatus(TaskStatus status) {
+        return taskRepository.findByStatusOrderBySortOrderAsc(status)
+                .stream()
+                .map(taskMapper::toResponse)
+                .toList();
+    }
 
-        // COMPANY
+    @Override
+    public List<TaskResponseDto> findByUser(Long userId) {
+        return taskRepository.findByAssignees_Id(userId)
+                .stream()
+                .map(taskMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<TaskResponseDto> search(String keyword) {
+        return taskRepository.findByTitleContainingIgnoreCase(keyword)
+                .stream()
+                .map(taskMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<TaskResponseDto> findByPriority(TaskPriority priority) {
+        return taskRepository.findByPriority(priority)
+                .stream()
+                .map(taskMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public List<TaskResponseDto> findByTag(Long tagId) {
+        return taskRepository.findByTags_Id(tagId)
+                .stream()
+                .map(taskMapper::toResponse)
+                .toList();
+    }
+
+    // =========================
+    // RELATION HANDLER (IMPORTANT)
+    // =========================
+    private void setRelations(Task task, TaskRequestDto dto) {
+
         if (dto.getCompanyId() != null) {
-
-            Company company = companyRepository.findById(dto.getCompanyId())
-                    .orElseThrow(() ->
-                            new RuntimeException("Company not found"));
-
-            existing.setCompany(company);
+            task.setCompany(
+                    companyRepository.findById(dto.getCompanyId())
+                            .orElseThrow(() -> new RuntimeException("Company not found"))
+            );
         }
 
-        // LEAD
         if (dto.getLeadId() != null) {
-
-            Person lead = personRepository.findById(dto.getLeadId())
-                    .orElseThrow(() ->
-                            new RuntimeException("Lead not found"));
-
-            existing.setLead(lead);
+            task.setLead(
+                    personRepository.findById(dto.getLeadId())
+                            .orElseThrow(() -> new RuntimeException("Lead not found"))
+            );
         }
 
-        // USERS
         if (dto.getAssigneeIds() != null) {
-
-            Set<User> users = dto.getAssigneeIds()
-                    .stream()
-                    .map(userId -> userRepository.findById(userId)
-                            .orElseThrow(() ->
-                                    new RuntimeException("User not found")))
-                    .collect(Collectors.toSet());
-
-            existing.setAssignees(users);
+            task.setAssignees(
+                    dto.getAssigneeIds().stream()
+                            .map(id -> userRepository.findById(id)
+                                    .orElseThrow(() -> new RuntimeException("User not found")))
+                            .collect(Collectors.toSet())
+            );
         }
 
-        // TAGS
         if (dto.getTagIds() != null) {
-
-            Set<Tag> tags = dto.getTagIds()
-                    .stream()
-                    .map(tagId -> tagRepository.findById(tagId)
-                            .orElseThrow(() ->
-                                    new RuntimeException("Tag not found")))
-                    .collect(Collectors.toSet());
-
-            existing.setTags(tags);
+            task.setTags(
+                    dto.getTagIds().stream()
+                            .map(id -> tagRepository.findById(id)
+                                    .orElseThrow(() -> new RuntimeException("Tag not found")))
+                            .collect(Collectors.toSet())
+            );
         }
-
-        Task updatedTask = taskRepository.save(existing);
-
-        return taskMapper.toResponse(updatedTask);
     }
 }

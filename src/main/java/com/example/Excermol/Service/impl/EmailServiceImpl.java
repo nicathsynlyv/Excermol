@@ -20,25 +20,25 @@ public class EmailServiceImpl implements EmailService {
     private final EmailRepository emailRepository;
 
     // BaseService metodları
-    @Override
-    public List<Email> getAll() {
-        return emailRepository.findAll();
-    }
-
-    @Override
-    public Optional<Email> getById(Long id) {
-        return emailRepository.findById(id);
-    }
-
-    @Override
-    public Email save(Email email) {
-        return emailRepository.save(email);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        emailRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Email> getAll() {
+//        return emailRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Email> getById(Long id) {
+//        return emailRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Email save(Email email) {
+//        return emailRepository.save(email);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        emailRepository.deleteById(id);
+//    }
 
     // EmailService spesifik metodları
     @Override

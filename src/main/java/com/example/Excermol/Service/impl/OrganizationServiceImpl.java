@@ -17,25 +17,25 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
 
     // BaseService metodları ilə uyğunlaşdırılmış
-    @Override
-    public List<Organization> getAll() {
-        return organizationRepository.findAll();
-    }
-
-    @Override
-    public Optional<Organization> getById(Long id) {
-        return organizationRepository.findById(id);
-    }
-
-    @Override
-    public Organization save(Organization organization) {
-        return organizationRepository.save(organization);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        organizationRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Organization> getAll() {
+//        return organizationRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Organization> getById(Long id) {
+//        return organizationRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Organization save(Organization organization) {
+//        return organizationRepository.save(organization);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        organizationRepository.deleteById(id);
+//    }
 
     // Organization-u update etmək
     @Override

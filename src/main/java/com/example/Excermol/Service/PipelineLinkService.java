@@ -4,6 +4,6 @@ import com.example.Excermol.entity.PipelineLink;
 
 import java.util.List;
 
-public interface PipelineLinkService extends BaseService<PipelineLink, Long> {
+public interface PipelineLinkService {
     List<PipelineLink> findByPipelineId(Long pipelineId);
 }

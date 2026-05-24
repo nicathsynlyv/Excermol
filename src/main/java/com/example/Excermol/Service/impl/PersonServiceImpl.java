@@ -22,25 +22,25 @@ public class PersonServiceImpl implements PersonService {
 
     // ---- BaseService metodları ----
 
-    @Override
-    public List<Person> getAll() {
-        return personRepository.findAll();
-    }
-
-    @Override
-    public Optional<Person> getById(Long id) {
-        return personRepository.findById(id);
-    }
-
-    @Override
-    public Person save(Person entity) {
-        return personRepository.save(entity);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        personRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Person> getAll() {
+//        return personRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Person> getById(Long id) {
+//        return personRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Person save(Person entity) {
+//        return personRepository.save(entity);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        personRepository.deleteById(id);
+//    }
 
     // ---- Əlavə metodlar ----
 

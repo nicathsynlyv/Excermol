@@ -16,25 +16,25 @@ public class RoutingServiceImpl implements RoutingService {
         this.routingRepository = routingRepository;
     }
 
-    @Override
-    public List<Routing> getAll() {
-        return routingRepository.findAll();
-    }
-
-    @Override
-    public Optional<Routing> getById(Long id) {
-        return routingRepository.findById(id);
-    }
-
-    @Override
-    public Routing save(Routing entity) {
-        return routingRepository.save(entity);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        routingRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Routing> getAll() {
+//        return routingRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Routing> getById(Long id) {
+//        return routingRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Routing save(Routing entity) {
+//        return routingRepository.save(entity);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        routingRepository.deleteById(id);
+//    }
 
     public Optional<Routing> findByRoutingTitle(String title){
         return routingRepository.findByRoutingTitle(title);

@@ -19,32 +19,32 @@ public class PipelineLinkServiceImpl implements PipelineLinkService {
     private final PipelineRepository pipelineRepository; // əlavə etməliyik
 
 
-
-    @Override
-    public List<PipelineLink> getAll() {
-        return pipelineLinkRepository.findAll();
-    }
-
-    @Override
-    public Optional<PipelineLink> getById(Long id) {
-        return pipelineLinkRepository.findById(id);
-    }
-
-    @Override
-    public PipelineLink save(PipelineLink entity) {
-        // pipeline yoxlama
-        Long pipelineId = entity.getPipeline().getId();
-        Pipeline pipeline = pipelineRepository.findById(pipelineId)
-                .orElseThrow(() -> new ResourceNotFoundException("Pipeline tapılmadı"));
-
-        entity.setPipeline(pipeline);
-        return pipelineLinkRepository.save(entity);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        pipelineLinkRepository.deleteById(id);
-    }
+//
+//    @Override
+//    public List<PipelineLink> getAll() {
+//        return pipelineLinkRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<PipelineLink> getById(Long id) {
+//        return pipelineLinkRepository.findById(id);
+//    }
+//
+//    @Override
+//    public PipelineLink save(PipelineLink entity) {
+//        // pipeline yoxlama
+//        Long pipelineId = entity.getPipeline().getId();
+//        Pipeline pipeline = pipelineRepository.findById(pipelineId)
+//                .orElseThrow(() -> new ResourceNotFoundException("Pipeline tapılmadı"));
+//
+//        entity.setPipeline(pipeline);
+//        return pipelineLinkRepository.save(entity);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        pipelineLinkRepository.deleteById(id);
+//    }
 
     @Override
     public List<PipelineLink> findByPipelineId(Long pipelineId) {

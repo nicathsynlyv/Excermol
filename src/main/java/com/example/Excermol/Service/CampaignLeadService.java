@@ -4,7 +4,7 @@ import com.example.Excermol.entity.CampaignLead;
 
 import java.util.List;
 
-public interface CampaignLeadService extends BaseService<CampaignLead,Long> {
+public interface CampaignLeadService  {
     List<CampaignLead> findByCampaignId(Long campaignId);
 
 }

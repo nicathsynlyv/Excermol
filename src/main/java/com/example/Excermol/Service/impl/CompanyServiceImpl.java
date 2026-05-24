@@ -19,25 +19,25 @@ public class CompanyServiceImpl implements CompanyService {
         this.companyRepository = companyRepository;
     }
 
-    @Override
-    public List<Company> getAll() {
-        return companyRepository.findAll();
-    }
-
-    @Override
-    public Optional<Company> getById(Long id) {
-        return companyRepository.findById(id);
-    }
-
-    @Override
-    public Company save(Company company) {
-        return companyRepository.save(company);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        companyRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Company> getAll() {
+//        return companyRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Company> getById(Long id) {
+//        return companyRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Company save(Company company) {
+//        return companyRepository.save(company);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        companyRepository.deleteById(id);
+//    }
 
     // Əlavə olaraq sənin repository-də olan xüsusi metodlar:
     public Optional<Company> getByCompanyName(String companyName) {

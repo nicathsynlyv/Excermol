@@ -18,25 +18,25 @@ public class TagServiceImpl implements TagService {
     }
 
     // ===== BaseService CRUD əməliyyatları =====
-    @Override
-    public List<Tag> getAll() {
-        return tagRepository.findAll();
-    }
-
-    @Override
-    public Optional<Tag> getById(Long id) {
-        return tagRepository.findById(id);
-    }
-
-    @Override
-    public Tag save(Tag tag) {
-        return tagRepository.save(tag);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        tagRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Tag> getAll() {
+//        return tagRepository.findAll();
+//    }
+//
+//    @Override
+//    public Optional<Tag> getById(Long id) {
+//        return tagRepository.findById(id);
+//    }
+//
+//    @Override
+//    public Tag save(Tag tag) {
+//        return tagRepository.save(tag);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        tagRepository.deleteById(id);
+//    }
 
     // ===== TagService xüsusi metodları =====
     @Override
