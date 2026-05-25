@@ -9,16 +9,19 @@ import java.util.List;
 @Repository
 public interface EmailRepository extends JpaRepository<Email, Long> {
 
-    // Status-a görə emailləri gətir
-    List<Email> findByStatus(EmailStatus status);
+    // Status-a görə — Inbox, Sent, Spam və s.
+    List<Email> findByStatusOrderByCreatedAtDesc(EmailStatus status);
 
-    // Oxunma statusuna görə
-    List<Email> findByIsRead(boolean isRead);
+    // Sender-ə görə
+    List<Email> findBySender_Id(Long userId);
 
-    // Göndəriciyə görə
-    List<Email> findBySender(String sender);
+    // Axtarış — subject-ə görə
+    List<Email> findBySubjectContainingIgnoreCase(String keyword);
 
-    // Alıcıya görə (recipients Set<String> olduğuna görə "containing")
-    List<Email> findByRecipientsContaining(String recipient);
+    // Oxunmamış emailler
+    List<Email> findByReadFalseOrderByCreatedAtDesc();
+
+    // Campaign-ə görə
+    List<Email> findByCampaign_Id(Long campaignId);
 
 }

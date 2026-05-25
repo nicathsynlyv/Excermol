@@ -1,22 +1,27 @@
 package com.example.Excermol.Service;
 
 import com.example.Excermol.entity.Email;
+import com.example.Excermol.entity.dtos.EmailRequestDto;
+import com.example.Excermol.entity.dtos.EmailResponseDto;
 import com.example.Excermol.enums.EmailStatus;
 
 import java.util.List;
 
 public interface EmailService  {
-    // Status-a görə emailləri gətir
-    List<Email> findByStatus(EmailStatus status);
+    List<EmailResponseDto> getAll();
+    EmailResponseDto getById(Long id);
+    EmailResponseDto createEmail(EmailRequestDto dto);
+    EmailResponseDto updateEmail(Long id, EmailRequestDto dto);
+    void deleteById(Long id);
+    List<EmailResponseDto> findByStatus(EmailStatus status);
+    List<EmailResponseDto> findBySender_Id(Long userId);
+    List<EmailResponseDto> findBySubjectContainingIgnoreCase(String keyword);
+    List<EmailResponseDto> findByReadFalse();
+    List<EmailResponseDto> findByCampaign_Id(Long campaignId);
 
-    // Oxunma statusuna görə
-    List<Email> findByIsRead(boolean isRead);
+//email oxundada databasede true olsun
+     EmailResponseDto markAsRead(Long id);
 
-    // Göndəriciyə görə
-    List<Email> findBySender(String sender);
-
-    // Alıcıya görə (recipients Set<String> olduğuna görə "containing")
-    List<Email> findByRecipientsContaining(String recipient);
 
 
 }

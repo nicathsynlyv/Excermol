@@ -2,10 +2,7 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.EmailStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,12 +11,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "emails")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
 public class Email {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,17 +26,18 @@ public class Email {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    private String sender;
 
-    @ElementCollection
-    @CollectionTable(name = "email_recipients", joinColumns = @JoinColumn(name = "email_id"))
-    @Column(name = "recipient")
-    private Set<String> recipients;
+    // String Set əvəzinə:
+    @ManyToMany
+    @JoinTable(name = "email_recipients",
+            joinColumns = @JoinColumn(name = "email_id"),
+            inverseJoinColumns = @JoinColumn(name = "person_id"))
+    private Set<Person> recipients;
 
     @Enumerated(EnumType.STRING)
     private EmailStatus status; // INBOX, IMPORTANT, SENT, DRAFT, SPAM, TRASH
 
-    private boolean isRead;
+    private boolean read;
 
 
     private LocalDateTime createdAt;
@@ -59,37 +56,29 @@ public class Email {
     private Campaign campaign;
 
 
-//    @ElementCollection
-//    @CollectionTable(name = "email_labels", joinColumns = @JoinColumn(name = "email_id"))
-//    @Column(name = "label")
-//    private List<String> labels; // Client, Work, Contest, Social media
+    @ElementCollection
+    @CollectionTable(name = "email_labels", joinColumns = @JoinColumn(name = "email_id"))
+    @Column(name = "label")
+    private List<String> labels; // Client, Work, Contest, Social media
 
 
-//email ile task arasinda elaqe
-//    @ManyToOne
-//    @JoinColumn(name = "task_id")
-//    private Task task;
-
-//email ile organization ile elaqe
-//    @ManyToOne
-//    @JoinColumn(name = "organization_id")
-//    private Organization organization;
-
-
-    //person ile elaqe
-    @ManyToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
-
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+    // String əvəzinə:
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id")
+    private User sender;
 
     //company ile
     // Düzgünü:
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
 

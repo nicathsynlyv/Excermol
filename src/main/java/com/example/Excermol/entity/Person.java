@@ -74,8 +74,11 @@ public class Person {
     private Set<Tag> tags = new HashSet<>();
 
     // Emails ilə əlaqə (One-to-Many)
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Email> emails = new HashSet<>();
+    @ManyToMany(mappedBy = "recipients")
+    private Set<Email> receivedEmails;
+    // Person entity-də — şəxsin öz email ünvanı
+    @Column(unique = true)
+    private String email; // məsələn: "jaman@gmail.com"
 
     // Activity ilə əlaqə (One-to-Many)
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
