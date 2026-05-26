@@ -1,20 +1,19 @@
 package com.example.Excermol.entity;
 
+import com.example.Excermol.enums.OrganizationType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "organizations")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
 public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,16 +31,24 @@ public class Organization {
     @Column(length = 250)
     private String description;
 
-    // Manager (User ilə əlaqə)
+    // (User ilə əlaqə)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private User manager;
 
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
     // Son əlaqə vaxtı
     private LocalDateTime lastInteractedAt;
 
-    // List adı (Clients, Customer və s.)
-    private String listName;
+    @Enumerated(EnumType.STRING)
+    private OrganizationType listName;
 
     // Deal sayı
     private Integer numberOfDeals;

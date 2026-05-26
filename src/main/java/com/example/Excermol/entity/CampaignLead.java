@@ -2,19 +2,16 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.LeadStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "campaign_leads")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Builder
 public class CampaignLead {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,5 +39,5 @@ public class CampaignLead {
 
 
     @Enumerated(EnumType.STRING)
-    private LeadStatus status;  // SENT_EMAIL, OPENED, CLICKED, REPLIED, BOUNCED
+    private LeadStatus status;
 }

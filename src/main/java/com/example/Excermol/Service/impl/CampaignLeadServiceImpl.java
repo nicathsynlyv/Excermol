@@ -3,65 +3,102 @@ package com.example.Excermol.Service.impl;
 import com.example.Excermol.Service.CampaignLeadService;
 import com.example.Excermol.entity.Campaign;
 import com.example.Excermol.entity.CampaignLead;
+import com.example.Excermol.entity.Company;
+import com.example.Excermol.entity.dtos.CampaignLeadRequestDTO;
+import com.example.Excermol.entity.dtos.CampaignLeadResponseDTO;
 import com.example.Excermol.exception.CampaignNotFoundException;
+import com.example.Excermol.exception.CompanyNotFoundException;
 import com.example.Excermol.exception.LeadNotFoundException;
+import com.example.Excermol.mapper.CampaignMapper;
 import com.example.Excermol.repository.CampaignLeadRepository;
 import com.example.Excermol.repository.CampaignRepository;
-import lombok.RequiredArgsConstructor;
+import com.example.Excermol.repository.CompanyRepository;
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
-@RequiredArgsConstructor
+@Transactional
+
 public class CampaignLeadServiceImpl implements CampaignLeadService {
 
     private final CampaignLeadRepository campaignLeadRepository;
     private final CampaignRepository campaignRepository;
+    private final CompanyRepository companyRepository;
+    private final CampaignMapper campaignMapper;
 
-//    // BaseService metodları
-//    @Override
-//    public List<CampaignLead> getAll() {
-//        return campaignLeadRepository.findAll();
-//    }
-//
-//    @Override
-//    public Optional<CampaignLead> getById(Long id) {
-//        return campaignLeadRepository.findById(id);
-//    }
-//
-//    @Override
-//    public CampaignLead save(CampaignLead lead) {
-//        return campaignLeadRepository.save(lead);
-//    }
-//
-//    @Override
-//    public void deleteById(Long id) {
-//        campaignLeadRepository.deleteById(id);
-//    }
-//
-    // CampaignLead spesifik metod
+    public CampaignLeadServiceImpl(CampaignLeadRepository campaignLeadRepository,
+                                   CampaignRepository campaignRepository,
+                                   CompanyRepository companyRepository,
+                                   CampaignMapper campaignMapper) {
+        this.campaignLeadRepository = campaignLeadRepository;
+        this.campaignRepository = campaignRepository;
+        this.companyRepository = companyRepository;
+        this.campaignMapper = campaignMapper;
+    }
+
     @Override
-    public List<CampaignLead> findByCampaignId(Long campaignId) {
-        return campaignLeadRepository.findByCampaignId(campaignId);
-    }
+    public CampaignLeadResponseDTO createLead(CampaignLeadRequestDTO requestDTO) {
+        // Campaign mövcuddurmu yoxla
+        Campaign campaign = campaignRepository.findById(requestDTO.getCampaignId())
+                .orElseThrow(() -> new CampaignNotFoundException(
+                        "Campaign tapılmadı! ID: " + requestDTO.getCampaignId()));
 
-    // Lead əlavə etmək
-    public CampaignLead addLead(Long campaignId, CampaignLead lead) {
-        Campaign campaign = campaignRepository.findById(campaignId)
-                .orElseThrow(() -> new CampaignNotFoundException("Campaign ID = " + campaignId + " tapılmadı!"));
+        CampaignLead lead = campaignMapper.toLeadEntity(requestDTO);
         lead.setCampaign(campaign);
-        return campaignLeadRepository.save(lead);
+        lead.setLastActive(LocalDate.now()); // ← create zamanı da set et
+
+
+        // Company mövcuddurmu yoxla
+        if (requestDTO.getCompanyId() != null) {
+            Company company = companyRepository.findById(requestDTO.getCompanyId())
+                    .orElseThrow(() -> new CompanyNotFoundException(
+                            "Company tapılmadı! ID: " + requestDTO.getCompanyId()));
+            lead.setCompany(company);
+        }
+
+        return campaignMapper.toLeadResponseDTO(campaignLeadRepository.save(lead));
     }
 
-    // Lead update etmək
-    public CampaignLead updateLeadStatus(Long leadId, CampaignLead updatedLead) {
-        CampaignLead lead = campaignLeadRepository.findById(leadId)
-                .orElseThrow(() -> new LeadNotFoundException("Lead ID = " + leadId + " tapılmadı!"));
-        lead.setStatus(updatedLead.getStatus());
-        lead.setProgress(updatedLead.getProgress());
-        lead.setLastActive(updatedLead.getLastActive());
-        return campaignLeadRepository.save(lead);
+    @Override
+    public List<CampaignLeadResponseDTO> getLeadsByCampaignId(Long campaignId) {
+        if (!campaignRepository.existsById(campaignId)) {
+            throw new CampaignNotFoundException("Campaign tapılmadı! ID: " + campaignId);
+        }
+
+        return campaignLeadRepository.findByCampaignId(campaignId)
+                .stream()
+                .map(campaignMapper::toLeadResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public CampaignLeadResponseDTO updateLead(Long id, CampaignLeadRequestDTO requestDTO) {
+        CampaignLead lead = campaignLeadRepository.findById(id)
+                .orElseThrow(() -> new LeadNotFoundException("Lead tapılmadı! ID: " + id));
+
+        campaignMapper.updateLeadEntity(lead, requestDTO);
+        lead.setLastActive(LocalDate.now());
+
+        if (requestDTO.getCompanyId() != null) {
+            Company company = companyRepository.findById(requestDTO.getCompanyId())
+                    .orElseThrow(() -> new CompanyNotFoundException(
+                            "Company tapılmadı! ID: " + requestDTO.getCompanyId()));
+            lead.setCompany(company);
+        }
+
+        return campaignMapper.toLeadResponseDTO(campaignLeadRepository.save(lead));
+    }
+
+    @Override
+    public void deleteLead(Long id) {
+        CampaignLead lead = campaignLeadRepository.findById(id)
+                .orElseThrow(() -> new LeadNotFoundException("Lead tapılmadı! ID: " + id));
+
+        campaignLeadRepository.delete(lead);
     }
 }

@@ -2,66 +2,72 @@ package com.example.Excermol.Service.impl;
 
 import com.example.Excermol.Service.CampaignService;
 import com.example.Excermol.entity.Campaign;
+import com.example.Excermol.entity.dtos.CampaignRequestDTO;
+import com.example.Excermol.entity.dtos.CampaignResponseDto;
 import com.example.Excermol.exception.CampaignNotFoundException;
+import com.example.Excermol.mapper.CampaignMapper;
 import com.example.Excermol.repository.CampaignRepository;
-import lombok.RequiredArgsConstructor;
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
-@RequiredArgsConstructor
+@Transactional
 public class CampaignServiceImpl implements CampaignService {
 
+
     private final CampaignRepository campaignRepository;
+    private final CampaignMapper campaignMapper;
 
-    // BaseService metodları
-//    @Override
-//    public List<Campaign> getAll() {
-//        return campaignRepository.findAll();
-//    }
-//
-//    @Override
-//    public Optional<Campaign> getById(Long id) {
-//        return campaignRepository.findById(id);
-//    }
-//
-//    @Override
-//    public Campaign save(Campaign campaign) {
-//        return campaignRepository.save(campaign);
-//    }
-//
-//    @Override
-//    public void deleteById(Long id) {
-//        campaignRepository.deleteById(id);
-//    }
+    public CampaignServiceImpl(CampaignRepository campaignRepository,
+                               CampaignMapper campaignMapper) {
+        this.campaignRepository = campaignRepository;
+        this.campaignMapper = campaignMapper;
+    }
 
-    // Campaign update metodu
-    public Campaign updateCampaign(Long id, Campaign updatedCampaign) {
+    @Override
+    public CampaignResponseDto createCampaign(CampaignRequestDTO requestDTO) {
+        Campaign campaign = campaignMapper.toEntity(requestDTO);
+        return campaignMapper.toResponseDTO(campaignRepository.save(campaign));
+    }
+
+    @Override
+    public List<CampaignResponseDto> getAllCampaigns() {
+        return campaignRepository.findAll()
+                .stream()
+                .map(campaignMapper::toResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public CampaignResponseDto getCampaignById(Long id) {
         Campaign campaign = campaignRepository.findById(id)
-                .orElseThrow(() -> new CampaignNotFoundException("Campaign ID = " + id + " tapılmadı!"));
+                .orElseThrow(() -> new CampaignNotFoundException(
+                        "Campaign tapılmadı! ID: " + id));
 
+        return campaignMapper.toResponseDTO(campaign);
+    }
 
+    @Override
+    public CampaignResponseDto updateCampaign(Long id, CampaignRequestDTO requestDTO) {
+        Campaign campaign = campaignRepository.findById(id)
+                .orElseThrow(() -> new CampaignNotFoundException(
+                        "Campaign tapılmadı! ID: " + id));
 
-        campaign.setName(updatedCampaign.getName());
-        campaign.setSequenceStarted(updatedCampaign.getSequenceStarted());
-        campaign.setOpenRate(updatedCampaign.getOpenRate());
-        campaign.setReplyRate(updatedCampaign.getReplyRate());
-        campaign.setBounceRate(updatedCampaign.getBounceRate());
-        campaign.setStatus(updatedCampaign.getStatus());
+        campaignMapper.updateEntity(campaign, requestDTO);
 
-        // Leads və Emails update lazımdırsa burada əlavə edə bilərsən
-        // campaign.getLeads().clear();
-        // if (updatedCampaign.getLeads() != null) {
-        //     campaign.getLeads().addAll(updatedCampaign.getLeads());
-        // }
-        //
-        // campaign.getEmails().clear();
-        // if (updatedCampaign.getEmails() != null) {
-        //     campaign.getEmails().addAll(updatedCampaign.getEmails());
-        // }
+        return campaignMapper.toResponseDTO(campaignRepository.save(campaign));
+    }
 
-        return campaignRepository.save(campaign);
+    @Override
+    public void deleteCampaign(Long id) {
+        Campaign campaign = campaignRepository.findById(id)
+                .orElseThrow(() -> new CampaignNotFoundException(
+                        "Campaign tapılmadı! ID: " + id));
+
+        campaignRepository.delete(campaign);
     }
 }
