@@ -58,6 +58,7 @@ public class PersonServiceImpl implements PersonService {
 
         Person person = personMapper.toEntity(requestDTO);
 
+
         if (requestDTO.getCompanyId() != null) {
             Company company = companyRepository.findById(requestDTO.getCompanyId())
                     .orElseThrow(() -> new CompanyNotFoundException(
