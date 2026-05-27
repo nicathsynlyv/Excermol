@@ -1,97 +1,85 @@
-//package com.example.Excermol.controller;
-//
-//import com.example.Excermol.Service.impl.PersonServiceImpl;
-//import com.example.Excermol.entity.Person;
-//import com.example.Excermol.enums.PersonStatus;
-//
-//import io.swagger.v3.oas.annotations.Operation;
-//import io.swagger.v3.oas.annotations.responses.ApiResponse;
-//import io.swagger.v3.oas.annotations.responses.ApiResponses;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.Pageable;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//
-//@RestController
-//@RequestMapping("/api/persons")
-//@RequiredArgsConstructor
-//public class PersonController {
-//
-//    private final PersonServiceImpl personServiceImpl;
-//
-//    // ---- CRUD ----
-//
-//    @Operation(summary = "Get all persons", description = "Bütün person siyahısını qaytarır")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
-//    })
-//    @GetMapping
-//    public ResponseEntity<List<Person>> getAll() {
-//        return ResponseEntity.ok(personServiceImpl.getAll());
-//    }
-//
-//    @Operation(summary = "Get person by ID", description = "Verilən ID-yə görə person qaytarır")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Person found"),
-//            @ApiResponse(responseCode = "404", description = "Person not found")
-//    })
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Person> getById(@PathVariable Long id) {
-//        return personServiceImpl.getById(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @Operation(summary = "Create or update person", description = "Yeni person əlavə edir və ya mövcud person-u update edir")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Person saved successfully")
-//    })
-//    @PostMapping
-//    public ResponseEntity<Person> save(@RequestBody Person person) {
-//        return ResponseEntity.ok(personServiceImpl.save(person));
-//    }
-//
-//    @Operation(summary = "Delete person by ID", description = "Verilən ID-yə görə person silir")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "204", description = "Person deleted successfully"),
-//            @ApiResponse(responseCode = "404", description = "Person not found")
-//    })
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> delete(@PathVariable Long id) {
-//        personServiceImpl.deleteById(id);
-//        return ResponseEntity.noContent().build();
-//    }
-//
-//    // ---- Əlavə metodlar ----
-//
-//    @Operation(summary = "Get persons by status", description = "Status-a görə person-ları qaytarır")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successfully retrieved by status")
-//    })
-//    @GetMapping("/status/{status}")
-//    public ResponseEntity<List<Person>> getByStatus(@PathVariable PersonStatus status) {
-//        return ResponseEntity.ok(personServiceImpl.getByStatus(status));
-//    }
-//
-//    @Operation(summary = "Search persons by name", description = "Adına görə person-ları axtarır (case insensitive)")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successfully searched by name")
-//    })
-//    @GetMapping("/search")
-//    public ResponseEntity<List<Person>> searchByName(@RequestParam String name) {
-//        return ResponseEntity.ok(personServiceImpl.searchByName(name));
-//    }
-//
-//
-//    @Operation(summary = "Get all persons with pagination", description = "Pagination və sort ilə person siyahısını qaytarır")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successfully retrieved paginated list")
-//    })
-//    @GetMapping("/paged")
-//    public ResponseEntity<Page<Person>> getAllWithPagination(Pageable pageable) {
-//        return ResponseEntity.ok(personServiceImpl.getAllWithPagination(pageable));
-//    }
-//}
+package com.example.Excermol.controller;
+
+import com.example.Excermol.Service.PersonService;
+
+import com.example.Excermol.entity.dtos.PersonRequestDTO;
+import com.example.Excermol.entity.dtos.PersonResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/people")
+@Tag(name = "Person Controller", description = "Person CRUD əməliyyatları")
+
+public class PersonController {
+
+    private final PersonService personService;
+
+    public PersonController(PersonService personService) {
+        this.personService = personService;
+    }
+
+    @Operation(summary = "Yeni person yarat")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Person uğurla yaradıldı",
+                    content = @Content(schema = @Schema(implementation = PersonResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Yanlış request body", content = @Content)
+    })
+    @PostMapping
+    public ResponseEntity<PersonResponseDTO> createPerson(
+            @Valid @RequestBody PersonRequestDTO requestDTO) {
+        return ResponseEntity.status(201).body(personService.createPerson(requestDTO));
+    }
+
+    @Operation(summary = "Bütün person-ları gətir")
+    @ApiResponse(responseCode = "200", description = "Siyahı uğurla qaytarıldı",
+            content = @Content(schema = @Schema(implementation = PersonResponseDTO.class)))
+    @GetMapping
+    public ResponseEntity<List<PersonResponseDTO>> getAllPersons() {
+        return ResponseEntity.ok(personService.getAllPersons());
+    }
+
+    @Operation(summary = "ID ilə person gətir")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Person tapıldı",
+                    content = @Content(schema = @Schema(implementation = PersonResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Person tapılmadı", content = @Content)
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<PersonResponseDTO> getPersonById(@PathVariable Long id) {
+        return ResponseEntity.ok(personService.getPersonById(id));
+    }
+
+    @Operation(summary = "Person yenilə")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Person uğurla yeniləndi",
+                    content = @Content(schema = @Schema(implementation = PersonResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Person tapılmadı", content = @Content)
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<PersonResponseDTO> updatePerson(
+            @PathVariable Long id,
+            @Valid @RequestBody PersonRequestDTO requestDTO) {
+        return ResponseEntity.ok(personService.updatePerson(id, requestDTO));
+    }
+
+    @Operation(summary = "Person sil")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Person uğurla silindi", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Person tapılmadı", content = @Content)
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePerson(@PathVariable Long id) {
+        personService.deletePerson(id);
+        return ResponseEntity.noContent().build();
+    }
+}

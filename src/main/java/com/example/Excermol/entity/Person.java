@@ -1,11 +1,12 @@
 package com.example.Excermol.entity;
 
+import com.example.Excermol.enums.ConnectionStrength;
 import com.example.Excermol.enums.PersonStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,22 +15,43 @@ import java.util.Set;
 
 @Entity
 @Table(name = "persons")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Builder
 public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Lead Name
-    @Column(nullable = false, length = 120)
+    // Create People popup-dan
+    @Column(nullable = false)
     private String fullName;
+
+    @Column(nullable = false)
+    private String lastName;
 
     // Job Title / Position
     private String jobTitle;
+
+    //website ucun
+    private String websiteUrl;
+
+    // Phone Number
+    private String phone;
+
+    //Social media
+    private String linkedinUrl;
+    private String whatsappUsername;
+    private String twitterName;
+    private String instagramName;
+    private BigDecimal  leadValue;      // $7,738 for example)
+    private String lists;          // "Partnerships"
+    // Connection strength (None, Strong və s.)
+    @Enumerated(EnumType.STRING)
+    private ConnectionStrength connectionStrength; // "None"
+
 
     // Status (Closed, Interested, Engaged...)
     @Enumerated(EnumType.STRING)
@@ -37,32 +59,25 @@ public class Person {
     private PersonStatus status;
 
     // Last Interaction
-    private LocalDateTime lastInteraction;
+    private LocalDateTime lastInteractionAt;
 
-    // Phone Number
-    private String phone;
+    @PrePersist
+    protected void onCreate() {
+        this.lastInteractionAt = LocalDateTime.now();
+    }
 
-    // Website
-    private String websiteUrl;
 
-    // Social Media
-    private String linkedInUrl;
-    private String whatsappUsername;
-    private String twitterHandle;
-    private String instagramHandle;
-
-    // Lead Value ($...)
-    private BigDecimal leadValue;
-
-    // Connection strength (None, Strong və s.)
-    private String connectionStrength;
 
     // --- RELATIONSHIPS ---
 
     // Company ilə əlaqə (Many-to-One)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PersonNote> notes = new HashSet<>();
+
 
     // Tags ilə əlaqə (Many-to-Many)
     @ManyToMany
@@ -76,11 +91,15 @@ public class Person {
     // Emails ilə əlaqə (One-to-Many)
     @ManyToMany(mappedBy = "recipients")
     private Set<Email> receivedEmails;
+
+
     // Person entity-də — şəxsin öz email ünvanı
     @Column(unique = true)
     private String email; // məsələn: "jaman@gmail.com"
 
+
+
     // Activity ilə əlaqə (One-to-Many)
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Activity> activities = new HashSet<>();
+    private Set<PersonActivity> activities = new HashSet<>();
 }

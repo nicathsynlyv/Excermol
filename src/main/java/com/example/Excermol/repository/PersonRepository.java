@@ -6,14 +6,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
-    // Status-a görə adamları tapmaq
+    // Email unikal olduğu üçün
+    Optional<Person> findByEmail(String email);
+
+    // Email mövcuddurmu
+    boolean existsByEmail(String email);
+
+    // Statusa görə filterlə — UI-da Status sütunu var
     List<Person> findByStatus(PersonStatus status);
 
-    // Adına görə axtarış (case-insensitive)
-    List<Person> findByFullNameContainingIgnoreCase(String fullName);
+    // Şirkətə görə filterlə
+    List<Person> findByCompanyId(Long companyId);
 
 
 }

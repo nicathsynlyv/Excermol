@@ -2,21 +2,19 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.ActivityAction;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "activities")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Builder
 //Bu class Person classina uygun yazilir  aktive adamlar ucun
-public class Activity {
+public class PersonActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +30,13 @@ public class Activity {
 
     // Vaxt
     private LocalDateTime performedAt;
+    @PrePersist
+    protected void onCreate() {
+        this.performedAt = LocalDateTime.now();
+    }
 
     // Əlaqəli şəxs
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
 }

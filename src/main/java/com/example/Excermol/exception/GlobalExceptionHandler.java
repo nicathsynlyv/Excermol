@@ -23,7 +23,10 @@ public class GlobalExceptionHandler {
             LeadNotFoundException.class,
             ResourceNotFoundException.class,
             UserNotFoundException.class,
-            CompanyNotFoundException.class
+            CompanyNotFoundException.class,
+            PersonNotFoundException.class,
+            ActivityNotFoundException.class,
+            NoteNotFoundException.class
     })
     public ResponseEntity<Map<String, Object>> handleNotFound(RuntimeException ex) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
