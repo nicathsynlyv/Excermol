@@ -24,6 +24,8 @@ public class PersonActivityController {
         this.personActivityService = personActivityService;
     }
 
+
+
     @Operation(summary = "Şəxsə aid bütün aktivlikləri gətir")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Aktivliklər uğurla qaytarıldı",

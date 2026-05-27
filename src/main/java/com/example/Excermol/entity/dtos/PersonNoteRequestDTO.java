@@ -13,6 +13,5 @@ public class PersonNoteRequestDTO {
 
     private String authorEmail;
 
-    @NotNull(message = "Person ID boş ola bilməz")
     private Long personId;
 }
