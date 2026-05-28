@@ -2,12 +2,11 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.UserRole;
 import com.example.Excermol.enums.UserStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -81,9 +80,11 @@ public class User {
     //task entitysi ile elaqe
     @ManyToMany(mappedBy = "assignees")
     private Set<Task> tasks;
+
     //comments entitysi ile elaqe
     @OneToMany(mappedBy = "author")
     private Set<Comment> comments;
+
     //attachments entitysi ile elaqe
     @OneToMany(mappedBy = "uploadedBy")
     private Set<Attachment> attachments;
