@@ -10,12 +10,18 @@ import java.util.Optional;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
-    // 1️⃣ CompanyName ilə axtarış (Create və ya UI-də lazım olur)
+     // 1️⃣ CompanyName ilə axtarış
     Optional<Company> findByCompanyName(String companyName);
 
-    // 2️⃣ Domain ilə axtarış (duplicate check üçün əhəmiyyətli)
+    // 2️⃣ Domain ilə axtarış (duplicate check)
     Optional<Company> findByDomain(String domain);
 
-    // 3️⃣ Status ilə filter (Closed, Interested, Engaged və s. üçün)
+    // 3️⃣ Status ilə filter
     List<Company> findByStatus(CompanyStatus status);
+
+    // ✅ 4️⃣ Owner-a görə şirkətlər (bir person neçə şirkətin sahibi ola bilər)
+    List<Company> findByOwnerId(Long ownerId);
+
+    // ✅ 5️⃣ Şəhərə görə filter
+    List<Company> findByCity(String city);
 }
