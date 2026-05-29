@@ -147,6 +147,7 @@ public class UserController {
         return ResponseEntity.ok(
                 userService.findActiveUsers()
         );
+
     }
 
     @Operation(summary = "Aktiv istifadəçi sayı")

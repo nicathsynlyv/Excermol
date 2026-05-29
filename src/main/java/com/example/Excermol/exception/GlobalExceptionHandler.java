@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+//hidden swagger de gorunmesin deye qoymusam
 @Hidden
 @ControllerAdvice
 public class GlobalExceptionHandler {

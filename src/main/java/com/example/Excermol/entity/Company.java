@@ -2,7 +2,6 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.CompanyStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -24,16 +23,11 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 120)
-    private String owner;
+
 
     // Lead adi sadəcə string
-    @Column(nullable = false)
-    private String lead;
-    //email ile elaqe
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "email_id")
-    private Email emailAddress;
+    private String leadSource;
+
 
 
     // Status enum
@@ -69,13 +63,30 @@ public class Company {
 
 
     // Bir şirkətə bir neçə şəxs aid ola bilər (One-to-Many)
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    // ✅ Düzgün
+    @OneToMany(mappedBy = "company")
     private Set<Person> employees = new HashSet<>();
+
+    // ✅ Person ilə əlaqə
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private Person owner;
 
 
     //pipeline ile
     @OneToMany(mappedBy = "company")
     private List<Pipeline> pipelines;
+
+
+
+    // ✅ Düzgün — Email entity-ndəki mappedBy
+    @OneToMany(mappedBy = "company")
+    private List<Email> emails = new ArrayList<>();
+
+    // ✅ Şirkətin contact email-i üçün sadə string
+    @Column(unique = true)
+    private String emailAddress; // "anwarhussen@gmail.com"
+
 }
 
 

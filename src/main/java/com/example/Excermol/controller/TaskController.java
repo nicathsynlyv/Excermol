@@ -1,7 +1,6 @@
 package com.example.Excermol.controller;
 
 import com.example.Excermol.Service.TaskService;
-import com.example.Excermol.entity.Task;
 import com.example.Excermol.entity.dtos.TaskRequestDto;
 import com.example.Excermol.entity.dtos.TaskResponseDto;
 import com.example.Excermol.enums.TaskPriority;

@@ -4,12 +4,8 @@ import com.example.Excermol.enums.TaskPriority;
 import com.example.Excermol.enums.TaskStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
-import lombok.*;
-import lombok.Builder;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
+import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -20,7 +16,6 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,7 +6,7 @@ import com.example.Excermol.enums.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+
 import java.util.List;
 
 @Repository
@@ -15,7 +15,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     // 1. Kanban sütunları üçün — olmasa UI işləməz
     List<Task> findByStatusOrderBySortOrderAsc(TaskStatus status);
 
-    // 2. User-in taskları — "Select user" filter üçün
+    // 2. User-in taskları — "Select user" filter üçün ve ya bu usera assign olmus tasklari getirmek
     List<Task> findByAssignees_Id(Long userId);
 
     // 3. Axtarış — UI-da search bar var
