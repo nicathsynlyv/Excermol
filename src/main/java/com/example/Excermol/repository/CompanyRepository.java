@@ -2,6 +2,8 @@ package com.example.Excermol.repository;
 
 import com.example.Excermol.entity.Company;
 import com.example.Excermol.enums.CompanyStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,18 +12,13 @@ import java.util.Optional;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
-     // 1️⃣ CompanyName ilə axtarış
-    Optional<Company> findByCompanyName(String companyName);
+    List<Company> findByCompanyNameContainingIgnoreCase(String companyName);
 
-    // 2️⃣ Domain ilə axtarış (duplicate check)
     Optional<Company> findByDomain(String domain);
-
-    // 3️⃣ Status ilə filter
     List<Company> findByStatus(CompanyStatus status);
-
-    // ✅ 4️⃣ Owner-a görə şirkətlər (bir person neçə şirkətin sahibi ola bilər)
     List<Company> findByOwnerId(Long ownerId);
 
-    // ✅ 5️⃣ Şəhərə görə filter
-    List<Company> findByCity(String city);
+    // ✅ Pagination ilə filter — böyük data olduqda lazım olur
+    Page<Company> findByStatus(CompanyStatus status, Pageable pageable);
+    Page<Company> findByOwnerId(Long ownerId, Pageable pageable);
 }

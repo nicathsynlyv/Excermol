@@ -23,11 +23,9 @@ public class CompanyMapper {
         company.setCity(requestDTO.getCity());
         company.setConnection(requestDTO.getConnection());
         company.setLeadValue(requestDTO.getLeadValue());
-        company.setStatus(
-                requestDTO.getStatus() != null
-                        ? requestDTO.getStatus()
-                        : CompanyStatus.INTERESTED
-        );
+        if (requestDTO.getStatus() != null) {
+            company.setStatus(requestDTO.getStatus());
+        }
         // ownerId → service-də set edirik
         return company;
     }
@@ -67,11 +65,9 @@ public class CompanyMapper {
         company.setCity(requestDTO.getCity());
         company.setConnection(requestDTO.getConnection());
         company.setLeadValue(requestDTO.getLeadValue());
-        company.setStatus(
-                requestDTO.getStatus() != null
-                        ? requestDTO.getStatus()
-                        : CompanyStatus.INTERESTED
-        );
+        if (requestDTO.getStatus() != null) {
+            company.setStatus(requestDTO.getStatus());
+        }
     }
 
     // ✅ List üçün köməkçi metod

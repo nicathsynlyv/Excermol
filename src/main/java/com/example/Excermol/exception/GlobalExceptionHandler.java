@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 //hidden swagger de gorunmesin deye qoymusam
 @Hidden
 @ControllerAdvice
@@ -42,19 +45,25 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
-    // 400 - Validation
+    // 400 - Validation metodunu genişlət — yalnız ilk xətanı deyil, hamısını göstər
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(
             MethodArgumentNotValidException ex) {
-        String message = ex.getBindingResult()
+
+        // ✅ Bütün xətaları göstər
+        List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(e -> e.getField() + ": " + e.getDefaultMessage())
-                .findFirst()
-                .orElse("Validation xətası");
-        return buildResponse(HttpStatus.BAD_REQUEST, message);
-    }
+                .collect(Collectors.toList());
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.put("messages", errors);  // ✅ "message" yox, "messages" — list qaytarır
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
     // 500 - Generic
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
