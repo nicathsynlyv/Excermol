@@ -33,7 +33,10 @@ public class Company {
     // Status enum
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private CompanyStatus status;
+//    private CompanyStatus status;
+    private CompanyStatus status = CompanyStatus.INTERESTED; // ✅
+
+
 
     // Şəhər
     private String city;
@@ -49,42 +52,39 @@ public class Company {
     private String companyName;
 
     // Domain
+    @Column(length = 255, unique = true)
     private String domain;
 
 
     // 🔗 Task ilə əlaqə
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "company")
     private List<Task> tasks = new ArrayList<>();
 
 
     // Bir şirkətin çoxlu lead-i ola bilər compaign lead ile elaqe
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CampaignLead> leads;
+    @OneToMany(mappedBy = "company")
+    private List<CampaignLead> leads = new ArrayList<>();
 
 
     // Bir şirkətə bir neçə şəxs aid ola bilər (One-to-Many)
     // ✅ Düzgün
     @OneToMany(mappedBy = "company")
-    private Set<Person> employees = new HashSet<>();
+    private Set<Person> employees = new HashSet<>();  // şirkətdə işləyən bütün şəxslər
 
     // ✅ Person ilə əlaqə
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
-    private Person owner;
+    private Person owner;  // şirkətin sahibi
 
 
-    //pipeline ile
     @OneToMany(mappedBy = "company")
-    private List<Pipeline> pipelines;
+    private List<Pipeline> pipelines = new ArrayList<>();  // ✅
 
-
-
-    // ✅ Düzgün — Email entity-ndəki mappedBy
     @OneToMany(mappedBy = "company")
-    private List<Email> emails = new ArrayList<>();
+    private List<Email> emails = new ArrayList<>();  // ✅
 
     // ✅ Şirkətin contact email-i üçün sadə string
-    @Column(unique = true)
+    @Column(length = 150)
     private String emailAddress; // "anwarhussen@gmail.com"
 
 }
