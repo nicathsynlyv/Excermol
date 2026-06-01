@@ -57,8 +57,8 @@ public class Organization {
     private Integer employeesRange;
 
     //pipeline ile
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-    private List<Pipeline> pipelines;
+//    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+//    private List<Pipeline> pipelines;
 
 
 }

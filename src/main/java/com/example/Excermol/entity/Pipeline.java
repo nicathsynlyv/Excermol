@@ -1,10 +1,9 @@
 package com.example.Excermol.entity;
 
+import com.example.Excermol.enums.PipelineStage;
 import com.example.Excermol.enums.PipelineStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,7 +11,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "pipelines")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pipeline {
@@ -24,10 +24,17 @@ public class Pipeline {
     @Column(nullable = false)
     private String name;
 
-    // Status: ENGAGED, INTERESTED, WARM, CLOSED
+    // Kart uzerundeki Status: AGENCY,STARTUP,SCALE_UP
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PipelineStatus status;
+
+
+    // Sutun:WARM,CLOSE,INTERESTED, ENGAGED
+    @Enumerated(EnumType.STRING)
+    private PipelineStage stage;
+
+
 
     // Əlaqəli şirkət
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,6 +44,8 @@ public class Pipeline {
     // Tarix
     private LocalDate date;
 
+    // serf olunan saat
+    private Integer hours;
 
     // Pul dəyəri
     @Column(precision = 15, scale = 2)
@@ -55,14 +64,22 @@ public class Pipeline {
     @Column(length = 2000)
     private String description;
 
-    //organization ile
-    @ManyToOne
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
+
+    // layihe genislendirmek istesem ayri entity yazaram gelecekde
+
+    @Column(length = 500)
 
 
-    //pipelineLink ile
-    @OneToMany(mappedBy = "pipeline", cascade = CascadeType.ALL)
-    private List<PipelineLink> links; // call, mail, chat və s.
+    private String callLink;
+
+    @Column(length = 500)
+    private String mailLink;
+
+    @Column(length = 500)
+    private String chatLink;
+
+
+
+
 
 }

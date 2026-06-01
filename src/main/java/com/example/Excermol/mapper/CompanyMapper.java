@@ -3,8 +3,9 @@ package com.example.Excermol.mapper;
 import com.example.Excermol.entity.Company;
 import com.example.Excermol.entity.dtos.CompanyRequestDTO;
 import com.example.Excermol.entity.dtos.CompanyResponseDTO;
-import com.example.Excermol.enums.CompanyStatus;
+
 import org.springframework.stereotype.Component;
+
 
 import java.util.Collections;
 import java.util.List;

@@ -5,6 +5,7 @@ import com.example.Excermol.entity.dtos.UserRequestDto;
 import com.example.Excermol.entity.dtos.UserResponseDto;
 import com.example.Excermol.enums.UserRole;
 import com.example.Excermol.enums.UserStatus;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
