@@ -15,6 +15,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -93,13 +94,19 @@ public class User {
     @ManyToMany(mappedBy = "assignees")
     private List<Pipeline> pipelines;
 
+//new changes
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Person> persons = new ArrayList<>();
+
+    // company ile gelecek ucun
+    @OneToMany(mappedBy = "user")
+    private List<Company> companies;
+
 
 //compagins ile elaqe
 //    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
 //    private List<Campaign> campaigns;
-////company ile
-//    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Company> companies;
+
 ////form ile
 //    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Form> forms = new ArrayList<>();

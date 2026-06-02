@@ -4,6 +4,7 @@ import com.example.Excermol.Service.PersonService;
 
 import com.example.Excermol.entity.dtos.PersonRequestDTO;
 import com.example.Excermol.entity.dtos.PersonResponseDTO;
+import com.example.Excermol.enums.PersonStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -82,4 +83,40 @@ public class PersonController {
         personService.deletePerson(id);
         return ResponseEntity.noContent().build();
     }
+
+
+    //user new changes
+    @Operation(summary = "User-ə məxsus bütün persons")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Persons siyahısı uğurla qaytarıldı"),
+            @ApiResponse(responseCode = "404", description = "User tapılmadı")
+    })
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<PersonResponseDTO>> getPersonsByUser(
+            @PathVariable Long userId) {
+        return ResponseEntity.ok(
+                personService.getPersonsByUser(userId)
+        );
+    }
+
+
+//user new changes
+
+    @Operation(summary = "User-ə məxsus persons + status filter")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Filterlənmiş persons siyahısı qaytarıldı"),
+            @ApiResponse(responseCode = "400", description = "Status dəyəri yanlışdır"),
+            @ApiResponse(responseCode = "404", description = "User tapılmadı"
+            )
+    })
+    @GetMapping("/user/{userId}/status/{status}")
+    public ResponseEntity<List<PersonResponseDTO>> getPersonsByUserAndStatus(
+            @PathVariable Long userId,
+            @PathVariable PersonStatus status) {
+        return ResponseEntity.ok(
+                personService.getPersonsByUserAndStatus(userId, status)
+        );
+    }
+
+
 }

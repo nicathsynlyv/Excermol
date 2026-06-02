@@ -102,4 +102,20 @@ public class Person {
     // Activity ilə əlaqə (One-to-Many)
     @OneToMany(mappedBy = "person",cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PersonActivity> activities = new HashSet<>();
+
+
+
+
+
+
+
+
+
+
+
+
+// gelecekde duzeltmek ucun    // Person hansı user-ə məxsusdur new changes
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

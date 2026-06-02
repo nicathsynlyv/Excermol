@@ -33,7 +33,7 @@ public class PersonMapper {
         person.setLists(requestDTO.getLists());
         person.setConnectionStrength(requestDTO.getConnectionStrength());
         person.setStatus(requestDTO.getStatus());
-        // companyId və tagIds → service-də set edirik
+        // companyId, tagIds və userId → service-də set edirik
         return person;
     }
 
@@ -70,6 +70,11 @@ public class PersonMapper {
                     .map(Tag::getName)
                     .collect(Collectors.toSet());
             responseDTO.setTagNames(tagNames);
+        }
+
+        // User new changes
+        if (person.getUser() != null) {
+            responseDTO.setUserId(person.getUser().getId());
         }
 
         return responseDTO;

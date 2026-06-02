@@ -23,4 +23,10 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     List<Person> findByCompanyId(Long companyId);
 
 
+
+    // User ← new changes
+    List<Person> findByUserId(Long userId);
+    List<Person> findByUserIdAndStatus(Long userId, PersonStatus status);
+
+
 }

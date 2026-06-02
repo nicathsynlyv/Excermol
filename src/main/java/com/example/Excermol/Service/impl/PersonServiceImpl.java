@@ -7,17 +7,21 @@ import com.example.Excermol.Service.PersonService;
 import com.example.Excermol.entity.Company;
 import com.example.Excermol.entity.Person;
 import com.example.Excermol.entity.Tag;
+import com.example.Excermol.entity.User;
 import com.example.Excermol.entity.dtos.PersonActivityRequestDTO;
 import com.example.Excermol.entity.dtos.PersonRequestDTO;
 import com.example.Excermol.entity.dtos.PersonResponseDTO;
 import com.example.Excermol.enums.ActivityAction;
+import com.example.Excermol.enums.PersonStatus;
 import com.example.Excermol.exception.CompanyNotFoundException;
 import com.example.Excermol.exception.EmailAlreadyExistsException;
 import com.example.Excermol.exception.PersonNotFoundException;
+import com.example.Excermol.exception.UserNotFoundException;
 import com.example.Excermol.mapper.PersonMapper;
 import com.example.Excermol.repository.CompanyRepository;
 import com.example.Excermol.repository.PersonRepository;
 import com.example.Excermol.repository.TagRepository;
+import com.example.Excermol.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -37,17 +41,20 @@ public class PersonServiceImpl implements PersonService {
     private final TagRepository tagRepository;
     private final PersonMapper personMapper;
     private final PersonActivityService personActivityService;
+    private final UserRepository userRepository;
 
     public PersonServiceImpl(PersonRepository personRepository,
                              CompanyRepository companyRepository,
                              TagRepository tagRepository,
                              PersonMapper personMapper,
-                             PersonActivityService personActivityService) {
+                             PersonActivityService personActivityService,
+                             UserRepository userRepository) {
         this.personRepository = personRepository;
         this.companyRepository = companyRepository;
         this.tagRepository = tagRepository;
         this.personMapper = personMapper;
         this.personActivityService = personActivityService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -64,6 +71,14 @@ public class PersonServiceImpl implements PersonService {
                     .orElseThrow(() -> new CompanyNotFoundException(
                             "Company tapılmadı! ID: " + requestDTO.getCompanyId()));
             person.setCompany(company);
+        }
+
+        // User ← new changes
+        if (requestDTO.getUserId() != null) {
+            User user = userRepository.findById(requestDTO.getUserId())
+                    .orElseThrow(() -> new UserNotFoundException(
+                            "User tapılmadı! ID: " + requestDTO.getUserId()));
+            person.setUser(user);
         }
 
         if (requestDTO.getTagIds() != null && !requestDTO.getTagIds().isEmpty()) {
@@ -148,5 +163,24 @@ public class PersonServiceImpl implements PersonService {
                 .orElseThrow(() -> new PersonNotFoundException(
                         "Person tapılmadı! ID: " + id));
         personRepository.delete(person);
+    }
+
+
+
+//user new changes
+    @Override
+    public List<PersonResponseDTO> getPersonsByUser(Long userId) {
+        return personRepository.findByUserId(userId)
+                .stream()
+                .map(personMapper::toResponseDTO)
+                .toList();
+    }
+//user new changes
+    @Override
+    public List<PersonResponseDTO> getPersonsByUserAndStatus(Long userId, PersonStatus status) {
+        return personRepository.findByUserIdAndStatus(userId, status)
+                .stream()
+                .map(personMapper::toResponseDTO)
+                .toList();
     }
 }

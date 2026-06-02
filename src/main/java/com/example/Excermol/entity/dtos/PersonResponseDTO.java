@@ -35,4 +35,8 @@ public class PersonResponseDTO {
 
     // Tags — UI-da "Agency", "Startup", "Scale Up"
     private Set<String> tagNames;
+
+//new changes
+    private Long userId;
+
 }

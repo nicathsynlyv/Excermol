@@ -87,6 +87,23 @@ public class Company {
     @Column(length = 150)
     private String emailAddress; // "anwarhussen@gmail.com"
 
+
+
+
+
+
+
+
+
+
+
+
+
+//gelecekde user ile relation duzeltmek ucun
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }
 
 

@@ -28,6 +28,9 @@ public class PersonRequestDTO {
     @NotNull(message = "Status boş ola bilməz")
     private PersonStatus status;
 
+
+
+
     // Details səhifəsindən — optional fieldlər
     private String jobTitle;
     private String websiteUrl;
@@ -43,4 +46,9 @@ public class PersonRequestDTO {
 
     private Long companyId;
     private Set<Long> tagIds;
+
+
+    //new changes
+    @NotNull(message = "User boş ola bilməz")
+    private Long userId;
 }
