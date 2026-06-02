@@ -94,18 +94,17 @@ public class User {
     @ManyToMany(mappedBy = "assignees")
     private List<Pipeline> pipelines;
 
-//new changes
+    //new changes person user elage
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Person> persons = new ArrayList<>();
 
-    // company ile gelecek ucun
-    @OneToMany(mappedBy = "user")
-    private List<Company> companies;
+    //  Company ilə əlaqə new changes
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Company> companies = new ArrayList<>();
 
-
-//compagins ile elaqe
-//    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
-//    private List<Campaign> campaigns;
+    //new changes compaign user relation
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Campaign> campaigns;
 
 ////form ile
 //    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)

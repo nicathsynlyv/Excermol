@@ -23,4 +23,8 @@ public class CompanyResponseDTO {
     // Owner
     private Long ownerId;
     private String ownerName;
+
+
+    // User ← new changes
+    private Long userId;
 }

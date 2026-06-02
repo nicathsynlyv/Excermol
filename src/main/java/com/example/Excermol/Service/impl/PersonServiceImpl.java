@@ -144,6 +144,15 @@ public class PersonServiceImpl implements PersonService {
             person.setTags(tags);
         }
 
+
+        // User ← new changes
+        if (requestDTO.getUserId() != null) {
+            User user = userRepository.findById(requestDTO.getUserId())
+                    .orElseThrow(() -> new UserNotFoundException(
+                            "User tapılmadı! ID: " + requestDTO.getUserId()));
+            person.setUser(user);
+        }
+
         person.setLastInteractionAt(LocalDateTime.now());
 
         Person saved = personRepository.save(person);

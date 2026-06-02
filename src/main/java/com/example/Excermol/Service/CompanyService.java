@@ -37,4 +37,11 @@ public interface CompanyService {
 
     // ✅ Owner-a görə şirkətlər
     List<CompanyResponseDTO> getCompaniesByOwner(Long ownerId);
+
+
+
+
+    // User ← new changes
+    List<CompanyResponseDTO> getCompaniesByUser(Long userId);
+    List<CompanyResponseDTO> getCompaniesByUserAndStatus(Long userId, CompanyStatus status);
 }

@@ -27,7 +27,7 @@ public class CompanyMapper {
         if (requestDTO.getStatus() != null) {
             company.setStatus(requestDTO.getStatus());
         }
-        // ownerId → service-də set edirik
+        // ownerId, userId → service-də set edirik
         return company;
     }
 
@@ -52,6 +52,11 @@ public class CompanyMapper {
             }
             responseDTO.setOwnerId(company.getOwner().getId());
             responseDTO.setOwnerName(ownerName);
+        }
+
+        // User ← Ynew changes
+        if (company.getUser() != null) {
+            responseDTO.setUserId(company.getUser().getId());
         }
 
         return responseDTO;

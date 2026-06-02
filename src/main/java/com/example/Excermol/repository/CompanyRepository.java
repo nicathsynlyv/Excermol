@@ -21,4 +21,10 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     // ✅ Pagination ilə filter — böyük data olduqda lazım olur
     Page<Company> findByStatus(CompanyStatus status, Pageable pageable);
     Page<Company> findByOwnerId(Long ownerId, Pageable pageable);
+
+
+
+    // User ← new changes
+    List<Company> findByUserId(Long userId);
+    List<Company> findByUserIdAndStatus(Long userId, CompanyStatus status);
 }

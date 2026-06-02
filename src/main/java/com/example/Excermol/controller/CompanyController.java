@@ -110,4 +110,31 @@ public class CompanyController {
                 companyService.searchCompanies(name)
         );
     }
+
+
+
+    //user new changes
+    @Operation(summary = "User-ə məxsus bütün şirkətlər")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Şirkətlər siyahısı uğurla qaytarıldı"),
+            @ApiResponse(responseCode = "404", description = "User tapılmadı")})
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<CompanyResponseDTO>> getCompaniesByUser(
+            @PathVariable Long userId) {
+        return ResponseEntity.ok(
+                companyService.getCompaniesByUser(userId)
+        );
+    }
+    //user new changes
+    @Operation(summary = "User-ə məxsus şirkətlər + status filter")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "Filterlənmiş şirkətlər siyahısı qaytarıldı"),
+            @ApiResponse(responseCode = "400", description = "Status dəyəri yanlışdır"),
+            @ApiResponse(responseCode = "404", description = "User tapılmadı")})
+    @GetMapping("/user/{userId}/status/{status}")
+    public ResponseEntity<List<CompanyResponseDTO>> getCompaniesByUserAndStatus(
+            @PathVariable Long userId,
+            @PathVariable CompanyStatus status) {
+        return ResponseEntity.ok(
+                companyService.getCompaniesByUserAndStatus(userId,status));
+    }
 }

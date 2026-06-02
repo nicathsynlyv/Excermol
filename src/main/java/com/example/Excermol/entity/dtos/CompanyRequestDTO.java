@@ -31,4 +31,10 @@ public class CompanyRequestDTO {
 
     // Owner — şirkətin sahibi
     private Long ownerId;
+
+
+
+    // User ← new changes
+    @NotNull(message = "User boş ola bilməz")
+    private Long userId;
 }

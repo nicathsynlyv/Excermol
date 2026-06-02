@@ -3,15 +3,18 @@ package com.example.Excermol.Service.impl;
 import com.example.Excermol.Service.CompanyService;
 import com.example.Excermol.entity.Company;
 import com.example.Excermol.entity.Person;
+import com.example.Excermol.entity.User;
 import com.example.Excermol.entity.dtos.CompanyRequestDTO;
 import com.example.Excermol.entity.dtos.CompanyResponseDTO;
 import com.example.Excermol.enums.CompanyStatus;
 import com.example.Excermol.exception.CompanyNotFoundException;
 import com.example.Excermol.exception.DomainAlreadyExistsException;
 import com.example.Excermol.exception.PersonNotFoundException;
+import com.example.Excermol.exception.UserNotFoundException;
 import com.example.Excermol.mapper.CompanyMapper;
 import com.example.Excermol.repository.CompanyRepository;
 import com.example.Excermol.repository.PersonRepository;
+import com.example.Excermol.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +30,16 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final CompanyMapper companyMapper;
     private final PersonRepository personRepository;
+    private final UserRepository userRepository;
 
     public CompanyServiceImpl(CompanyRepository companyRepository,
                               CompanyMapper companyMapper,
-                              PersonRepository personRepository) {
+                              PersonRepository personRepository,
+                              UserRepository userRepository) {
         this.companyRepository = companyRepository;
         this.companyMapper = companyMapper;
         this.personRepository = personRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -54,6 +60,14 @@ public class CompanyServiceImpl implements CompanyService {
                     .orElseThrow(() -> new PersonNotFoundException(
                             "Person tapılmadı! ID: " + requestDTO.getOwnerId()));
             company.setOwner(owner);
+        }
+
+        // User ← new changes
+        if (requestDTO.getUserId() != null) {
+            User user = userRepository.findById(requestDTO.getUserId())
+                    .orElseThrow(() -> new UserNotFoundException(
+                            "User tapılmadı! ID: " + requestDTO.getUserId()));
+            company.setUser(user);
         }
 
         Company saved = companyRepository.save(company);
@@ -86,6 +100,15 @@ public class CompanyServiceImpl implements CompanyService {
         if (!company.getDomain().equals(requestDTO.getDomain())) {
             if (companyRepository.findByDomain(requestDTO.getDomain()).isPresent()) {
                 throw new DomainAlreadyExistsException("Bu domain artıq mövcuddur: " + requestDTO.getDomain());
+            }
+
+
+            // User ← new changes
+            if (requestDTO.getUserId() != null) {
+                User user = userRepository.findById(requestDTO.getUserId())
+                        .orElseThrow(() -> new UserNotFoundException(
+                                "User tapılmadı! ID: " + requestDTO.getUserId()));
+                company.setUser(user);
             }
         }
 
@@ -130,5 +153,17 @@ public class CompanyServiceImpl implements CompanyService {
         return companyMapper.toResponseList(companies);
     }
 
+
+//user new changes
+    @Override
+    public List<CompanyResponseDTO> getCompaniesByUser(Long userId) {
+        return companyMapper.toResponseList(companyRepository.findByUserId(userId));
+    }
+//user new changes
+    @Override
+    public List<CompanyResponseDTO> getCompaniesByUserAndStatus(Long userId, CompanyStatus status) {
+        return companyMapper.toResponseList(
+                companyRepository.findByUserIdAndStatus(userId, status));
+    }
 }
 
