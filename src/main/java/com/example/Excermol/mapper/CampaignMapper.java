@@ -18,6 +18,8 @@ public class CampaignMapper {  // CampaignRequestDTO -> Entity
         campaign.setName(requestDTO.getName());
         campaign.setStatus(requestDTO.getStatus());
         return campaign;
+        // userId → service-də set edirik
+
     }
 
     // Campaign Entity -> ResponseDTO
@@ -27,6 +29,11 @@ public class CampaignMapper {  // CampaignRequestDTO -> Entity
         responseDTO.setName(campaign.getName());
         responseDTO.setStatus(campaign.getStatus());
         responseDTO.setCreatedAt(campaign.getCreatedAt());
+
+        // User ← new changes
+        if (campaign.getUser() != null) {
+            responseDTO.setUserId(campaign.getUser().getId());
+        }
 
         // Statistikaları leads-dən hesabla
         List<CampaignLead> leads = campaign.getLeads();

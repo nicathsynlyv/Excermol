@@ -3,6 +3,7 @@ package com.example.Excermol.controller;
 import com.example.Excermol.Service.CampaignService;
 import com.example.Excermol.entity.dtos.CampaignRequestDTO;
 import com.example.Excermol.entity.dtos.CampaignResponseDto;
+import com.example.Excermol.enums.CampaignStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -79,5 +80,34 @@ public class CampaignController {
     public ResponseEntity<Void> deleteCampaign(@PathVariable Long id) {
         campaignService.deleteCampaign(id);
         return ResponseEntity.noContent().build();
+    }
+
+
+//user new changes
+@Operation(summary = "User-ə məxsus bütün kampaniyalar")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Siyahı uğurla qaytarıldı"),
+        @ApiResponse(responseCode = "404", description = "İstifadəçi tapılmadı"),
+        @ApiResponse(responseCode = "500", description = "Daxili server xətası")
+})
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<CampaignResponseDto>> getCampaignsByUser(
+            @PathVariable Long userId) {
+        return ResponseEntity.ok(campaignService.getCampaignsByUser(userId));
+    }
+//user new changes
+
+    @Operation(summary = "User-ə məxsus kampaniyalar + status filter")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Siyahı uğurla qaytarıldı"),
+            @ApiResponse(responseCode = "400", description = "Yanlış status dəyəri göndərilib"),
+            @ApiResponse(responseCode = "404", description = "İstifadəçi tapılmadı"),
+            @ApiResponse(responseCode = "500", description = "Daxili server xətası")
+    })
+    @GetMapping("/user/{userId}/status/{status}")
+    public ResponseEntity<List<CampaignResponseDto>> getCampaignsByUserAndStatus(
+            @PathVariable Long userId,
+            @PathVariable CampaignStatus status) {
+        return ResponseEntity.ok(campaignService.getCampaignsByUserAndStatus(userId, status));
     }
 }

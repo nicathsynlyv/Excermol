@@ -18,4 +18,8 @@ public class CampaignResponseDto {
     private Double openRate;
     private Double replyRate;
     private Double bounceRate;
+
+
+    // User ← new changes
+    private Long userId;
 }
