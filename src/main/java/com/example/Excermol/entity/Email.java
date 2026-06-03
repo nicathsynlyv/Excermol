@@ -62,15 +62,16 @@ public class Email {
     private List<String> labels; // Client, Work, Contest, Social media
 
 
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
     // String əvəzinə:
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
@@ -81,5 +82,10 @@ public class Email {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+
+    //gelecekede form routinglere baxmaq ucun istifade oluna biler
+    @OneToMany(mappedBy = "email")
+    private List<FormRouting> routings = new ArrayList<>();
 
 }

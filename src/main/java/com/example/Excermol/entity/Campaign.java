@@ -42,9 +42,8 @@ public class Campaign {
     private List<Email> emails;
 
 
-
-//user new changes
+   //user new changes
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 }

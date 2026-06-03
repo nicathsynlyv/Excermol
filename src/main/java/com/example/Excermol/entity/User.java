@@ -106,9 +106,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Campaign> campaigns;
 
-////form ile
-//    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Form> forms = new ArrayList<>();
+    //form ile
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Form> forms = new ArrayList<>();
 
 
 }

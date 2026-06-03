@@ -10,7 +10,9 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -46,7 +48,7 @@ public class Person {
     private String whatsappUsername;
     private String twitterName;
     private String instagramName;
-    private BigDecimal  leadValue;      // $7,738 for example)
+    private BigDecimal leadValue;      // $7,738 for example)
     private String lists;          // "Partnerships"
     // Connection strength (None, Strong və s.)
     @Enumerated(EnumType.STRING)
@@ -65,7 +67,6 @@ public class Person {
     protected void onCreate() {
         this.lastInteractionAt = LocalDateTime.now();
     }
-
 
 
     // --- RELATIONSHIPS ---
@@ -98,24 +99,18 @@ public class Person {
     private String email; // məsələn: "jaman@gmail.com"
 
 
-
     // Activity ilə əlaqə (One-to-Many)
-    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PersonActivity> activities = new HashSet<>();
 
 
-
-
-
-
-
-
-
-
-
-
-// gelecekde duzeltmek ucun    // Person hansı user-ə məxsusdur new changes
+    //Person hansı user-ə məxsusdur new changes
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+
+    //form response ucun
+    @OneToMany(mappedBy = "contact")
+    private List<FormResponse> formResponses = new ArrayList<>();
 }
