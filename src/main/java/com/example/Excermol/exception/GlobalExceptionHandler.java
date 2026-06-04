@@ -30,7 +30,11 @@ public class GlobalExceptionHandler {
             PersonNotFoundException.class,
             ActivityNotFoundException.class,
             NoteNotFoundException.class,
-            PipelineNotFoundException.class
+            PipelineNotFoundException.class,
+            FormNotFoundException.class,
+            FormFieldNotFoundException.class,
+            FormResponseNotFoundException.class,
+            FormRoutingNotFoundException.class
     })
     public ResponseEntity<Map<String, Object>> handleNotFound(RuntimeException ex) {
         return buildResponse(

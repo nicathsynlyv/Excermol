@@ -29,15 +29,6 @@ public class Form {
     @Column(name = "responses_count")
     private Integer responsesCount = 0;
 
-    //build ile elaqe
-    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FormField> fields = new ArrayList<>();
-    //response ile elaqe
-    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FormResponse> responses = new ArrayList<>();
-    //routing ile elaqe
-    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FormRouting> routings = new ArrayList<>();
 
     @Column(name = "links")
     private String links; // form URL
@@ -67,6 +58,16 @@ public class Form {
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
+
+    //build ile elaqe
+    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FormField> fields = new ArrayList<>();
+    //response ile elaqe
+    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FormResponse> responses = new ArrayList<>();
+    //routing ile elaqe
+    @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FormRouting> routings = new ArrayList<>();
 
 
 }

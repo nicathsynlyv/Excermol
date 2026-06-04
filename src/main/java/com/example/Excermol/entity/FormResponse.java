@@ -13,7 +13,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//forms page davami
 public class FormResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
