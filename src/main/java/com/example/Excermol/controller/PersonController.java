@@ -99,7 +99,6 @@ public class PersonController {
         );
     }
 
-
 //user new changes
 
     @Operation(summary = "User-ə məxsus persons + status filter")
