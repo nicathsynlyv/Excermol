@@ -25,6 +25,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+//setting page in de UserProfile ile eyni seydir
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

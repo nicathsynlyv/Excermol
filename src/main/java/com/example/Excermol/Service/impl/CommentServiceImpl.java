@@ -7,7 +7,6 @@ import com.example.Excermol.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
