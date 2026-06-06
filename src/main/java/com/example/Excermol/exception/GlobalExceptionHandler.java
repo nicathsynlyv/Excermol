@@ -45,7 +45,9 @@ public class GlobalExceptionHandler {
             NotificationSettingNotFoundException.class,
             NotificationSettingAlreadyExistsException.class,
             CompanyAttributeNotFoundException.class,
-            SystemAttributeCannotBeModifiedException.class
+            SystemAttributeCannotBeModifiedException.class,
+            IntegrationNotFoundException.class,
+            IntegrationAlreadyExistsException.class
     })
     public ResponseEntity<Map<String, Object>> handleNotFound(RuntimeException ex) {
         return buildResponse(
