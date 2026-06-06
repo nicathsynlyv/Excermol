@@ -24,7 +24,7 @@ public class IntegrationController {
     public IntegrationController(IntegrationService integrationService) {
         this.integrationService = integrationService;
     }
-
+//1
     @Operation(summary = "Yeni integration yarat")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Integration uğurla yaradıldı"),
@@ -36,7 +36,7 @@ public class IntegrationController {
             @RequestBody IntegrationCreateRequestDTO dto) {
         return ResponseEntity.ok(integrationService.createIntegration(dto));
     }
-
+//2
     @Operation(summary = "Workspace-ə görə bütün integration-lar")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -46,7 +46,7 @@ public class IntegrationController {
             @PathVariable Long workspaceId) {
         return ResponseEntity.ok(integrationService.getIntegrationsByWorkspaceId(workspaceId));
     }
-
+//3
     @Operation(summary = "ID ilə integration tap")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Integration tapıldı"),
@@ -56,7 +56,7 @@ public class IntegrationController {
     public ResponseEntity<IntegrationResponseDTO> getIntegrationById(@PathVariable Long id) {
         return ResponseEntity.ok(integrationService.getIntegrationById(id));
     }
-
+//4
     @Operation(summary = "Workspace və tipə görə integration tap")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Integration tapıldı"),
@@ -68,7 +68,7 @@ public class IntegrationController {
             @PathVariable IntegrationType type) {
         return ResponseEntity.ok(integrationService.getIntegrationByType(workspaceId, type));
     }
-
+//5
     @Operation(summary = "Aktiv integration-lar")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -78,7 +78,7 @@ public class IntegrationController {
             @PathVariable Long workspaceId) {
         return ResponseEntity.ok(integrationService.getActiveIntegrations(workspaceId));
     }
-
+//6
     @Operation(summary = "Integration update et - description, toggle")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Integration uğurla yeniləndi"),
@@ -90,7 +90,7 @@ public class IntegrationController {
             @RequestBody IntegrationUpdateRequestDTO dto) {
         return ResponseEntity.ok(integrationService.updateIntegration(id, dto));
     }
-
+//7
     @Operation(summary = "Integration toggle et - aktiv/deaktiv")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Toggle uğurla edildi"),
@@ -100,7 +100,7 @@ public class IntegrationController {
     public ResponseEntity<IntegrationResponseDTO> toggleIntegration(@PathVariable Long id) {
         return ResponseEntity.ok(integrationService.toggleIntegration(id));
     }
-
+//8
     @Operation(summary = "Integration sil")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Integration uğurla silindi"),

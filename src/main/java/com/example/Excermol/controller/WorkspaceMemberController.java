@@ -25,7 +25,7 @@ public class WorkspaceMemberController {
     public WorkspaceMemberController(WorkspaceMemberService workspaceMemberService) {
         this.workspaceMemberService = workspaceMemberService;
     }
-
+//1
     @Operation(summary = "Yeni üzv əlavə et - 'Invite team member'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Üzv uğurla əlavə edildi"),
@@ -37,7 +37,7 @@ public class WorkspaceMemberController {
             @RequestBody WorkspaceMemberCreateRequestDTO dto) {
         return ResponseEntity.ok(workspaceMemberService.addMember(dto));
     }
-
+//2
     @Operation(summary = "Workspace-ə görə bütün üzvlər")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -47,7 +47,7 @@ public class WorkspaceMemberController {
             @PathVariable Long workspaceId) {
         return ResponseEntity.ok(workspaceMemberService.getMembersByWorkspaceId(workspaceId));
     }
-
+//3
     @Operation(summary = "ID ilə üzv tap")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Üzv tapıldı"),
@@ -57,7 +57,7 @@ public class WorkspaceMemberController {
     public ResponseEntity<WorkspaceMemberResponseDTO> getMemberById(@PathVariable Long id) {
         return ResponseEntity.ok(workspaceMemberService.getMemberById(id));
     }
-
+//4
     @Operation(summary = "Üzvün rolunu dəyiş - ADMIN, MEMBER")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Rol uğurla dəyişdirildi"),
@@ -70,7 +70,7 @@ public class WorkspaceMemberController {
             @RequestBody WorkspaceMemberUpdateRequestDTO dto) {
         return ResponseEntity.ok(workspaceMemberService.updateMemberRole(id, dto));
     }
-
+//5
     @Operation(summary = "Üzvü sil")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Üzv uğurla silindi"),
@@ -82,7 +82,7 @@ public class WorkspaceMemberController {
         workspaceMemberService.removeMember(id);
         return ResponseEntity.noContent().build();
     }
-
+//6
     @Operation(summary = "Rola görə üzvlər - OWNER, ADMIN, MEMBER")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")

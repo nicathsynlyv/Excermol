@@ -23,7 +23,7 @@ public class NotificationSettingController {
     public NotificationSettingController(NotificationSettingService notificationSettingService) {
         this.notificationSettingService = notificationSettingService;
     }
-
+//1
     @Operation(summary = "Yeni notification setting yarat")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Setting uğurla yaradıldı"),
@@ -35,7 +35,7 @@ public class NotificationSettingController {
             @RequestBody NotificationSettingCreateRequestDTO dto) {
         return ResponseEntity.ok(notificationSettingService.createNotificationSetting(dto));
     }
-
+//2
     @Operation(summary = "Workspace-ə görə bütün settings")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -45,7 +45,7 @@ public class NotificationSettingController {
             @PathVariable Long workspaceId) {
         return ResponseEntity.ok(notificationSettingService.getSettingsByWorkspaceId(workspaceId));
     }
-
+//3
     @Operation(summary = "User-ə görə bütün settings")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -55,7 +55,7 @@ public class NotificationSettingController {
             @PathVariable Long userId) {
         return ResponseEntity.ok(notificationSettingService.getSettingsByUserId(userId));
     }
-
+//4
     @Operation(summary = "Workspace və User-ə görə setting tap")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Setting tapıldı"),
@@ -67,7 +67,7 @@ public class NotificationSettingController {
             @PathVariable Long userId) {
         return ResponseEntity.ok(notificationSettingService.getSettingByWorkspaceAndUser(workspaceId, userId));
     }
-
+//5
     @Operation(summary = "ID ilə setting tap")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Setting tapıldı"),
@@ -77,7 +77,7 @@ public class NotificationSettingController {
     public ResponseEntity<NotificationSettingResponseDTO> getSettingById(@PathVariable Long id) {
         return ResponseEntity.ok(notificationSettingService.getSettingById(id));
     }
-
+//6
     @Operation(summary = "Checkboxları update et")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Setting uğurla yeniləndi"),
@@ -89,7 +89,7 @@ public class NotificationSettingController {
             @RequestBody NotificationSettingUpdateRequestDTO dto) {
         return ResponseEntity.ok(notificationSettingService.updateSetting(id, dto));
     }
-
+//7
     @Operation(summary = "Setting sil")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Setting uğurla silindi"),

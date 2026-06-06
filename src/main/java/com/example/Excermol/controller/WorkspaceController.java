@@ -23,7 +23,7 @@ public class WorkspaceController {
     public WorkspaceController(WorkspaceService workspaceService) {
         this.workspaceService = workspaceService;
     }
-
+//1
     @Operation(summary = "Yeni workspace yarat")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Workspace uğurla yaradıldı"),
@@ -34,7 +34,7 @@ public class WorkspaceController {
             @RequestBody WorkspaceCreateRequestDTO dto) {
         return ResponseEntity.ok(workspaceService.createWorkspace(dto));
     }
-
+//2
     @Operation(summary = "Bütün workspace-ləri gətir")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -43,7 +43,7 @@ public class WorkspaceController {
     public ResponseEntity<List<WorkspaceResponseDTO>> getAllWorkspaces() {
         return ResponseEntity.ok(workspaceService.getAllWorkspaces());
     }
-
+//3
     @Operation(summary = "ID ilə workspace tap")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Workspace tapıldı"),
@@ -53,7 +53,7 @@ public class WorkspaceController {
     public ResponseEntity<WorkspaceResponseDTO> getWorkspaceById(@PathVariable Long id) {
         return ResponseEntity.ok(workspaceService.getWorkspaceById(id));
     }
-
+//4
     @Operation(summary = "Owner-a görə workspace-lər")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -63,7 +63,7 @@ public class WorkspaceController {
             @PathVariable Long ownerId) {
         return ResponseEntity.ok(workspaceService.getWorkspacesByOwner(ownerId));
     }
-
+//5
     @Operation(summary = "Workspace update et - General tab 'Update workspace'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Workspace uğurla yeniləndi"),
@@ -75,7 +75,7 @@ public class WorkspaceController {
             @RequestBody WorkspaceUpdateRequestDTO dto) {
         return ResponseEntity.ok(workspaceService.updateWorkspace(id, dto));
     }
-
+//6
     @Operation(summary = "Workspace sil")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Workspace uğurla silindi"),
@@ -86,7 +86,7 @@ public class WorkspaceController {
         workspaceService.deleteWorkspace(id);
         return ResponseEntity.noContent().build();
     }
-
+//7
     @Operation(summary = "Workspace-i reset et - General tab 'Reset workspace'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Workspace uğurla reset edildi"),
@@ -97,7 +97,7 @@ public class WorkspaceController {
         workspaceService.resetWorkspace(id);
         return ResponseEntity.noContent().build();
     }
-
+//8
     @Operation(summary = "Workspace-dən çıx - General tab 'Leave workspace'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Workspace-dən uğurla çıxıldı"),
