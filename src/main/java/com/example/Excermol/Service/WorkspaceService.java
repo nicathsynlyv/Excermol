@@ -6,7 +6,7 @@ import com.example.Excermol.entity.dtos.WorkspaceUpdateRequestDTO;
 
 import java.util.List;
 
-public interface workspaceService {
+public interface WorkspaceService {
 
     // workspace yarat
     WorkspaceResponseDTO createWorkspace(WorkspaceCreateRequestDTO dto);
