@@ -43,7 +43,9 @@ public class GlobalExceptionHandler {
             OwnerRoleChangeNotAllowedException.class,
             OwnerCannotBeRemovedException.class,
             NotificationSettingNotFoundException.class,
-            NotificationSettingAlreadyExistsException.class
+            NotificationSettingAlreadyExistsException.class,
+            CompanyAttributeNotFoundException.class,
+            SystemAttributeCannotBeModifiedException.class
     })
     public ResponseEntity<Map<String, Object>> handleNotFound(RuntimeException ex) {
         return buildResponse(
