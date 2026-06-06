@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface WorkSpaceMemberRepository extends JpaRepository<WorkspaceMember, Long> {
+public interface WorkspaceMemberRepository extends JpaRepository<WorkspaceMember, Long> {
 
     //workspace e gore butun member ler
     List<WorkspaceMember> findAllByWorkspaceId(Long workspaceId);
