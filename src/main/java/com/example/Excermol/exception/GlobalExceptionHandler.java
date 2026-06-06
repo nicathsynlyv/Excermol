@@ -37,7 +37,13 @@ public class GlobalExceptionHandler {
             FormRoutingNotFoundException.class,
             WorkspaceNotFoundException.class,
             MemberNotFoundException.class,
-            OwnerCannotLeaveWorkspaceException.class
+            OwnerCannotLeaveWorkspaceException.class,
+            WorkspaceMemberNotFoundException.class,
+            UserAlreadyMemberException.class,
+            OwnerRoleChangeNotAllowedException.class,
+            OwnerCannotBeRemovedException.class,
+            NotificationSettingNotFoundException.class,
+            NotificationSettingAlreadyExistsException.class
     })
     public ResponseEntity<Map<String, Object>> handleNotFound(RuntimeException ex) {
         return buildResponse(

@@ -26,16 +26,16 @@ import java.util.stream.Collectors;
 @Transactional
 public class WorkspaceServiceImpl implements WorkspaceService {
 
-    private final WorkspaceRepository workSpaceRepository;
+    private final WorkspaceRepository workspaceRepository;
     private final UserRepository userRepository;
     private final WorkspaceMemberRepository workspaceMemberRepository;
     private final WorkspaceMapper workspaceMapper;
 
-    public WorkspaceServiceImpl(WorkspaceRepository workSpaceRepository,
+    public WorkspaceServiceImpl(WorkspaceRepository workspaceRepository,
                                 UserRepository userRepository,
                                 WorkspaceMemberRepository workspaceMemberRepository,
                                 WorkspaceMapper workspaceMapper) {
-        this.workSpaceRepository = workSpaceRepository;
+        this.workspaceRepository = workspaceRepository;
         this.userRepository = userRepository;
         this.workspaceMemberRepository = workspaceMemberRepository;
         this.workspaceMapper = workspaceMapper;
@@ -52,7 +52,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         Workspace workspace = workspaceMapper.toEntity(dto);
         workspace.setOwner(owner);
 
-        Workspace saved = workSpaceRepository.save(workspace);
+        Workspace saved = workspaceRepository.save(workspace);
 
         // owner-i avtomatik OWNER rolu ilə member əlavə et
         WorkspaceMember ownerMember = new WorkspaceMember();
@@ -66,7 +66,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     @Override
     public List<WorkspaceResponseDTO> getAllWorkspaces() {
-        return workSpaceRepository.findAll()
+        return workspaceRepository.findAll()
                 .stream()
                 .map(workspaceMapper::toResponseDTO)
                 .collect(Collectors.toList());
@@ -74,14 +74,14 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     @Override
     public WorkspaceResponseDTO getWorkspaceById(Long id) {
-        Workspace workspace = workSpaceRepository.findById(id)
+        Workspace workspace = workspaceRepository.findById(id)
                 .orElseThrow(() -> new WorkspaceNotFoundException("Workspace tapılmadı: " + id));
         return workspaceMapper.toResponseDTO(workspace);
     }
 
     @Override
     public List<WorkspaceResponseDTO> getWorkspacesByOwner(Long ownerId) {
-        return workSpaceRepository.findAllByOwnerId(ownerId)
+        return workspaceRepository.findAllByOwnerId(ownerId)
                 .stream()
                 .map(workspaceMapper::toResponseDTO)
                 .collect(Collectors.toList());
@@ -89,25 +89,25 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     @Override
     public WorkspaceResponseDTO updateWorkspace(Long id, WorkspaceUpdateRequestDTO dto) {
-        Workspace workspace = workSpaceRepository.findById(id)
+        Workspace workspace = workspaceRepository.findById(id)
                 .orElseThrow(() -> new WorkspaceNotFoundException("Workspace tapılmadı: " + id));
 
         workspaceMapper.updateEntity(workspace, dto);
 
-        Workspace updated = workSpaceRepository.save(workspace);
+        Workspace updated = workspaceRepository.save(workspace);
         return workspaceMapper.toResponseDTO(updated);
     }
 
     @Override
     public void deleteWorkspace(Long id) {
-        Workspace workspace = workSpaceRepository.findById(id)
+        Workspace workspace = workspaceRepository.findById(id)
                 .orElseThrow(() -> new WorkspaceNotFoundException("Workspace tapılmadı: " + id));
-        workSpaceRepository.delete(workspace);
+        workspaceRepository.delete(workspace);
     }
 
     @Override
     public void resetWorkspace(Long id) {
-        Workspace workspace = workSpaceRepository.findById(id)
+        Workspace workspace = workspaceRepository.findById(id)
                 .orElseThrow(() -> new WorkspaceNotFoundException("Workspace tapılmadı: " + id));
 
         // bütün əlaqəli data silinir - CascadeType.ALL avtomatik silir
@@ -116,12 +116,12 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         workspace.getCompanyAttributes().clear();
         workspace.getIntegrations().clear();
 
-        workSpaceRepository.save(workspace);
+        workspaceRepository.save(workspace);
     }
 
     @Override
     public void leaveWorkspace(Long workspaceId, Long userId) {
-        Workspace workspace = workSpaceRepository.findById(workspaceId)
+        Workspace workspace = workspaceRepository.findById(workspaceId)
                 .orElseThrow(() -> new WorkspaceNotFoundException("Workspace tapılmadı: " + workspaceId));
 
         // OWNER workspace-dən çıxa bilməz
