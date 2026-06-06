@@ -34,7 +34,10 @@ public class GlobalExceptionHandler {
             FormNotFoundException.class,
             FormFieldNotFoundException.class,
             FormResponseNotFoundException.class,
-            FormRoutingNotFoundException.class
+            FormRoutingNotFoundException.class,
+            WorkspaceNotFoundException.class,
+            MemberNotFoundException.class,
+            OwnerCannotLeaveWorkspaceException.class
     })
     public ResponseEntity<Map<String, Object>> handleNotFound(RuntimeException ex) {
         return buildResponse(
