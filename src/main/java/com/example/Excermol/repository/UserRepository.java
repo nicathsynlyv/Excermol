@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-//Database Layer oldugunu deyir @Repository
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 

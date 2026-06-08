@@ -1,6 +1,6 @@
 package com.example.Excermol.Service;
 
-import com.example.Excermol.entity.CampaignLead;
+
 import com.example.Excermol.entity.dtos.CampaignLeadRequestDTO;
 import com.example.Excermol.entity.dtos.CampaignLeadResponseDTO;
 
