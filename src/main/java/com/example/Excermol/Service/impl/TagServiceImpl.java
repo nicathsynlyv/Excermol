@@ -1,4 +1,4 @@
-package com.example.Excermol.Service.impl;
+//package com.example.Excermol.Service.impl;
 
 import com.example.Excermol.Service.TagService;
 import com.example.Excermol.entity.Tag;
@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class TagServiceImpl implements TagService {
+//@Service
+//public class TagServiceImpl implements TagService {
 
-    private final TagRepository tagRepository;
+//    private final TagRepository tagRepository;
 
-    public TagServiceImpl(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
+//    public TagServiceImpl(TagRepository tagRepository) {
+//        this.tagRepository = tagRepository;
+//    }
 
     // ===== BaseService CRUD əməliyyatları =====
 //    @Override
@@ -39,8 +39,8 @@ public class TagServiceImpl implements TagService {
 //    }
 
     // ===== TagService xüsusi metodları =====
-    @Override
-    public Tag findByName(String name) {
-        return tagRepository.findByName(name);
-    }
-}
+//    @Override
+//    public Tag findByName(String name) {
+//        return tagRepository.findByName(name);
+//    }
+//}
