@@ -2,7 +2,7 @@ package com.example.Excermol.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.Builder;
+
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +13,6 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
