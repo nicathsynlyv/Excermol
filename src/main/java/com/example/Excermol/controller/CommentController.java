@@ -1,96 +1,89 @@
-//package com.example.Excermol.controller;
-//
-//import com.example.Excermol.Service.impl.CommentServiceImpl;
-//import com.example.Excermol.entity.Comment;
-//import io.swagger.v3.oas.annotations.Operation;
-//import io.swagger.v3.oas.annotations.media.Content;
-//import io.swagger.v3.oas.annotations.media.Schema;
-//import io.swagger.v3.oas.annotations.responses.ApiResponse;
-//import io.swagger.v3.oas.annotations.responses.ApiResponses;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//
-//@RestController
-//@RequestMapping("/api/comments")
-//public class CommentController {
-//
-//    private final CommentServiceImpl commentServiceImpl;
-//
-//    public CommentController(CommentServiceImpl commentServiceImpl) {
-//        this.commentServiceImpl = commentServiceImpl;
-//    }
-//
-//    @Operation(summary = "Bütün comment-ləri gətirir")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Uğurla gətirildi",
-//                    content = @Content(schema = @Schema(implementation = Comment.class)))
-//    })
-//    @GetMapping
-//    public ResponseEntity<List<Comment>> getAllComments() {
-//        return ResponseEntity.ok(commentServiceImpl.getAll());
-//    }
-//
-//    @Operation(summary = "ID-ə görə comment gətirir")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Comment tapıldı",
-//                    content = @Content(schema = @Schema(implementation = Comment.class))),
-//            @ApiResponse(responseCode = "404", description = "Comment tapılmadı", content = @Content)
-//    })
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Comment> getCommentById(@PathVariable Long id) {
-//        return commentServiceImpl.getById(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @Operation(summary = "Yeni comment əlavə edir")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "201", description = "Comment uğurla yaradıldı",
-//                    content = @Content(schema = @Schema(implementation = Comment.class))),
-//            @ApiResponse(responseCode = "400", description = "Yanlış request body", content = @Content)
-//    })
-//    @PostMapping
-//    public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
-//        return ResponseEntity.status(201).body(commentServiceImpl.save(comment));
-//    }
-//
-//    @Operation(summary = "Comment update edir")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Comment uğurla update olundu",
-//                    content = @Content(schema = @Schema(implementation = Comment.class))),
-//            @ApiResponse(responseCode = "404", description = "Comment tapılmadı", content = @Content)
-//    })
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody Comment updatedComment) {
-//        return commentServiceImpl.getById(id)
-//                .map(comment -> ResponseEntity.ok(commentServiceImpl.save(updatedComment)))
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-//
-//    @Operation(summary = "Comment silir")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "204", description = "Comment uğurla silindi", content = @Content),
-//            @ApiResponse(responseCode = "404", description = "Comment tapılmadı", content = @Content)
-//    })
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
-//        if (commentServiceImpl.getById(id).isPresent()) {
-//            commentServiceImpl.deleteById(id);
-//            return ResponseEntity.noContent().build();
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-//
-//    @Operation(summary = "Task-id-ə görə comment-ləri gətirir")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Uğurla gətirildi",
-//                    content = @Content(schema = @Schema(implementation = Comment.class)))
-//    })
-//    @GetMapping("/task/{taskId}")
-//    public ResponseEntity<List<Comment>> getCommentsByTaskId(@PathVariable Long taskId) {
-//        return ResponseEntity.ok(commentServiceImpl.findByTask_Id(taskId));
-//    }
-//}
+package com.example.Excermol.controller;
+
+import com.example.Excermol.Service.CommentService;
+import com.example.Excermol.entity.dtos.CommentCreateRequestDTO;
+import com.example.Excermol.entity.dtos.CommentResponseDTO;
+import com.example.Excermol.entity.dtos.CommentUpdateRequestDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/comments")
+@Tag(name = "Comment API", description = "Task Comment əməliyyatları")
+public class CommentController {
+
+    private final CommentService commentService;
+
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
+//1
+    @Operation(summary = "Yeni comment yarat")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comment uğurla yaradıldı"),
+            @ApiResponse(responseCode = "404", description = "Task və ya User tapılmadı")
+    })
+    @PostMapping
+    public ResponseEntity<CommentResponseDTO> createComment(
+            @RequestBody CommentCreateRequestDTO dto) {
+        return ResponseEntity.ok(commentService.createComment(dto));
+    }
+//2
+    @Operation(summary = "Task-a görə bütün commentlər")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
+    })
+    @GetMapping("/task/{taskId}")
+    public ResponseEntity<List<CommentResponseDTO>> getCommentsByTaskId(
+            @PathVariable Long taskId) {
+        return ResponseEntity.ok(commentService.getCommentsByTaskId(taskId));
+    }
+//3
+    @Operation(summary = "ID ilə comment tap")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comment tapıldı"),
+            @ApiResponse(responseCode = "404", description = "Comment tapılmadı")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<CommentResponseDTO> getCommentById(@PathVariable Long id) {
+        return ResponseEntity.ok(commentService.getCommentById(id));
+    }
+//4
+    @Operation(summary = "Comment update et")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comment uğurla yeniləndi"),
+            @ApiResponse(responseCode = "404", description = "Comment tapılmadı")
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<CommentResponseDTO> updateComment(
+            @PathVariable Long id,
+            @RequestBody CommentUpdateRequestDTO dto) {
+        return ResponseEntity.ok(commentService.updateComment(id, dto));
+    }
+//5
+    @Operation(summary = "Comment sil")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Comment uğurla silindi"),
+            @ApiResponse(responseCode = "404", description = "Comment tapılmadı")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
+        commentService.deleteComment(id);
+        return ResponseEntity.noContent().build();
+    }
+//6
+    @Operation(summary = "Task-a görə comment sayı")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
+    })
+    @GetMapping("/task/{taskId}/count")
+    public ResponseEntity<Integer> getCommentCountByTaskId(@PathVariable Long taskId) {
+        return ResponseEntity.ok(commentService.getCommentCountByTaskId(taskId));
+    }
+}

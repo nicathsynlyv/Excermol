@@ -8,6 +8,12 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    // Task-id-ə görə bütün comment-lər
-    List<Comment> findByTask_Id(Long taskId);
+    // task-a görə bütün commentlər
+    List<Comment> findAllByTaskId(Long taskId);
+
+    // user-ə görə bütün commentlər
+    List<Comment> findAllByAuthorId(Long authorId);
+
+    // task-a görə comment sayı
+    Integer countByTaskId(Long taskId);
 }
