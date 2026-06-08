@@ -47,7 +47,9 @@ public class GlobalExceptionHandler {
             CompanyAttributeNotFoundException.class,
             SystemAttributeCannotBeModifiedException.class,
             IntegrationNotFoundException.class,
-            IntegrationAlreadyExistsException.class
+            IntegrationAlreadyExistsException.class,
+            TagAlreadyExistsException.class,
+            TagNotFoundException.class
     })
     public ResponseEntity<Map<String, Object>> handleNotFound(RuntimeException ex) {
         return buildResponse(
