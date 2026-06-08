@@ -46,4 +46,7 @@ public class TaskResponseDto {
     private Set<String> tagNames;
 
     private Set<Long> tagIds;
+
+    // comments
+    private Integer commentsCount;
 }

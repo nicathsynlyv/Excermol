@@ -97,6 +97,13 @@ public class TaskMapper {
             );
         }
 
+        // COMMENTS COUNT
+        if (task.getComments() != null) {
+            dto.setCommentsCount(task.getComments().size());
+        } else {
+            dto.setCommentsCount(0);
+        }
+
         return dto;
     }
     // ➕ ƏLAVƏ EDİLƏN METOD: List<Entity> -> List<ResponseDto>
