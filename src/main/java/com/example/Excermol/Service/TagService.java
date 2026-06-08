@@ -34,4 +34,13 @@ public interface TagService {
 
     // person-un bütün tag-ləri
     List<TagResponseDTO> getTagsByPersonId(Long personId);
+
+    // task-a tag əlavə et
+    void addTagToTask(Long tagId, Long taskId);
+
+    // task-dan tag sil
+    void removeTagFromTask(Long tagId, Long taskId);
+
+    // task-ın bütün tag-ləri
+    List<TagResponseDTO> getTagsByTaskId(Long taskId);
 }

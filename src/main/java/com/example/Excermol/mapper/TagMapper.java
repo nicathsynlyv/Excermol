@@ -41,6 +41,14 @@ public class TagMapper {
             dto.setPersonsCount(0);
         }
 
+        // neçə task-da istifadə olunur
+        if (tag.getTasks() != null) {
+            dto.setTasksCount(tag.getTasks().size());
+        } else {
+            dto.setTasksCount(0);
+        }
+
+
         return dto;
     }
 }

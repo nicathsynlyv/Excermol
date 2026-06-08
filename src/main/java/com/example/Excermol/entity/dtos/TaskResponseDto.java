@@ -44,4 +44,6 @@ public class TaskResponseDto {
     private Set<String> assigneeNames;
 
     private Set<String> tagNames;
+
+    private Set<Long> tagIds;
 }

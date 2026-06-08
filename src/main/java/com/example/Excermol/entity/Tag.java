@@ -25,4 +25,8 @@ public class Tag {
     // Tag-ə bir neçə şəxs aid ola bilər (Many-to-Many)
     @ManyToMany(mappedBy = "tags")
     private Set<Person> persons = new HashSet<>();
+
+    // taga bir nece task aid ola biler
+    @ManyToMany(mappedBy = "tags")
+    private Set<Task> tasks = new HashSet<>();
 }

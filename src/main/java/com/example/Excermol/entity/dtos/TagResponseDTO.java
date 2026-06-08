@@ -10,5 +10,7 @@ public class TagResponseDTO {
     private String name;
     private String color;
     private Integer personsCount; // neçə person-da istifadə olunur
+    private Integer tasksCount;   // neçə task-da istifadə olunur
+
 
 }

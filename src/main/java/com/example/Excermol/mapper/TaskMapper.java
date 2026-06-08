@@ -80,12 +80,19 @@ public class TaskMapper {
             );
         }
 
-        // TAGS
+        // TAGS - mövcud kod
         if (task.getTags() != null) {
             dto.setTagNames(
                     task.getTags()
                             .stream()
                             .map(Tag::getName)
+                            .collect(Collectors.toSet())
+            );
+            // Bunu əlavə et
+            dto.setTagIds(
+                    task.getTags()
+                            .stream()
+                            .map(Tag::getId)
                             .collect(Collectors.toSet())
             );
         }
