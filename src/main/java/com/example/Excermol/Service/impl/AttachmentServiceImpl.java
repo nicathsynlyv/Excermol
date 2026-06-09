@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class AttachmentServiceImpl implements AttachmentService {
+//@Service
+//@RequiredArgsConstructor
+//public class AttachmentServiceImpl implements AttachmentService {
 
-    private final AttachmentRepository attachmentRepository;
+//    private final AttachmentRepository attachmentRepository;
 
     // BaseService metodları
 //    @Override
@@ -36,14 +36,14 @@ public class AttachmentServiceImpl implements AttachmentService {
 //        attachmentRepository.deleteById(id);
 //    }
 
-    // AttachmentService spesifik metodlar
-    @Override
-    public List<Attachment> findByTask_Id(Long taskId) {
-        return attachmentRepository.findByTask_Id(taskId);
-    }
-
-    @Override
-    public List<Attachment> findByEmail_Id(Long emailId) {
-        return attachmentRepository.findByEmail_Id(emailId);
-    }
-}
+//    // AttachmentService spesifik metodlar
+//    @Override
+//    public List<Attachment> findByTask_Id(Long taskId) {
+//        return attachmentRepository.findByTask_Id(taskId);
+//    }
+//
+//    @Override
+//    public List<Attachment> findByEmail_Id(Long emailId) {
+//        return attachmentRepository.findByEmail_Id(emailId);
+//    }
+//}

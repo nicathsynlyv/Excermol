@@ -2,13 +2,19 @@ package com.example.Excermol.repository;
 
 import com.example.Excermol.entity.Attachment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface AttachmentRepository  extends JpaRepository<Attachment, Long> {
-    // Task-id-ə görə bütün attachment-lər
-    List<Attachment> findByTask_Id(Long taskId);
+@Repository
+public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 
-    // Email-ə görə attachments
-    List<Attachment> findByEmail_Id(Long emailId);
+    // email-ə görə bütün attachmentlər
+    List<Attachment> findAllByEmailId(Long emailId);
+
+    // task-a görə bütün attachmentlər
+    List<Attachment> findAllByTaskId(Long taskId);
+
+    // user-ə görə bütün attachmentlər
+    List<Attachment> findAllByUploadedById(Long userId);
 }
