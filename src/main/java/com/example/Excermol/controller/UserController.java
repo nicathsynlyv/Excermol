@@ -5,14 +5,11 @@ import com.example.Excermol.entity.dtos.UserRequestDto;
 import com.example.Excermol.entity.dtos.UserResponseDto;
 import com.example.Excermol.enums.UserRole;
 import com.example.Excermol.enums.UserStatus;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -31,7 +28,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
+//1
     @Operation(summary = "Yeni istifadəçi yaratmaq")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "İstifadəçi uğurla yaradıldı"),
@@ -50,7 +47,7 @@ public class UserController {
                 HttpStatus.CREATED
         );
     }
-
+//2
     @Operation(summary = "Bütün istifadəçilər")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Siyahı uğurla qaytarıldı")
@@ -62,7 +59,7 @@ public class UserController {
                 userService.getAll()
         );
     }
-
+//3
     @Operation(summary = "ID üzrə istifadəçi tapmaq")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "İstifadəçi tapıldı"),
@@ -76,7 +73,7 @@ public class UserController {
                 userService.getById(id)
         );
     }
-
+//4
     @Operation(summary = "İstifadəçi axtarışı")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Axtarış nəticələri qaytarıldı"),
@@ -91,7 +88,7 @@ public class UserController {
                 userService.searchUsers(keyword, pageable)
         );
     }
-
+//5
     @Operation(summary = "İstifadəçini yenilə")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "İstifadəçi uğurla yeniləndi"),
@@ -109,7 +106,7 @@ public class UserController {
 
         return ResponseEntity.ok(updatedUser);
     }
-
+//6
     @Operation(summary = "İstifadəçini sil")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "İstifadəçi uğurla silindi"),
@@ -123,7 +120,7 @@ public class UserController {
 
         return ResponseEntity.noContent().build();
     }
-
+//7
     @Operation(summary = "Son login vaxtını yenilə")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Son login vaxtı yeniləndi"),
@@ -137,7 +134,7 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
-
+//8
     @Operation(summary = "Aktiv istifadəçilər")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Aktiv istifadəçilər qaytarıldı")
@@ -150,7 +147,7 @@ public class UserController {
         );
 
     }
-
+//9
     @Operation(summary = "Aktiv istifadəçi sayı")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Aktiv istifadəçi sayı qaytarıldı")
@@ -162,7 +159,7 @@ public class UserController {
                 userService.getActiveUserCount()
         );
     }
-
+//10
     @Operation(summary = "Statusa görə istifadəçilər")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "İstifadəçilər uğurla qaytarıldı"),
@@ -176,7 +173,7 @@ public class UserController {
                 userService.findByStatus(status)
         );
     }
-
+//11
     @Operation(summary = "Rola görə istifadəçilər")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "İstifadəçilər uğurla qaytarıldı"),

@@ -2,7 +2,6 @@ package com.example.Excermol.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.Builder;
 
 @Entity
 @Table(name = "attachments")
@@ -10,14 +9,21 @@ import lombok.Builder;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Attachment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "file_name")
     private String fileName;
-    private String fileUrl; // faylın saxlanma yeri (məs: AWS S3 link və ya local path)
-    private String fileType; // image, pdf, docx və s.
+
+    @Column(name = "file_url")
+    private String fileUrl;
+
+    @Column(name = "file_type")
+    private String fileType;
 
     // Task ilə əlaqə
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,13 +31,12 @@ public class Attachment {
     private Task task;
 
     // Faylı yükləyən user
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = true)
     private User uploadedBy;
 
-    // 🔗 Email ilə əlaqə
+    // Email ilə əlaqə
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "email_id", nullable = true)
     private Email email;
-
 }
