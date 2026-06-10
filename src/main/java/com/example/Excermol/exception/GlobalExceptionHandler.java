@@ -50,7 +50,8 @@ public class GlobalExceptionHandler {
             IntegrationAlreadyExistsException.class,
             TagAlreadyExistsException.class,
             TagNotFoundException.class,
-            CommentNotFoundException.class
+            CommentNotFoundException.class,
+            AttachmentNotFoundException.class
     })
     public ResponseEntity<Map<String, Object>> handleNotFound(RuntimeException ex) {
         return buildResponse(

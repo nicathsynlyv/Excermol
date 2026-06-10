@@ -91,6 +91,12 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+<!--forai-->
+<!--		<dependency>-->
+<!--			<groupId>com.fasterxml.jackson.core</groupId>-->
+<!--			<artifactId>jackson-databind</artifactId>-->
+<!--		</dependency>-->
+
 <!--		h2 database ucun-->
 <!--		<dependency>-->
 <!--			<groupId>com.h2database</groupId>-->

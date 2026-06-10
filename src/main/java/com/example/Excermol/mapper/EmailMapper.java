@@ -69,6 +69,9 @@ public class EmailMapper {
                             .map(Attachment::getFileName)
                             .collect(Collectors.toList())
             );
+//            dto.setAttachmentsCount(email.getAttachments().size()); // ← əlavə et
+//        }else {
+//            dto.setAttachmentsCount(0);
         }
 
         return dto;

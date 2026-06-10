@@ -39,4 +39,9 @@ public class EmailResponseDto {
 
     // Attachments
     private List<String> attachmentNames;
+
+
+//    private Integer attachmentsCount;  // ← əlavə et
+
+
 }

@@ -49,4 +49,10 @@ public class TaskResponseDto {
 
     // comments
     private Integer commentsCount;
+
+    // email attachment ucn
+//    private Integer attachmentsCount;
+
+
+
 }

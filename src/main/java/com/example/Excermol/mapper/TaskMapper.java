@@ -104,6 +104,13 @@ public class TaskMapper {
             dto.setCommentsCount(0);
         }
 
+        // ATTACHMENTS COUNT
+//        if (task.getAttachments() != null) {
+//            dto.setAttachmentsCount(task.getAttachments().size());
+//        } else {
+//            dto.setAttachmentsCount(0);
+//        }
+
         return dto;
     }
     // ➕ ƏLAVƏ EDİLƏN METOD: List<Entity> -> List<ResponseDto>
