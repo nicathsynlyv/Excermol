@@ -1,6 +1,7 @@
 package com.example.Excermol.exception;
 
 import io.swagger.v3.oas.annotations.Hidden;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Hidden
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     // 404 - Not Found
@@ -109,7 +111,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleGeneric(
             Exception ex) {
 
-        ex.printStackTrace();
+        log.error("Unexpected error occurred", ex);
 
         return buildResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
