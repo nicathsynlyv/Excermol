@@ -1,8 +1,6 @@
 package com.example.Excermol.Service.impl;
 
 import com.example.Excermol.Service.PersonActivityService;
-
-
 import com.example.Excermol.Service.PersonService;
 import com.example.Excermol.entity.Company;
 import com.example.Excermol.entity.Person;
@@ -23,7 +21,7 @@ import com.example.Excermol.repository.PersonRepository;
 import com.example.Excermol.repository.TagRepository;
 import com.example.Excermol.repository.UserRepository;
 import jakarta.transaction.Transactional;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,6 +32,7 @@ import java.util.Set;
 
 @Service
 @Transactional
+@Slf4j
 public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
@@ -59,25 +58,32 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonResponseDTO createPerson(PersonRequestDTO requestDTO) {
+        log.info("Creating person with email: {}", requestDTO.getEmail());
+
         if (personRepository.existsByEmail(requestDTO.getEmail())) {
+            log.warn("Email already exists: {}", requestDTO.getEmail());
             throw new EmailAlreadyExistsException("Bu email artıq mövcuddur: " + requestDTO.getEmail());
         }
 
         Person person = personMapper.toEntity(requestDTO);
 
-
         if (requestDTO.getCompanyId() != null) {
+            log.info("Setting company with id: {}", requestDTO.getCompanyId());
             Company company = companyRepository.findById(requestDTO.getCompanyId())
-                    .orElseThrow(() -> new CompanyNotFoundException(
-                            "Company tapılmadı! ID: " + requestDTO.getCompanyId()));
+                    .orElseThrow(() -> {
+                        log.warn("Company not found with id: {}", requestDTO.getCompanyId());
+                        return new CompanyNotFoundException("Company tapılmadı! ID: " + requestDTO.getCompanyId());
+                    });
             person.setCompany(company);
         }
 
-        // User ← new changes
         if (requestDTO.getUserId() != null) {
+            log.info("Setting user with id: {}", requestDTO.getUserId());
             User user = userRepository.findById(requestDTO.getUserId())
-                    .orElseThrow(() -> new UserNotFoundException(
-                            "User tapılmadı! ID: " + requestDTO.getUserId()));
+                    .orElseThrow(() -> {
+                        log.warn("User not found with id: {}", requestDTO.getUserId());
+                        return new UserNotFoundException("User tapılmadı! ID: " + requestDTO.getUserId());
+                    });
             person.setUser(user);
         }
 
@@ -87,55 +93,71 @@ public class PersonServiceImpl implements PersonService {
         }
 
         Person saved = personRepository.save(person);
+        log.info("Person created successfully with id: {}", saved.getId());
 
-        // Activity avtomatik əlavə et
         PersonActivityRequestDTO activityDTO = new PersonActivityRequestDTO();
         activityDTO.setAction(ActivityAction.CREATED);
         activityDTO.setPerformedBy(saved.getFullName() + " " + saved.getLastName());
         activityDTO.setPersonId(saved.getId());
         personActivityService.addActivity(activityDTO);
+        log.info("Activity logged for person id: {}", saved.getId());
 
         return personMapper.toResponseDTO(saved);
     }
 
     @Override
     public List<PersonResponseDTO> getAllPersons() {
-        return personRepository.findAll()
+        log.info("Fetching all persons");
+
+        List<PersonResponseDTO> persons = personRepository.findAll()
                 .stream()
                 .map(personMapper::toResponseDTO)
                 .toList();
+
+        log.info("Retrieved {} persons", persons.size());
+        return persons;
     }
 
     @Override
     public PersonResponseDTO getPersonById(Long id) {
+        log.info("Fetching person with id: {}", id);
+
         Person person = personRepository.findById(id)
-                .orElseThrow(() -> new PersonNotFoundException(
-                        "Person tapılmadı! ID: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Person not found with id: {}", id);
+                    return new PersonNotFoundException("Person tapılmadı! ID: " + id);
+                });
+
+        log.info("Person found with id: {}", id);
         return personMapper.toResponseDTO(person);
     }
+
     @Override
     public PersonResponseDTO updatePerson(Long id, PersonRequestDTO requestDTO) {
+        log.info("Updating person with id: {}", id);
 
         Person person = personRepository.findById(id)
-                .orElseThrow(() -> new PersonNotFoundException(
-                        "Person tapılmadı! ID: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Person not found for update. Id: {}", id);
+                    return new PersonNotFoundException("Person tapılmadı! ID: " + id);
+                });
 
-        Optional<Person> existingPerson =
-                personRepository.findByEmail(requestDTO.getEmail());
+        Optional<Person> existingPerson = personRepository.findByEmail(requestDTO.getEmail());
 
-        if (existingPerson.isPresent()
-                && !existingPerson.get().getId().equals(id)) {
-
-            throw new EmailAlreadyExistsException(
-                    "Bu email artıq mövcuddur: " + requestDTO.getEmail());
+        if (existingPerson.isPresent() && !existingPerson.get().getId().equals(id)) {
+            log.warn("Email already exists: {}", requestDTO.getEmail());
+            throw new EmailAlreadyExistsException("Bu email artıq mövcuddur: " + requestDTO.getEmail());
         }
 
         personMapper.updateEntity(person, requestDTO);
 
         if (requestDTO.getCompanyId() != null) {
+            log.info("Updating company with id: {}", requestDTO.getCompanyId());
             Company company = companyRepository.findById(requestDTO.getCompanyId())
-                    .orElseThrow(() -> new CompanyNotFoundException(
-                            "Company tapılmadı! ID: " + requestDTO.getCompanyId()));
+                    .orElseThrow(() -> {
+                        log.warn("Company not found with id: {}", requestDTO.getCompanyId());
+                        return new CompanyNotFoundException("Company tapılmadı! ID: " + requestDTO.getCompanyId());
+                    });
             person.setCompany(company);
         }
 
@@ -144,52 +166,68 @@ public class PersonServiceImpl implements PersonService {
             person.setTags(tags);
         }
 
-
-        // User ← new changes
         if (requestDTO.getUserId() != null) {
+            log.info("Updating user with id: {}", requestDTO.getUserId());
             User user = userRepository.findById(requestDTO.getUserId())
-                    .orElseThrow(() -> new UserNotFoundException(
-                            "User tapılmadı! ID: " + requestDTO.getUserId()));
+                    .orElseThrow(() -> {
+                        log.warn("User not found with id: {}", requestDTO.getUserId());
+                        return new UserNotFoundException("User tapılmadı! ID: " + requestDTO.getUserId());
+                    });
             person.setUser(user);
         }
 
         person.setLastInteractionAt(LocalDateTime.now());
 
         Person saved = personRepository.save(person);
+        log.info("Person updated successfully. Id: {}", id);
 
         PersonActivityRequestDTO activityDTO = new PersonActivityRequestDTO();
         activityDTO.setAction(ActivityAction.UPDATED);
         activityDTO.setPerformedBy(saved.getFullName() + " " + saved.getLastName());
         activityDTO.setPersonId(saved.getId());
-
         personActivityService.addActivity(activityDTO);
+        log.info("Activity logged for person id: {}", saved.getId());
 
         return personMapper.toResponseDTO(saved);
     }
+
     @Override
     public void deletePerson(Long id) {
+        log.info("Deleting person with id: {}", id);
+
         Person person = personRepository.findById(id)
-                .orElseThrow(() -> new PersonNotFoundException(
-                        "Person tapılmadı! ID: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Person not found for deletion. Id: {}", id);
+                    return new PersonNotFoundException("Person tapılmadı! ID: " + id);
+                });
+
         personRepository.delete(person);
+        log.info("Person deleted successfully. Id: {}", id);
     }
 
-
-
-//user new changes
     @Override
     public List<PersonResponseDTO> getPersonsByUser(Long userId) {
-        return personRepository.findByUserId(userId)
+        log.info("Fetching persons for user id: {}", userId);
+
+        List<PersonResponseDTO> persons = personRepository.findByUserId(userId)
                 .stream()
                 .map(personMapper::toResponseDTO)
                 .toList();
+
+        log.info("Retrieved {} persons for user id: {}", persons.size(), userId);
+        return persons;
     }
-//user new changes
+
     @Override
     public List<PersonResponseDTO> getPersonsByUserAndStatus(Long userId, PersonStatus status) {
-        return personRepository.findByUserIdAndStatus(userId, status)
+        log.info("Fetching persons for user id: {} with status: {}", userId, status);
+
+        List<PersonResponseDTO> persons = personRepository.findByUserIdAndStatus(userId, status)
                 .stream()
                 .map(personMapper::toResponseDTO)
                 .toList();
+
+        log.info("Retrieved {} persons for user id: {} with status: {}", persons.size(), userId, status);
+        return persons;
     }
 }
