@@ -16,6 +16,7 @@ import com.example.Excermol.repository.CompanyRepository;
 import com.example.Excermol.repository.PersonRepository;
 import com.example.Excermol.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
@@ -43,12 +45,12 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
 
-
-
     @Override
     public CompanyResponseDTO createCompany(CompanyRequestDTO requestDTO) {
+        log.info("Creating company with name: {}", requestDTO.getCompanyName());
         // Domain duplicate yoxlaması
         if (companyRepository.findByDomain(requestDTO.getDomain()).isPresent()) {
+            log.warn("Domain already exists: {}", requestDTO.getDomain());
             throw new DomainAlreadyExistsException("Bu domain artıq mövcuddur: " + requestDTO.getDomain());
         }
 
@@ -57,28 +59,32 @@ public class CompanyServiceImpl implements CompanyService {
         // Owner set et
         if (requestDTO.getOwnerId() != null) {
             Person owner = personRepository.findById(requestDTO.getOwnerId())
-                    .orElseThrow(() -> new PersonNotFoundException(
-                            "Person tapılmadı! ID: " + requestDTO.getOwnerId()));
+                    .orElseThrow(() -> {
+                        log.warn("Person not found with id: {}", requestDTO.getOwnerId());
+                        return new PersonNotFoundException("Person tapılmadı! ID: " + requestDTO.getOwnerId());
+                    });
             company.setOwner(owner);
         }
 
         // User ← new changes
         if (requestDTO.getUserId() != null) {
             User user = userRepository.findById(requestDTO.getUserId())
-                    .orElseThrow(() -> new UserNotFoundException(
-                            "User tapılmadı! ID: " + requestDTO.getUserId()));
+                    .orElseThrow(() -> {
+                        log.warn("User not found with id: {}", requestDTO.getUserId());
+                        return new UserNotFoundException("User tapılmadı! ID: " + requestDTO.getUserId());
+                    });
             company.setUser(user);
         }
 
         Company saved = companyRepository.save(company);
+        log.info("Company created successfully with id: {}", saved.getId());
         return companyMapper.toResponseDTO(saved);
     }
 
     @Override
     public Page<CompanyResponseDTO> getAllCompanies(Pageable pageable) {
-
+        log.info("Fetching all companies - page {}, size {}", pageable.getPageNumber(), pageable.getPageSize());
         Page<Company> companies = companyRepository.findAll(pageable);
-
         return companies.map(companyMapper::toResponseDTO);
     }
 
@@ -154,12 +160,13 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
 
-//user new changes
+    //user new changes
     @Override
     public List<CompanyResponseDTO> getCompaniesByUser(Long userId) {
         return companyMapper.toResponseList(companyRepository.findByUserId(userId));
     }
-//user new changes
+
+    //user new changes
     @Override
     public List<CompanyResponseDTO> getCompaniesByUserAndStatus(Long userId, CompanyStatus status) {
         return companyMapper.toResponseList(
