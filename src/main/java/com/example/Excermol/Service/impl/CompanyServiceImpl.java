@@ -85,26 +85,36 @@ public class CompanyServiceImpl implements CompanyService {
     public Page<CompanyResponseDTO> getAllCompanies(Pageable pageable) {
         log.info("Fetching all companies - page {}, size {}", pageable.getPageNumber(), pageable.getPageSize());
         Page<Company> companies = companyRepository.findAll(pageable);
+        log.info("Retrieved {} companies", companies.getTotalElements());
         return companies.map(companyMapper::toResponseDTO);
     }
 
     @Override
     public CompanyResponseDTO getCompanyById(Long id) {
+        log.info("Fetching company with id: {}", id);
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new CompanyNotFoundException(
-                        "Company tapılmadı! ID: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Company not found with id: {}", id);
+                    return new CompanyNotFoundException("Company tapılmadı! ID: " + id);
+                });
+        log.info("Company found with id: {}", id);
         return companyMapper.toResponseDTO(company);
     }
 
     @Override
     public CompanyResponseDTO updateCompany(Long id, CompanyRequestDTO requestDTO) {
+        log.info("Updating company with id: {}", id);
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new CompanyNotFoundException(
-                        "Company tapılmadı! ID: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Company not found for update. Id: {}", id);
+                    return new CompanyNotFoundException("Company tapılmadı! ID: " + id);
+                });
 
         // Domain dəyişirsə — duplicate yoxla
         if (!company.getDomain().equals(requestDTO.getDomain())) {
+            log.info("Domain changed for company id: {}. Checking duplicate...", id);
             if (companyRepository.findByDomain(requestDTO.getDomain()).isPresent()) {
+                log.warn("Domain already exists: {}", requestDTO.getDomain());
                 throw new DomainAlreadyExistsException("Bu domain artıq mövcuddur: " + requestDTO.getDomain());
             }
 
@@ -112,8 +122,10 @@ public class CompanyServiceImpl implements CompanyService {
             // User ← new changes
             if (requestDTO.getUserId() != null) {
                 User user = userRepository.findById(requestDTO.getUserId())
-                        .orElseThrow(() -> new UserNotFoundException(
-                                "User tapılmadı! ID: " + requestDTO.getUserId()));
+                        .orElseThrow(() -> {
+                            log.warn("User not found with id: {}", requestDTO.getUserId());
+                            return new UserNotFoundException("User tapılmadı! ID: " + requestDTO.getUserId());
+                        });
                 company.setUser(user);
             }
         }
@@ -123,39 +135,48 @@ public class CompanyServiceImpl implements CompanyService {
         // Owner yenilə
         if (requestDTO.getOwnerId() != null) {
             Person owner = personRepository.findById(requestDTO.getOwnerId())
-                    .orElseThrow(() -> new PersonNotFoundException(
-                            "Person tapılmadı! ID: " + requestDTO.getOwnerId()));
+                    .orElseThrow(() -> {
+                        log.warn("Person not found with id: {}", requestDTO.getOwnerId());
+                        return new PersonNotFoundException("Person tapılmadı! ID: " + requestDTO.getOwnerId());
+                    });
             company.setOwner(owner);
         }
 
         Company saved = companyRepository.save(company);
+        log.info("Company updated successfully. Id: {}", id);
         return companyMapper.toResponseDTO(saved);
     }
 
     @Override
     public void deleteCompany(Long id) {
+        log.info("Deleting company with id: {}", id);
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new CompanyNotFoundException(
-                        "Company tapılmadı! ID: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Company not found for deletion. Id: {}", id);
+                    return new CompanyNotFoundException("Company tapılmadı! ID: " + id);
+                });
         companyRepository.delete(company);
+        log.info("Company deleted successfully. Id: {}", id);
     }
 
     @Override
     public List<CompanyResponseDTO> getCompaniesByStatus(CompanyStatus status) {
+        log.info("Fetching companies by status: {}", status);
         return companyMapper.toResponseList(companyRepository.findByStatus(status));
     }
 
     @Override
     public List<CompanyResponseDTO> getCompaniesByOwner(Long ownerId) {
+        log.info("Fetching companies by owner id: {}", ownerId);
         return companyMapper.toResponseList(companyRepository.findByOwnerId(ownerId));
     }
 
     @Override
     public List<CompanyResponseDTO> searchCompanies(String companyName) {
-
+        log.info("Searching companies with name: {}", companyName);
         List<Company> companies =
                 companyRepository.findByCompanyNameContainingIgnoreCase(companyName);
-
+        log.info("Found {} companies matching '{}'", companies.size(), companyName);
         return companyMapper.toResponseList(companies);
     }
 
@@ -163,12 +184,14 @@ public class CompanyServiceImpl implements CompanyService {
     //user new changes
     @Override
     public List<CompanyResponseDTO> getCompaniesByUser(Long userId) {
+        log.info("Fetching companies by user id: {}", userId);
         return companyMapper.toResponseList(companyRepository.findByUserId(userId));
     }
 
     //user new changes
     @Override
     public List<CompanyResponseDTO> getCompaniesByUserAndStatus(Long userId, CompanyStatus status) {
+        log.info("Fetching companies by user id: {} and status: {}", userId, status);
         return companyMapper.toResponseList(
                 companyRepository.findByUserIdAndStatus(userId, status));
     }
