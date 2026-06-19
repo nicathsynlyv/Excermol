@@ -59,6 +59,7 @@ public class Form {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+
     //build ile elaqe
     @OneToMany(mappedBy = "form", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FormField> fields = new ArrayList<>();
