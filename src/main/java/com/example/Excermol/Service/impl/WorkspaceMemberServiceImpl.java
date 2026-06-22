@@ -14,6 +14,7 @@ import com.example.Excermol.repository.UserRepository;
 import com.example.Excermol.repository.WorkspaceMemberRepository;
 import com.example.Excermol.repository.WorkspaceRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class WorkspaceMemberServiceImpl implements WorkspaceMemberService {
 
     private final WorkspaceMemberRepository workspaceMemberRepository;
@@ -41,19 +43,26 @@ public class WorkspaceMemberServiceImpl implements WorkspaceMemberService {
 
     @Override
     public WorkspaceMemberResponseDTO addMember(WorkspaceMemberCreateRequestDTO dto) {
+        log.info("Adding member - workspaceId: {},userId: {}", dto.getWorkspaceId(), dto.getUserId());
         // user artıq bu workspace-dədirmi?
-        if (workspaceMemberRepository.existsByWorkspaceIdAndUserId(
-                dto.getWorkspaceId(), dto.getUserId())) {
+        if (workspaceMemberRepository.existsByWorkspaceIdAndUserId(dto.getWorkspaceId(), dto.getUserId())) {
+            log.warn("User {} already mumber of workspace {}", dto.getUserId(), dto.getWorkspaceId());
             throw new UserAlreadyMemberException("User artıq bu workspace-dədir");
         }
 
         // workspace tap
         Workspace workspace = workspaceRepository.findById(dto.getWorkspaceId())
-                .orElseThrow(() -> new WorkspaceNotFoundException("Workspace tapılmadı: " + dto.getWorkspaceId()));
+                .orElseThrow(() -> {
+                    log.warn("Workspace not found with Id {}", dto.getWorkspaceId());
+                    return new WorkspaceNotFoundException("Workspace tapilmadi" + dto.getWorkspaceId());
+                });
 
         // user tap
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("User tapılmadı: " + dto.getUserId()));
+                .orElseThrow(() -> {
+                    log.warn("User not found with Id {}", dto.getUserId());
+                    return new UserNotFoundException("User tapilmadi" + dto.getUserId());
+                });
 
         // member yarat
         WorkspaceMember member = workspaceMemberMapper.toEntity(dto);
@@ -62,58 +71,84 @@ public class WorkspaceMemberServiceImpl implements WorkspaceMemberService {
         member.setInviteDate(LocalDateTime.now());
 
         WorkspaceMember saved = workspaceMemberRepository.save(member);
+        log.info("Member added successfully. MemberId: {}, WorkspaceId: {},UserId: {}",saved.getId(),dto.getWorkspaceId(),dto.getUserId());
         return workspaceMemberMapper.toResponseDTO(saved);
     }
 
     @Override
     public List<WorkspaceMemberResponseDTO> getMembersByWorkspaceId(Long workspaceId) {
-        return workspaceMemberRepository.findAllByWorkspaceId(workspaceId)
+        log.info("Fetching members by workspaceId: {}", workspaceId);
+
+
+        List<WorkspaceMemberResponseDTO> members  = workspaceMemberRepository.findAllByWorkspaceId(workspaceId)
                 .stream()
                 .map(workspaceMemberMapper::toResponseDTO)
                 .collect(Collectors.toList());
+        log.info("Retrieved {} members for workspaceId: {}", members.size(), workspaceId);
+        return members;
     }
 
     @Override
     public WorkspaceMemberResponseDTO getMemberById(Long id) {
+        log.info("Fetching member by id: {}", id);
         WorkspaceMember member = workspaceMemberRepository.findById(id)
-                .orElseThrow(() -> new WorkspaceMemberNotFoundException("Member tapılmadı: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Member not found with Id {}", id);
+                    return new MemberNotFoundException("Member Tapilmadi " + id);
+                });
+        log.info("Member found with id: {}",id);
         return workspaceMemberMapper.toResponseDTO(member);
     }
 
     @Override
     public WorkspaceMemberResponseDTO updateMemberRole(Long id, WorkspaceMemberUpdateRequestDTO dto) {
+        log.info("Update role for member id: {},new role: {}", id, dto.getRole());
         WorkspaceMember member = workspaceMemberRepository.findById(id)
-                .orElseThrow(() -> new WorkspaceMemberNotFoundException("Member tapılmadı: " + id));
+                .orElseThrow(() -> {
+                    log.warn("Member not found for role update. ID {}", id);
+                    return new MemberNotFoundException("Member Tapilmadi " + id);
+                        });
 
         // OWNER rolunu dəyişmək olmaz
         if (member.getRole() == MemberRole.OWNER) {
+            log.warn("Attempt to change OWNER role.MemberID: {}",id);
             throw new OwnerRoleChangeNotAllowedException("Owner-in rolu dəyişdirilə bilməz");
         }
 
         workspaceMemberMapper.updateEntity(member, dto);
 
         WorkspaceMember updated = workspaceMemberRepository.save(member);
+        log.info("Member role updated successfully. MemberId: {}, Role: {}",id, dto.getRole());
         return workspaceMemberMapper.toResponseDTO(updated);
     }
 
     @Override
     public void removeMember(Long id) {
+        log.info("Removing member with id: {}", id);
         WorkspaceMember member = workspaceMemberRepository.findById(id)
-                .orElseThrow(() -> new WorkspaceMemberNotFoundException("Member tapılmadı: " + id));
+                .orElseThrow(() ->{
+                    log.warn("Member not found for removal. ID {}", id);
+                    return new MemberNotFoundException("Member Tapilmadi " + id);
+                        });
 
         // OWNER silinə bilməz
         if (member.getRole() == MemberRole.OWNER) {
+            log.warn("Attempt to remove OWNER. MemberID: {}",id);
             throw new OwnerCannotBeRemovedException("Owner workspace-dən silinə bilməz");
         }
 
         workspaceMemberRepository.delete(member);
+        log.info("Member removed successfully. ID: {}",id);
     }
 
     @Override
     public List<WorkspaceMemberResponseDTO> getMembersByRole(Long workspaceId, MemberRole role) {
-        return workspaceMemberRepository.findAllByWorkspaceIdAndRole(workspaceId, role)
+        log.info("Fetching Members by workspaceID: {} and role: {}",workspaceId,role);
+        List<WorkspaceMemberResponseDTO> members = workspaceMemberRepository.findAllByWorkspaceIdAndRole(workspaceId, role)
                 .stream()
                 .map(workspaceMemberMapper::toResponseDTO)
                 .collect(Collectors.toList());
+        log.info("Found {} members with role {} in workspaceiD: {}",members.size(),role,workspaceId);
+        return members;
     }
 }
