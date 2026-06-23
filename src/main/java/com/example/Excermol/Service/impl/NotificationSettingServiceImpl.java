@@ -16,6 +16,7 @@ import com.example.Excermol.repository.NotificationSettingRepository;
 import com.example.Excermol.repository.UserRepository;
 import com.example.Excermol.repository.WorkspaceRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class NotificationSettingServiceImpl implements NotificationSettingService {
 
     private final NotificationSettingRepository notificationSettingRepository;
