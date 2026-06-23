@@ -6,7 +6,10 @@ import com.example.Excermol.entity.Person;
 import com.example.Excermol.entity.dtos.EmailRequestDto;
 import com.example.Excermol.entity.dtos.EmailResponseDto;
 import com.example.Excermol.enums.EmailStatus;
+import com.example.Excermol.exception.CampaignNotFoundException;
+import com.example.Excermol.exception.CompanyNotFoundException;
 import com.example.Excermol.exception.EmailNotFoundException;
+import com.example.Excermol.exception.UserNotFoundException;
 import com.example.Excermol.mapper.EmailMapper;
 import com.example.Excermol.repository.*;
 import jakarta.transaction.Transactional;
@@ -160,17 +163,17 @@ public class EmailServiceImpl implements EmailService {
 
         if (dto.getSenderId() != null) {
             existing.setSender(userRepository.findById(dto.getSenderId())
-                    .orElseThrow(() -> new RuntimeException("User tapılmadı")));
+                    .orElseThrow(() -> new UserNotFoundException("User tapılmadı")));
         }
 
         if (dto.getCompanyId() != null) {
             existing.setCompany(companyRepository.findById(dto.getCompanyId())
-                    .orElseThrow(() -> new RuntimeException("Company tapılmadı")));
+                    .orElseThrow(() -> new CompanyNotFoundException("Company tapılmadı")));
         }
 
         if (dto.getCampaignId() != null) {
             existing.setCampaign(campaignRepository.findById(dto.getCampaignId())
-                    .orElseThrow(() -> new RuntimeException("Campaign tapılmadı")));
+                    .orElseThrow(() -> new CampaignNotFoundException("Campaign tapılmadı")));
         }
 
         if (dto.getRecipientIds() != null && !dto.getRecipientIds().isEmpty()) {

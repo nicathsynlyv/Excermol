@@ -73,7 +73,7 @@ public class FormServiceImpl implements FormService {
                     log.warn("Form not found with id: {}", id);
                     return new FormNotFoundException("Form tapılmadı: " + id);
                 });
-        log.info("Form found with id: {}", id);
+
         return formMapper.toResponseDTO(form);
     }
 
