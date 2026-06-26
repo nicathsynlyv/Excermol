@@ -12,6 +12,7 @@ import com.example.Excermol.mapper.OrganizationMapper;
 import com.example.Excermol.repository.OrganizationRepository;
 import com.example.Excermol.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("OrganizationServiceImpl Unit Tests")
 class OrganizationServiceImplTest {
 
     @Mock

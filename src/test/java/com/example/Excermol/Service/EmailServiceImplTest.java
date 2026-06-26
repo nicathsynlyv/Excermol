@@ -10,6 +10,7 @@ import com.example.Excermol.exception.EmailNotFoundException;
 import com.example.Excermol.mapper.EmailMapper;
 import com.example.Excermol.repository.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("EmailServiceImpl Unit Tests")
 class EmailServiceImplTest {
 
     @Mock
