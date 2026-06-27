@@ -24,10 +24,8 @@ public class Company {
     private Long id;
 
 
-
     // Lead adi sadəcə string
     private String leadSource;
-
 
 
     // Status enum
@@ -35,7 +33,6 @@ public class Company {
     @Column(nullable = false, length = 20)
     //private CompanyStatus status;
     private CompanyStatus status = CompanyStatus.INTERESTED; // ✅
-
 
 
     // Şəhər
@@ -88,18 +85,7 @@ public class Company {
     private String emailAddress; // "anwarhussen@gmail.com"
 
 
-
-
-
-
-
-
-
-
-
-
-
-//gelecekde user ile relation duzeltmek ucun
+    //gelecekde user ile relation duzeltmek ucun
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
