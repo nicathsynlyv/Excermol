@@ -43,7 +43,7 @@ public class PipelineServiceImpl implements PipelineService {
 
     @Override
     public PipelineResponseDTO create(PipelineRequestDTO dto) {
-        log.info("Create pipeline for company id: {}",dto.getCompanyId());
+        log.info("Create pipeline for company id: {}", dto.getCompanyId());
         // Company tap
         Company company = companyRepository.findById(dto.getCompanyId())
                 .orElseThrow(() -> {
@@ -73,13 +73,13 @@ public class PipelineServiceImpl implements PipelineService {
                     log.warn("Pipeline not found with id: {}", id);
                     return new PipelineNotFoundException("Pipeline tapılmadı: " + id);
                 });
-        log.info("pipeline found with id: {}",id);
+        log.info("pipeline found with id: {}", id);
         return pipelineMapper.toResponseDTO(pipeline);
     }
 
     @Override
     public PipelineResponseDTO update(Long id, PipelineRequestDTO dto) {
-        log.info("Update pipeline with id: {}",id);
+        log.info("Update pipeline with id: {}", id);
         // Mövcud pipeline tap
         Pipeline pipeline = pipelineRepository.findById(id)
                 .orElseThrow(() -> {
@@ -180,7 +180,6 @@ public class PipelineServiceImpl implements PipelineService {
         log.info("Retrieved {} pipelines for assignee id: {}", pipelines.size(), userId);
         return pipelines;
     }
-
 
 
     // ServiceImpl-in sonuna əlavə edirem cunki dublikate olmasin deye
