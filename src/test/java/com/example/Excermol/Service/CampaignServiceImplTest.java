@@ -64,6 +64,7 @@ class CampaignServiceImplTest {
     // =========================
     // CREATE
     // =========================
+//    1
     @Test
     void createCampaign_shouldSaveAndReturnCampaign_withoutUser() {
         when(campaignMapper.toEntity(requestDTO)).thenReturn(campaign);
@@ -77,6 +78,7 @@ class CampaignServiceImplTest {
         verify(campaignRepository).save(campaign);
     }
 
+    //2
     @Test
     void createCampaign_shouldSetUser_whenUserIdProvided() {
         requestDTO.setUserId(5L);
@@ -94,6 +96,7 @@ class CampaignServiceImplTest {
         verify(userRepository).findById(5L);
     }
 
+    //3
     @Test
     void createCampaign_shouldThrowException_whenUserNotFound() {
         requestDTO.setUserId(5L);
@@ -108,6 +111,7 @@ class CampaignServiceImplTest {
     // =========================
     // GET ALL
     // =========================
+//    4
     @Test
     void getAllCampaigns_shouldReturnAllCampaigns() {
         when(campaignRepository.findAll()).thenReturn(List.of(campaign));
@@ -120,6 +124,7 @@ class CampaignServiceImplTest {
         verify(campaignRepository).findAll();
     }
 
+    //5
     @Test
     void getAllCampaigns_shouldReturnEmptyList_whenNoCampaigns() {
         when(campaignRepository.findAll()).thenReturn(List.of());
@@ -129,6 +134,7 @@ class CampaignServiceImplTest {
         assertThat(result).isEmpty();
     }
 
+    //6
     // =========================
     // GET BY ID
     // =========================
@@ -143,6 +149,7 @@ class CampaignServiceImplTest {
         verify(campaignRepository).findById(1L);
     }
 
+    //7
     @Test
     void getCampaignById_shouldThrowException_whenNotFound() {
         when(campaignRepository.findById(99L)).thenReturn(Optional.empty());
@@ -150,6 +157,7 @@ class CampaignServiceImplTest {
         assertThrows(CampaignNotFoundException.class, () -> campaignService.getCampaignById(99L));
     }
 
+    //8
     // =========================
     // UPDATE
     // =========================
@@ -168,6 +176,7 @@ class CampaignServiceImplTest {
         verify(campaignRepository).save(campaign);
     }
 
+    //9
     @Test
     void updateCampaign_shouldThrowException_whenCampaignNotFound() {
         when(campaignRepository.findById(99L)).thenReturn(Optional.empty());
@@ -176,6 +185,7 @@ class CampaignServiceImplTest {
         verify(campaignRepository, never()).save(any());
     }
 
+    //10
     @Test
     void updateCampaign_shouldUpdateUser_whenUserIdProvided() {
         requestDTO.setUserId(5L);
@@ -192,6 +202,7 @@ class CampaignServiceImplTest {
         assertThat(campaign.getUser()).isEqualTo(user);
     }
 
+    //11
     @Test
     void updateCampaign_shouldThrowException_whenUserNotFound() {
         requestDTO.setUserId(5L);
@@ -203,6 +214,7 @@ class CampaignServiceImplTest {
         verify(campaignRepository, never()).save(any());
     }
 
+    //12
     // =========================
     // DELETE
     // =========================
@@ -215,6 +227,7 @@ class CampaignServiceImplTest {
         verify(campaignRepository).delete(campaign);
     }
 
+    //13
     @Test
     void deleteCampaign_shouldThrowException_whenNotFound() {
         when(campaignRepository.findById(99L)).thenReturn(Optional.empty());
@@ -223,6 +236,7 @@ class CampaignServiceImplTest {
         verify(campaignRepository, never()).delete(any());
     }
 
+    //14
     // =========================
     // GET BY USER
     // =========================
@@ -237,6 +251,7 @@ class CampaignServiceImplTest {
         verify(campaignRepository).findByUserId(5L);
     }
 
+    //15
     @Test
     void getCampaignsByUser_shouldReturnEmptyList_whenNoCampaigns() {
         when(campaignRepository.findByUserId(5L)).thenReturn(List.of());
@@ -246,6 +261,7 @@ class CampaignServiceImplTest {
         assertThat(result).isEmpty();
     }
 
+    //16
     // =========================
     // GET BY USER AND STATUS
     // =========================
@@ -260,6 +276,7 @@ class CampaignServiceImplTest {
         verify(campaignRepository).findByUserIdAndStatus(5L, CampaignStatus.ACTIVE);
     }
 
+    //17
     @Test
     void getCampaignsByUserAndStatus_shouldReturnEmptyList_whenNoMatches() {
         when(campaignRepository.findByUserIdAndStatus(5L, CampaignStatus.ACTIVE)).thenReturn(List.of());
