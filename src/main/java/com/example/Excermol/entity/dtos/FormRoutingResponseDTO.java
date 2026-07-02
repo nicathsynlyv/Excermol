@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 public class FormRoutingResponseDTO {
 
-    private Long id;
+    private ong id;
     private RoutingCondition conditionType;
     private String conditionValue;
     private String redirectTo;
