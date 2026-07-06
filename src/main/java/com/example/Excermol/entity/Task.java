@@ -5,6 +5,9 @@ import com.example.Excermol.enums.TaskStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +24,9 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @NotBlank
+    @NotBlank(message = "Başlıq boş ola bilməz")
+    @Size(min = 2, max = 100)
+    @Column(nullable = false, length = 100)
     private String title;
 
     @Column(columnDefinition = "TEXT")
@@ -52,6 +57,7 @@ public class Task {
     private Person lead;
 
     @Max(100)
+    @Min(0)
     private int progress; // 0-100%
 
     // Kanban sütununda sıra üçün
