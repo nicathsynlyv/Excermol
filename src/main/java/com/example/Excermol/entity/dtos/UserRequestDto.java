@@ -13,18 +13,21 @@ import lombok.Setter;
 public class UserRequestDto {
 
     @NotBlank(message = "Ad boş ola bilməz")
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 50,message = "Ad 2-50 simvol arası olmalıdlır")
     private String fullName;
 
     @Email(message = "Email formatı düzgün deyil")
     @NotBlank(message = "Email boş ola bilməz")
+    @Size(max = 100,message = "Email 100 simvoldan cox ola bilməz")
     private String email;
 
     @NotBlank(message = "Şifrə boş ola bilməz")
-    @Size(min = 6)
+    @Size(min = 6,max = 50, message = "Şifrə 6-50 simvol arası olmalıdır")
     private String password;
 
+    @NotBlank(message = "Status boş ola bilməz")
     private UserStatus status;
 
+    @NotBlank(message = "Role boş ola bilməz")
     private UserRole role;
 }

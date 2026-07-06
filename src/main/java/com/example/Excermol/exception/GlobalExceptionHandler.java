@@ -19,7 +19,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    // =========================
     // 404 - Not Found
+    // =========================
     @ExceptionHandler({
             TaskNotFoundException.class,
             EmailNotFoundException.class,
@@ -39,42 +41,49 @@ public class GlobalExceptionHandler {
             FormRoutingNotFoundException.class,
             WorkspaceNotFoundException.class,
             MemberNotFoundException.class,
-            OwnerCannotLeaveWorkspaceException.class,
             WorkspaceMemberNotFoundException.class,
-            UserAlreadyMemberException.class,
-            OwnerRoleChangeNotAllowedException.class,
-            OwnerCannotBeRemovedException.class,
             NotificationSettingNotFoundException.class,
-            NotificationSettingAlreadyExistsException.class,
             CompanyAttributeNotFoundException.class,
-            SystemAttributeCannotBeModifiedException.class,
             IntegrationNotFoundException.class,
-            IntegrationAlreadyExistsException.class,
-            TagAlreadyExistsException.class,
             TagNotFoundException.class,
             CommentNotFoundException.class,
             AttachmentNotFoundException.class
     })
     public ResponseEntity<Map<String, Object>> handleNotFound(RuntimeException ex) {
-        return buildResponse(
-                HttpStatus.NOT_FOUND,
-                ex.getMessage()
-        );
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    // =========================
     // 409 - Conflict
+    // =========================
     @ExceptionHandler({
             EmailAlreadyExistsException.class,
-            DomainAlreadyExistsException.class
+            DomainAlreadyExistsException.class,
+            UserAlreadyMemberException.class,
+            NotificationSettingAlreadyExistsException.class,
+            IntegrationAlreadyExistsException.class,
+            TagAlreadyExistsException.class
     })
     public ResponseEntity<Map<String, Object>> handleConflict(RuntimeException ex) {
-        return buildResponse(
-                HttpStatus.CONFLICT,
-                ex.getMessage()
-        );
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
+    // =========================
+    // 403 - Forbidden
+    // =========================
+    @ExceptionHandler({
+            OwnerCannotLeaveWorkspaceException.class,
+            OwnerRoleChangeNotAllowedException.class,
+            OwnerCannotBeRemovedException.class,
+            SystemAttributeCannotBeModifiedException.class
+    })
+    public ResponseEntity<Map<String, Object>> handleForbidden(RuntimeException ex) {
+        return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+    // =========================
     // 400 - Validation Errors
+    // =========================
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(
             MethodArgumentNotValidException ex) {
@@ -82,8 +91,7 @@ public class GlobalExceptionHandler {
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error ->
-                        error.getField() + ": " + error.getDefaultMessage())
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
@@ -95,43 +103,36 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    // =========================
     // 400 - IllegalArgumentException
+    // =========================
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(
             IllegalArgumentException ex) {
-
-        return buildResponse(
-                HttpStatus.BAD_REQUEST,
-                ex.getMessage()
-        );
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    // =========================
     // 500 - Generic Exception
+    // =========================
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGeneric(
-            Exception ex) {
-
+    public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
         log.error("Unexpected error occurred", ex);
-
-        return buildResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "Daxili server xətası baş verdi"
-        );
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Daxili server xətası baş verdi");
     }
 
+    // =========================
+    // KÖMƏKÇI METOD
+    // =========================
     private ResponseEntity<Map<String, Object>> buildResponse(
-            HttpStatus status,
-            String message) {
+            HttpStatus status, String message) {
 
         Map<String, Object> response = new HashMap<>();
-
         response.put("timestamp", LocalDateTime.now());
         response.put("status", status.value());
         response.put("error", status.getReasonPhrase());
         response.put("message", message);
 
-        return ResponseEntity
-                .status(status)
-                .body(response);
+        return ResponseEntity.status(status).body(response);
     }
 }
