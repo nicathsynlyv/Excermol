@@ -35,6 +35,17 @@ public class OrganizationMapper {
         organization.setEmployeesRange(requestDTO.getEmployeesRange());
     }
 
+//
+//    private String normalizeDomain(String domain) {
+//        if (domain == null) return null;
+//        return domain
+//                .trim()
+//                .replaceAll("^https?://", "")
+//                .replaceAll("^www\\.", "")
+//                .replaceAll("/$", "")
+//                .toLowerCase();
+//    }
+
     // Entity -> ResponseDTO
     public OrganizationResponseDTO toResponseDTO(Organization organization) {
 
