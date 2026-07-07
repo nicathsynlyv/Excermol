@@ -2,6 +2,8 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.EmailStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,9 +23,13 @@ public class Email {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Mövzu boş ola bilməz")
+    @Size(max=250)
+    @Column(nullable = false, length = 250)
     private String subject;
 
-    @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Email məzmunu boş ola bilməz")
+    @Column(columnDefinition = "TEXT",nullable = false)
     private String body;
 
 
@@ -35,6 +41,7 @@ public class Email {
     private Set<Person> recipients;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EmailStatus status; // INBOX, IMPORTANT, SENT, DRAFT, SPAM, TRASH
 
     private boolean read;
