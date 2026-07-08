@@ -2,6 +2,8 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.OrganizationType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 
@@ -20,14 +22,19 @@ public class Organization {
     private Long id;
 
     // Organization adı
-    @Column(nullable = false)
+    @NotBlank(message = "Organization adı boş ola bilməz")
+    @Size(min = 2,max = 100)
+    @Column(nullable = false,length = 100)
     private String name;
 
     // Domain (website)
-    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Domain boş ola bilməz")
+    @Size(max = 255)
+    @Column(nullable = false, unique = true,length = 255)
     private String domain;
 
     // Təsvir
+    @Size(max = 250)
     @Column(length = 250)
     private String description;
 
