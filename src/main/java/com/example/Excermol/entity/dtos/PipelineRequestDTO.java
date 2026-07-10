@@ -15,6 +15,7 @@ import java.util.List;
 public class PipelineRequestDTO {
 
     @NotBlank(message = "Pipeline adı boş ola bilməz")
+    @Size(min = 2, max = 100,message = "Pipeline adı 2-100 simvol arasında olmalıdır")
     private String name;
 
     @NotNull(message = "Status boş ola bilməz")
@@ -29,9 +30,11 @@ public class PipelineRequestDTO {
     private LocalDate date;
 
     @Min(value = 0, message = "Saat mənfi ola bilməz")
+    @Max(value = 9999,message = "Saat 9999 dan çox ola bilməz")
     private Integer hours;
 
     @DecimalMin(value = "0.0", message = "Dəyər mənfi ola bilməz")
+    @DecimalMax(value = "999999999.99", message = "Dəyər həddən artıq böyükdür")
     private BigDecimal value;
 
     private List<Long> assigneeIds;       // User entity-dən sadəcə ID-lər
@@ -39,13 +42,13 @@ public class PipelineRequestDTO {
     @Size(max = 2000, message = "Təsvir 2000 simvoldan çox ola bilməz")
     private String description;
 
-    @Size(max = 500)
+    @Size(max = 500,message = "Call link 500 simvoldan çox ola bilməz")
     private String callLink;
 
-    @Size(max = 500)
+    @Size(max = 500,message = "Mail link 500 simvoldan çox ola bilməz")
     private String mailLink;
 
-    @Size(max = 500)
+    @Size(max = 500,message = "Chat link 500 simvoldan çox ola bilməz")
     private String chatLink;
 
 }

@@ -3,6 +3,7 @@ package com.example.Excermol.entity;
 import com.example.Excermol.enums.PipelineStage;
 import com.example.Excermol.enums.PipelineStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -21,7 +22,9 @@ public class Pipeline {
     private Long id;
 
     // Pipeline adı
-    @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2,max = 100)
+    @Column(nullable = false,length = 100)
     private String name;
 
     // Kart uzerundeki Status: AGENCY,STARTUP,SCALE_UP
@@ -45,9 +48,11 @@ public class Pipeline {
     private LocalDate date;
 
     // serf olunan saat
+    @Min(0) @Max(9999)
     private Integer hours;
 
     // Pul dəyəri
+    @DecimalMin("0.0")
     @Column(precision = 15, scale = 2)
     private BigDecimal value;
 
@@ -61,6 +66,7 @@ public class Pipeline {
     private List<User> assignees; // təyin olunmuş komanda
 
     //     Əlavə məlumat
+    @Size(max = 2000)
     @Column(length = 2000)
     private String description;
 
@@ -77,9 +83,6 @@ public class Pipeline {
 
     @Column(length = 500)
     private String chatLink;
-
-
-
 
 
 }
