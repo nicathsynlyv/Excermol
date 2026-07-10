@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class FormController {
     })
     @PostMapping
     public ResponseEntity<FormResponseDTO> createForm(
-            @RequestBody FormCreateRequestDTO dto,
+            @Valid @RequestBody FormCreateRequestDTO dto,
             @RequestParam Long ownerId) {
         return ResponseEntity.ok(formService.createForm(dto, ownerId));
     }
@@ -75,7 +76,7 @@ public class FormController {
     @PutMapping("/{id}")
     public ResponseEntity<FormResponseDTO> updateForm(
             @PathVariable Long id,
-            @RequestBody FormUpdateRequestDTO dto) {
+           @Valid @RequestBody FormUpdateRequestDTO dto) {
         return ResponseEntity.ok(formService.updateForm(id, dto));
     }
 

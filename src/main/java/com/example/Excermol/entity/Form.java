@@ -2,6 +2,8 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.FormStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +24,9 @@ public class Form {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "forms_name")
+    @NotBlank
+    @Size(min = 2,max = 100)
+    @Column(name = "forms_name",length = 100)
     private String formsName; // "Lead Capture Form", "Customer Onboarding Form"
 
 
@@ -30,7 +34,8 @@ public class Form {
     private Integer responsesCount = 0;
 
 
-    @Column(name = "links")
+    @Size(max=500)
+    @Column(name = "links",length = 500)
     private String links; // form URL
 
     @Enumerated(EnumType.STRING)
