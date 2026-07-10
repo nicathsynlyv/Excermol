@@ -3,6 +3,8 @@ package com.example.Excermol.entity;
 import com.example.Excermol.enums.ConnectionStrength;
 import com.example.Excermol.enums.PersonStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,22 +30,30 @@ public class Person {
     private Long id;
 
     // Create People popup-dan
-    @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 50)
+    @Column(nullable = false, length = 50)
     private String fullName;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Size(min = 2, max = 50)
+    @Column(nullable = false, length = 50)
     private String lastName;
 
     // Job Title / Position
+    @Size(max = 100)
+    @Column(length = 100)
     private String jobTitle;
 
     //website ucun
+    @Size(max = 255)
     private String websiteUrl;
 
     // Phone Number
     private String phone;
 
     //Social media
+    @Size(max = 255)
     private String linkedinUrl;
     private String whatsappUsername;
     private String twitterName;
@@ -95,7 +105,10 @@ public class Person {
 
 
     // Person entity-də — şəxsin öz email ünvanı
-    @Column(unique = true)
+
+    @jakarta.validation.constraints.Email
+    @Size(max = 100)
+    @Column(unique = true, length = 100)
     private String email; // məsələn: "jaman@gmail.com"
 
 
