@@ -2,6 +2,9 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.CompanyStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -25,6 +28,8 @@ public class Company {
 
 
     // Lead adi sadəcə string
+    @Size(max = 100)
+    @Column(length = 100)
     private String leadSource;
 
 
@@ -36,19 +41,25 @@ public class Company {
 
 
     // Şəhər
+    @Size(max = 100)
+    @Column(length = 100)
     private String city;
 
     // Lead value
+    @DecimalMin("0.0")
     @Column(name = "lead_value", precision = 15, scale = 2)
     private BigDecimal leadValue;
 
     // Connection (məs: Zoho CRM, Pipedrive və s.)
     private String connection;
 
+    @NotBlank
+    @Size(min =2,max = 150)
     @Column(nullable = false, length = 150)
     private String companyName;
 
     // Domain
+    @Size(max = 255)
     @Column(length = 255, unique = true)
     private String domain;
 
@@ -81,6 +92,8 @@ public class Company {
     private List<Email> emails = new ArrayList<>();  // ✅
 
     // ✅ Şirkətin contact email-i üçün sadə string
+    @jakarta.validation.constraints.Email
+    @Size(max = 150)
     @Column(length = 150)
     private String emailAddress; // "anwarhussen@gmail.com"
 
