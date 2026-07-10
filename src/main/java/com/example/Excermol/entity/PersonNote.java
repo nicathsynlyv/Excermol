@@ -1,6 +1,9 @@
 package com.example.Excermol.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,10 +20,15 @@ public class PersonNote {
     private Long id;
 
     // Note məzmunu — "Hello, Designer", "Lead Qualification Summary"
+    @NotNull
+    @Size(max = 5000)
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
     // Kimin adından yazılıb
+    @Email
+    @Size(max = 100)
+    @Column(length = 100)
     private String authorEmail;
 
     // Nə vaxt yazılıb
