@@ -2,6 +2,9 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.FieldType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,18 +20,23 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+//form builder figmada
 public class FormField {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "label", nullable = false)
+    @NotBlank
+    @Size(min=2,max=100)
+    @Column(name = "label", nullable = false, length = 100)
     private String label; // "Work Email Address", "First Name"
 
-    @Column(name = "placeholder")
+    @Size(max = 200)
+    @Column(name = "placeholder",length = 200)
     private String placeholder; // "Enter email address", "Enter first name"
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "field_type", nullable = false)
     private FieldType fieldType; // TEXT, EMAIL, SELECT ...

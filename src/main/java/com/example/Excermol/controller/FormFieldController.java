@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class FormFieldController {
     })
     @PostMapping
     public ResponseEntity<FormFieldResponseDTO> createField(
-            @RequestBody FormFieldCreateRequestDTO dto) {
+            @Valid @RequestBody FormFieldCreateRequestDTO dto) {
         return ResponseEntity.ok(formFieldService.createField(dto));
     }
 
@@ -65,7 +66,7 @@ public class FormFieldController {
     @PutMapping("/{id}")
     public ResponseEntity<FormFieldResponseDTO> updateField(
             @PathVariable Long id,
-            @RequestBody FormFieldUpdateRequestDTO dto) {
+            @Valid @RequestBody FormFieldUpdateRequestDTO dto) {
         return ResponseEntity.ok(formFieldService.updateField(id, dto));
     }
 
