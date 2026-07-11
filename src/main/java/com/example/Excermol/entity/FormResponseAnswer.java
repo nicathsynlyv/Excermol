@@ -1,6 +1,7 @@
 package com.example.Excermol.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class FormResponseAnswer {
     private Long id;
 
 
+    @Size(max = 5000)
     @Column(name = "value", columnDefinition = "TEXT")
     private String value; // "Tahsan", "tahsankhan@gmail.com", "Zoho CRM"
 
