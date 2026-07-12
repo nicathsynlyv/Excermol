@@ -2,6 +2,8 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.RoutingCondition;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,16 +21,19 @@ public class FormRouting {
 
 
     // Hansı şərt - "Contains", "Equals", "Starts With"
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "condition_type")
     private RoutingCondition conditionType;
 
     // Şərtin dəyəri - məs. "@gmail.com", "@company.com"
-    @Column(name = "condition_value")
+    @Size(max = 255)
+    @Column(name = "condition_value",length = 255)
     private String conditionValue;
 
     // Hara yönləndir - "Thank you page" və ya URL
-    @Column(name = "redirect_to")
+    @Size(max = 500)
+    @Column(name = "redirect_to",length = 500)
     private String redirectTo;
 
     // Company email adı

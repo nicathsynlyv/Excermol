@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class FormRoutingController {
     })
     @PostMapping
     public ResponseEntity<FormRoutingResponseDTO> createRouting(
-            @RequestBody FormRoutingCreateRequestDTO dto) {
+            @Valid @RequestBody FormRoutingCreateRequestDTO dto) {
         return ResponseEntity.ok(formRoutingService.createRouting(dto));
     }
 
@@ -63,7 +64,7 @@ public class FormRoutingController {
     @PutMapping("/{id}")
     public ResponseEntity<FormRoutingResponseDTO> updateRouting(
             @PathVariable Long id,
-            @RequestBody FormRoutingUpdateRequestDTO dto) {
+            @Valid @RequestBody FormRoutingUpdateRequestDTO dto) {
         return ResponseEntity.ok(formRoutingService.updateRouting(id, dto));
     }
 
