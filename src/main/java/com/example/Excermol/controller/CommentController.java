@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,8 @@ public class CommentController {
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
-//1
+
+    //1
     @Operation(summary = "Yeni comment yarat")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Comment uğurla yaradıldı"),
@@ -31,10 +33,11 @@ public class CommentController {
     })
     @PostMapping
     public ResponseEntity<CommentResponseDTO> createComment(
-            @RequestBody CommentCreateRequestDTO dto) {
+            @Valid @RequestBody CommentCreateRequestDTO dto) {
         return ResponseEntity.ok(commentService.createComment(dto));
     }
-//2
+
+    //2
     @Operation(summary = "Task-a görə bütün commentlər")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -44,7 +47,8 @@ public class CommentController {
             @PathVariable Long taskId) {
         return ResponseEntity.ok(commentService.getCommentsByTaskId(taskId));
     }
-//3
+
+    //3
     @Operation(summary = "ID ilə comment tap")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Comment tapıldı"),
@@ -54,7 +58,8 @@ public class CommentController {
     public ResponseEntity<CommentResponseDTO> getCommentById(@PathVariable Long id) {
         return ResponseEntity.ok(commentService.getCommentById(id));
     }
-//4
+
+    //4
     @Operation(summary = "Comment update et")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Comment uğurla yeniləndi"),
@@ -63,10 +68,11 @@ public class CommentController {
     @PutMapping("/{id}")
     public ResponseEntity<CommentResponseDTO> updateComment(
             @PathVariable Long id,
-            @RequestBody CommentUpdateRequestDTO dto) {
+            @Valid @RequestBody CommentUpdateRequestDTO dto) {
         return ResponseEntity.ok(commentService.updateComment(id, dto));
     }
-//5
+
+    //5
     @Operation(summary = "Comment sil")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Comment uğurla silindi"),
@@ -77,7 +83,8 @@ public class CommentController {
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();
     }
-//6
+
+    //6
     @Operation(summary = "Task-a görə comment sayı")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
