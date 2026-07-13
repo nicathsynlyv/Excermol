@@ -2,6 +2,7 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.MemberRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class WorkspaceMember {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "rola", nullable = false)
     private MemberRole role;
@@ -38,8 +40,7 @@ public class WorkspaceMember {
     private LocalDateTime inviteDate;
 
 
-
-    @Column(name = "created_at",updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "update_at")

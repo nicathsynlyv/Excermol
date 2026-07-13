@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,8 @@ public class WorkspaceMemberController {
     public WorkspaceMemberController(WorkspaceMemberService workspaceMemberService) {
         this.workspaceMemberService = workspaceMemberService;
     }
-//1
+
+    //1
     @Operation(summary = "Yeni üzv əlavə et - 'Invite team member'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Üzv uğurla əlavə edildi"),
@@ -34,10 +36,11 @@ public class WorkspaceMemberController {
     })
     @PostMapping
     public ResponseEntity<WorkspaceMemberResponseDTO> addMember(
-            @RequestBody WorkspaceMemberCreateRequestDTO dto) {
+            @Valid @RequestBody WorkspaceMemberCreateRequestDTO dto) {
         return ResponseEntity.ok(workspaceMemberService.addMember(dto));
     }
-//2
+
+    //2
     @Operation(summary = "Workspace-ə görə bütün üzvlər")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -47,7 +50,8 @@ public class WorkspaceMemberController {
             @PathVariable Long workspaceId) {
         return ResponseEntity.ok(workspaceMemberService.getMembersByWorkspaceId(workspaceId));
     }
-//3
+
+    //3
     @Operation(summary = "ID ilə üzv tap")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Üzv tapıldı"),
@@ -57,7 +61,8 @@ public class WorkspaceMemberController {
     public ResponseEntity<WorkspaceMemberResponseDTO> getMemberById(@PathVariable Long id) {
         return ResponseEntity.ok(workspaceMemberService.getMemberById(id));
     }
-//4
+
+    //4
     @Operation(summary = "Üzvün rolunu dəyiş - ADMIN, MEMBER")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Rol uğurla dəyişdirildi"),
@@ -67,10 +72,11 @@ public class WorkspaceMemberController {
     @PutMapping("/{id}/role")
     public ResponseEntity<WorkspaceMemberResponseDTO> updateMemberRole(
             @PathVariable Long id,
-            @RequestBody WorkspaceMemberUpdateRequestDTO dto) {
+            @Valid @RequestBody WorkspaceMemberUpdateRequestDTO dto) {
         return ResponseEntity.ok(workspaceMemberService.updateMemberRole(id, dto));
     }
-//5
+
+    //5
     @Operation(summary = "Üzvü sil")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Üzv uğurla silindi"),
@@ -82,7 +88,8 @@ public class WorkspaceMemberController {
         workspaceMemberService.removeMember(id);
         return ResponseEntity.noContent().build();
     }
-//6
+
+    //6
     @Operation(summary = "Rola görə üzvlər - OWNER, ADMIN, MEMBER")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
