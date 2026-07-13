@@ -2,6 +2,8 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.IntegrationType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,11 +25,13 @@ public class Integration {
     private Long id;
 
     // ZAPIER, MAKE, CHROME, SLACK, MAILCHIMP, DROPBOX, ASANA, EVERNOTE
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "integration_type", nullable = false)
     private IntegrationType integrationType;
 
     // "Automate Breakcold with 6000+ applications"
+    @Size(max = 500)
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
