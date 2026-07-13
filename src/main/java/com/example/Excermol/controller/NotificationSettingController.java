@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class NotificationSettingController {
     })
     @PostMapping
     public ResponseEntity<NotificationSettingResponseDTO> createNotificationSetting(
-            @RequestBody NotificationSettingCreateRequestDTO dto) {
+           @Valid @RequestBody NotificationSettingCreateRequestDTO dto) {
         return ResponseEntity.ok(notificationSettingService.createNotificationSetting(dto));
     }
 //2
@@ -86,7 +87,7 @@ public class NotificationSettingController {
     @PutMapping("/{id}")
     public ResponseEntity<NotificationSettingResponseDTO> updateSetting(
             @PathVariable Long id,
-            @RequestBody NotificationSettingUpdateRequestDTO dto) {
+           @Valid @RequestBody NotificationSettingUpdateRequestDTO dto) {
         return ResponseEntity.ok(notificationSettingService.updateSetting(id, dto));
     }
 //7
