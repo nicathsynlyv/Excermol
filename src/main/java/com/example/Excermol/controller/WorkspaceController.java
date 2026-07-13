@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class WorkspaceController {
     })
     @PostMapping
     public ResponseEntity<WorkspaceResponseDTO> createWorkspace(
-            @RequestBody WorkspaceCreateRequestDTO dto) {
+            @Valid @RequestBody WorkspaceCreateRequestDTO dto) {
         return ResponseEntity.ok(workspaceService.createWorkspace(dto));
     }
 //2
@@ -72,7 +73,7 @@ public class WorkspaceController {
     @PutMapping("/{id}")
     public ResponseEntity<WorkspaceResponseDTO> updateWorkspace(
             @PathVariable Long id,
-            @RequestBody WorkspaceUpdateRequestDTO dto) {
+           @Valid @RequestBody WorkspaceUpdateRequestDTO dto) {
         return ResponseEntity.ok(workspaceService.updateWorkspace(id, dto));
     }
 //6

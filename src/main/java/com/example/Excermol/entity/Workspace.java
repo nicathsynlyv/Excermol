@@ -2,6 +2,8 @@ package com.example.Excermol.entity;
 
 import com.example.Excermol.enums.PhoneCountryCode;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,13 +22,17 @@ public class Workspace {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @NotBlank
+    @Size(min = 2,max = 100)
+    @Column(name = "name", nullable = false,length = 100)
     private String name;
 
-    @Column(name = "workspace_Avatar")
+    @Size(max = 500)
+    @Column(name = "workspace_Avatar",length = 500)
     private String workspaceAvatar;
 
-    @Column(name = "currency")
+    @Size(max = 10)
+    @Column(name = "currency",length = 10)
     private String currency;
 
     @Enumerated(EnumType.STRING)
