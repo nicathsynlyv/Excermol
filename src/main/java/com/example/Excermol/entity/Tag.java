@@ -1,6 +1,9 @@
 package com.example.Excermol.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 
@@ -18,7 +21,14 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(min = 2,max = 50)
+    @Column(nullable = false, length = 50)
     private String name;   // Marketing, Urgent, Report...
+
+
+    @Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
+    @Column(length = 7)
     private String color;  // rəng kodu (#FF0000 və s.)
 
 
