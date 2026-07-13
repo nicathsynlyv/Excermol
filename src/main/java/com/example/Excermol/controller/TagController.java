@@ -8,10 +8,12 @@ import com.example.Excermol.entity.dtos.TagUpdateRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/tags")
 @io.swagger.v3.oas.annotations.tags.Tag(name = "Tag API", description = "Person və Task üçün Tag əməliyyatları")
@@ -34,10 +36,11 @@ public class TagController {
     })
     @PostMapping
     public ResponseEntity<TagResponseDTO> createTag(
-            @RequestBody TagCreateRequestDTO dto) {
+            @Valid @RequestBody TagCreateRequestDTO dto) {
         return ResponseEntity.ok(tagService.createTag(dto));
     }
-//2
+
+    //2
     @Operation(summary = "Bütün tag-ləri gətir")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -46,7 +49,8 @@ public class TagController {
     public ResponseEntity<List<TagResponseDTO>> getAllTags() {
         return ResponseEntity.ok(tagService.getAllTags());
     }
-//3
+
+    //3
     @Operation(summary = "ID ilə tag tap")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tag tapıldı"),
@@ -56,7 +60,8 @@ public class TagController {
     public ResponseEntity<TagResponseDTO> getTagById(@PathVariable Long id) {
         return ResponseEntity.ok(tagService.getTagById(id));
     }
-//4
+
+    //4
     @Operation(summary = "Ada görə tag axtarış")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -66,7 +71,8 @@ public class TagController {
             @RequestParam String name) {
         return ResponseEntity.ok(tagService.searchTagsByName(name));
     }
-//5
+
+    //5
     @Operation(summary = "Tag update et")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tag uğurla yeniləndi"),
@@ -76,10 +82,11 @@ public class TagController {
     @PutMapping("/{id}")
     public ResponseEntity<TagResponseDTO> updateTag(
             @PathVariable Long id,
-            @RequestBody TagUpdateRequestDTO dto) {
+            @Valid @RequestBody TagUpdateRequestDTO dto) {
         return ResponseEntity.ok(tagService.updateTag(id, dto));
     }
-//6
+
+    //6
     @Operation(summary = "Tag sil")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Tag uğurla silindi"),
@@ -108,7 +115,8 @@ public class TagController {
         tagService.addTagToPerson(tagId, personId);
         return ResponseEntity.noContent().build();
     }
-//8
+
+    //8
     @Operation(summary = "Person-dan tag sil")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Tag uğurla silindi"),
@@ -121,7 +129,8 @@ public class TagController {
         tagService.removeTagFromPerson(tagId, personId);
         return ResponseEntity.noContent().build();
     }
-//9
+
+    //9
     @Operation(summary = "Person-un bütün tag-ləri")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat"),
@@ -132,6 +141,7 @@ public class TagController {
             @PathVariable Long personId) {
         return ResponseEntity.ok(tagService.getTagsByPersonId(personId));
     }
+
     // =========================
     // TASK - TAG
     // =========================
@@ -149,7 +159,8 @@ public class TagController {
         tagService.addTagToTask(tagId, taskId);
         return ResponseEntity.noContent().build();
     }
-//11
+
+    //11
     @Operation(summary = "Task-dan tag sil")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Tag uğurla silindi"),
@@ -162,7 +173,8 @@ public class TagController {
         tagService.removeTagFromTask(tagId, taskId);
         return ResponseEntity.noContent().build();
     }
-//12
+
+    //12
     @Operation(summary = "Task-ın bütün tag-ləri")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat"),
