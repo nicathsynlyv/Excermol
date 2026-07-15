@@ -4,6 +4,7 @@ import com.example.Excermol.enums.UserRole;
 import com.example.Excermol.enums.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,9 +26,9 @@ public class UserRequestDto {
     @Size(min = 6,max = 50, message = "Şifrə 6-50 simvol arası olmalıdır")
     private String password;
 
-    @NotBlank(message = "Status boş ola bilməz")
+    @NotNull(message = "Status boş ola bilməz")
     private UserStatus status;
 
-    @NotBlank(message = "Role boş ola bilməz")
+    @NotNull(message = "Role boş ola bilməz")
     private UserRole role;
 }
