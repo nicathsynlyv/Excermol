@@ -8,6 +8,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.access.AccessDeniedException;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +83,28 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<Map<String, Object>> handleForbidden(RuntimeException ex) {
         return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+
+    // =========================
+// 401 - Authentication Errors (Login zamanı) securiy ucun
+// =========================
+    @ExceptionHandler({
+            BadCredentialsException.class,
+            AuthenticationException.class
+    })
+    public ResponseEntity<Map<String, Object>> handleAuthenticationErrors(Exception ex) {
+        log.warn("Authentication failed: {}", ex.getMessage());
+        return buildResponse(HttpStatus.UNAUTHORIZED, "Email və ya şifrə yanlışdır");
+    }
+
+    // =========================
+// 403 - Access Denied (Rol yetərsizdir)
+// =========================
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
+        log.warn("Access denied: {}", ex.getMessage());
+        return buildResponse(HttpStatus.FORBIDDEN, "Bu əməliyyat üçün səlahiyyətiniz yoxdur");
     }
 
     // =========================

@@ -14,11 +14,11 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Service
 @Slf4j
@@ -27,19 +27,20 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public List<UserResponseDto> getAll(){
+    public List<UserResponseDto> getAll() {
         return userMapper.toResponseList(
                 userRepository.findAll()
         );
     }
-
 
     @Override
     public UserResponseDto getById(Long id) {
@@ -50,8 +51,6 @@ public class UserServiceImpl implements UserService {
 
         return userMapper.toResponse(user);
     }
-
-
 
     @Override
     public void deleteById(Long id) {
@@ -71,13 +70,16 @@ public class UserServiceImpl implements UserService {
                     "Bu email artiq istifade edilib");
         }
 
+
         User user = userMapper.toEntity(dto);
+
+//        passwordEncoder ucun elave edirem
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         User savedUser = userRepository.save(user);
 
         return userMapper.toResponse(savedUser);
     }
-
 
 
     @Override
@@ -114,14 +116,15 @@ public class UserServiceImpl implements UserService {
 
         if (dto.getPassword() != null &&
                 !dto.getPassword().isBlank()) {
-
-            existingUser.setPassword(dto.getPassword());
+//            encoder ucun elave edirem
+            existingUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
         User updated = userRepository.save(existingUser);
 
         return userMapper.toResponse(updated);
     }
+
     @Override
     public void updateLastLogin(String email) {
 
