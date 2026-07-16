@@ -38,6 +38,7 @@ public class JwtUtil {
     }
 
     // Token-dən email (username) çıxar
+//    bu metodun isi odur ki Biz token yaratdiqdan sonra istifade yazdigi token oxuyub bu kimin acaridir deye bilir
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
