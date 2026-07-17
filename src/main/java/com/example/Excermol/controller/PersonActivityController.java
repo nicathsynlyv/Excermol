@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class PersonActivityController {
             @ApiResponse(responseCode = "204", description = "Activity uğurla silindi", content = @Content),
             @ApiResponse(responseCode = "404", description = "Activity tapılmadı", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{activityId}")
     public ResponseEntity<Void> deleteActivity(@PathVariable Long activityId) {
         personActivityService.deleteActivity(activityId);

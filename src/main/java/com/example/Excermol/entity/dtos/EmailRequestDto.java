@@ -3,6 +3,7 @@ package com.example.Excermol.entity.dtos;
 import com.example.Excermol.enums.EmailStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +24,7 @@ public class EmailRequestDto {
     @NotBlank(message = "Email məzmunu boş ola bilməz")
     private String body;
 
-    @NotBlank(message = "Status boş ola bilməz")
+    @NotNull(message = "Status boş ola bilməz")
     private EmailStatus status;
 
     private LocalDateTime sentAt;
@@ -32,7 +33,7 @@ public class EmailRequestDto {
     private List<String> labels;
 
     // RELATION IDS
-    @NotBlank(message = "Göndərən boş ola bilməz")
+    @NotNull(message = "Göndərən ID-si boş ola bilməz")
     private Long senderId;
 
     private Long companyId;

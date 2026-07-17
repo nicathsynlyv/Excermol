@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class CampaignController {
                     content = @Content(schema = @Schema(implementation = CampaignResponseDto.class))),
             @ApiResponse(responseCode = "400", description = "Yanlış request body", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<CampaignResponseDto> createCampaign(
             @Valid @RequestBody CampaignRequestDTO requestDTO) {
@@ -64,6 +66,7 @@ public class CampaignController {
                     content = @Content(schema = @Schema(implementation = CampaignResponseDto.class))),
             @ApiResponse(responseCode = "404", description = "Kampaniya tapılmadı", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<CampaignResponseDto> updateCampaign(
             @PathVariable Long id,
@@ -76,6 +79,7 @@ public class CampaignController {
             @ApiResponse(responseCode = "204", description = "Kampaniya uğurla silindi", content = @Content),
             @ApiResponse(responseCode = "404", description = "Kampaniya tapılmadı", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCampaign(@PathVariable Long id) {
         campaignService.deleteCampaign(id);
@@ -83,20 +87,20 @@ public class CampaignController {
     }
 
 
-//user new changes
-@Operation(summary = "User-ə məxsus bütün kampaniyalar")
-@ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Siyahı uğurla qaytarıldı"),
-        @ApiResponse(responseCode = "404", description = "İstifadəçi tapılmadı"),
-        @ApiResponse(responseCode = "500", description = "Daxili server xətası")
-})
+    //user new changes
+    @Operation(summary = "User-ə məxsus bütün kampaniyalar")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Siyahı uğurla qaytarıldı"),
+            @ApiResponse(responseCode = "404", description = "İstifadəçi tapılmadı"),
+            @ApiResponse(responseCode = "500", description = "Daxili server xətası")
+    })
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<CampaignResponseDto>> getCampaignsByUser(
             @PathVariable Long userId) {
         return ResponseEntity.ok(campaignService.getCampaignsByUser(userId));
     }
-//user new changes
 
+    //user new changes
     @Operation(summary = "User-ə məxsus kampaniyalar + status filter")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Siyahı uğurla qaytarıldı"),

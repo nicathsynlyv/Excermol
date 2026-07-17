@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class WorkspaceController {
             @ApiResponse(responseCode = "200", description = "Workspace uğurla yaradıldı"),
             @ApiResponse(responseCode = "404", description = "User tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<WorkspaceResponseDTO> createWorkspace(
             @Valid @RequestBody WorkspaceCreateRequestDTO dto) {
@@ -70,6 +72,7 @@ public class WorkspaceController {
             @ApiResponse(responseCode = "200", description = "Workspace uğurla yeniləndi"),
             @ApiResponse(responseCode = "404", description = "Workspace tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<WorkspaceResponseDTO> updateWorkspace(
             @PathVariable Long id,
@@ -82,6 +85,7 @@ public class WorkspaceController {
             @ApiResponse(responseCode = "204", description = "Workspace uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Workspace tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteWorkspace(@PathVariable Long id) {
         workspaceService.deleteWorkspace(id);
@@ -93,6 +97,7 @@ public class WorkspaceController {
             @ApiResponse(responseCode = "204", description = "Workspace uğurla reset edildi"),
             @ApiResponse(responseCode = "404", description = "Workspace tapılmadı")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}/reset")
     public ResponseEntity<Void> resetWorkspace(@PathVariable Long id) {
         workspaceService.resetWorkspace(id);

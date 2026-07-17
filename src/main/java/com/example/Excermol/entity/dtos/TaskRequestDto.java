@@ -2,10 +2,7 @@ package com.example.Excermol.entity.dtos;
 
 import com.example.Excermol.enums.TaskPriority;
 import com.example.Excermol.enums.TaskStatus;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Value;
@@ -28,10 +25,10 @@ public class TaskRequestDto {
     private LocalDate dueDate;
 
 
-    @NotBlank(message = "Priority boş ola bilməz")
+    @NotNull(message = "Priority boş ola bilməz")
     private TaskPriority priority;
 
-    @NotBlank(message = "Status boş ola bilməz")
+    @NotNull(message = "Status boş ola bilməz")
     private TaskStatus status;
 
     @Min(value = 0, message = "Progress mənfi ola bilməz")

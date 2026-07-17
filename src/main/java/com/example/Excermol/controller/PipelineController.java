@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class PipelineController {
             @ApiResponse(responseCode = "400", description = "Məlumatlar düzgün deyil"),
             @ApiResponse(responseCode = "404", description = "Şirkət tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<PipelineResponseDTO> create(
             @Valid @RequestBody PipelineRequestDTO dto) {
@@ -85,6 +87,7 @@ public class PipelineController {
             @ApiResponse(responseCode = "400", description = "Məlumatlar düzgün deyil"),
             @ApiResponse(responseCode = "404", description = "Pipeline və ya şirkət tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<PipelineResponseDTO> update(
             @PathVariable Long id,
@@ -101,6 +104,7 @@ public class PipelineController {
             @ApiResponse(responseCode = "204", description = "Pipeline uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Pipeline tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable Long id) {

@@ -3,11 +3,8 @@ package com.example.Excermol.entity;
 import com.example.Excermol.enums.TaskPriority;
 import com.example.Excermol.enums.TaskStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.*;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,6 +45,7 @@ public class Task {
         this.updatedAt = LocalDateTime.now();
     }
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private TaskPriority priority;
 
@@ -68,6 +66,7 @@ public class Task {
     private Integer completedSubtasks;
 
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private TaskStatus status; // TODO, IN_PROGRESS, DONE
 

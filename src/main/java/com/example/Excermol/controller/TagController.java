@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "Tag uğurla yaradıldı"),
             @ApiResponse(responseCode = "400", description = "Bu adda tag artıq mövcuddur")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<TagResponseDTO> createTag(
             @Valid @RequestBody TagCreateRequestDTO dto) {
@@ -79,6 +81,7 @@ public class TagController {
             @ApiResponse(responseCode = "404", description = "Tag tapılmadı"),
             @ApiResponse(responseCode = "400", description = "Bu adda tag artıq mövcuddur")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<TagResponseDTO> updateTag(
             @PathVariable Long id,
@@ -92,6 +95,7 @@ public class TagController {
             @ApiResponse(responseCode = "204", description = "Tag uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Tag tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
@@ -108,6 +112,7 @@ public class TagController {
             @ApiResponse(responseCode = "404", description = "Tag və ya Person tapılmadı"),
             @ApiResponse(responseCode = "400", description = "Tag artıq person-a əlavə edilib")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping("/{tagId}/person/{personId}")
     public ResponseEntity<Void> addTagToPerson(
             @PathVariable Long tagId,
@@ -122,6 +127,7 @@ public class TagController {
             @ApiResponse(responseCode = "204", description = "Tag uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Tag və ya Person tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{tagId}/person/{personId}")
     public ResponseEntity<Void> removeTagFromPerson(
             @PathVariable Long tagId,
@@ -152,6 +158,7 @@ public class TagController {
             @ApiResponse(responseCode = "404", description = "Tag və ya Task tapılmadı"),
             @ApiResponse(responseCode = "400", description = "Tag artıq task-a əlavə edilib")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping("/{tagId}/task/{taskId}")
     public ResponseEntity<Void> addTagToTask(
             @PathVariable Long tagId,
@@ -166,6 +173,7 @@ public class TagController {
             @ApiResponse(responseCode = "204", description = "Tag uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Tag və ya Task tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{tagId}/task/{taskId}")
     public ResponseEntity<Void> removeTagFromTask(
             @PathVariable Long tagId,

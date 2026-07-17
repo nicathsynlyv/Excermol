@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "Comment uğurla yaradıldı"),
             @ApiResponse(responseCode = "404", description = "Task və ya User tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<CommentResponseDTO> createComment(
             @Valid @RequestBody CommentCreateRequestDTO dto) {
@@ -65,6 +67,7 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "Comment uğurla yeniləndi"),
             @ApiResponse(responseCode = "404", description = "Comment tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<CommentResponseDTO> updateComment(
             @PathVariable Long id,
@@ -78,6 +81,7 @@ public class CommentController {
             @ApiResponse(responseCode = "204", description = "Comment uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Comment tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class FormRoutingController {
             @ApiResponse(responseCode = "200", description = "Routing uğurla yaradıldı"),
             @ApiResponse(responseCode = "404", description = "Form və ya FormField tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<FormRoutingResponseDTO> createRouting(
             @Valid @RequestBody FormRoutingCreateRequestDTO dto) {
@@ -61,6 +63,7 @@ public class FormRoutingController {
             @ApiResponse(responseCode = "200", description = "Routing uğurla yeniləndi"),
             @ApiResponse(responseCode = "404", description = "Routing tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<FormRoutingResponseDTO> updateRouting(
             @PathVariable Long id,
@@ -73,6 +76,7 @@ public class FormRoutingController {
             @ApiResponse(responseCode = "204", description = "Routing uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Routing tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRouting(@PathVariable Long id) {
         formRoutingService.deleteRouting(id);

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class FormResponseController {
             @ApiResponse(responseCode = "200", description = "Form uğurla submit edildi"),
             @ApiResponse(responseCode = "404", description = "Form tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping("/submit")
     public ResponseEntity<FormSubmitResponseDTO> submitForm(
             @Valid @RequestBody FormSubmitRequestDTO dto) {
@@ -61,6 +63,7 @@ public class FormResponseController {
             @ApiResponse(responseCode = "204", description = "Cavab uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Cavab tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteResponse(@PathVariable Long id) {
         formResponseService.deleteResponse(id);

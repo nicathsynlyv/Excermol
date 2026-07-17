@@ -1,7 +1,5 @@
 package com.example.Excermol.controller;
 
-
-
 import com.example.Excermol.Service.FormService;
 import com.example.Excermol.entity.dtos.FormCreateRequestDTO;
 import com.example.Excermol.entity.dtos.FormResponseDTO;
@@ -13,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +32,7 @@ public class FormController {
             @ApiResponse(responseCode = "200", description = "Form uğurla yaradıldı"),
             @ApiResponse(responseCode = "404", description = "User tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','USER')")
     @PostMapping
     public ResponseEntity<FormResponseDTO> createForm(
             @Valid @RequestBody FormCreateRequestDTO dto,
@@ -73,6 +73,7 @@ public class FormController {
             @ApiResponse(responseCode = "200", description = "Form uğurla yeniləndi"),
             @ApiResponse(responseCode = "404", description = "Form tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','USER')")
     @PutMapping("/{id}")
     public ResponseEntity<FormResponseDTO> updateForm(
             @PathVariable Long id,
@@ -85,6 +86,7 @@ public class FormController {
             @ApiResponse(responseCode = "204", description = "Form uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Form tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteForm(@PathVariable Long id) {
         formService.deleteForm(id);
@@ -96,6 +98,7 @@ public class FormController {
             @ApiResponse(responseCode = "200", description = "Status dəyişdirildi"),
             @ApiResponse(responseCode = "404", description = "Form tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','USER')")
     @PatchMapping("/{id}/toggle-status")
     public ResponseEntity<FormResponseDTO> toggleFormStatus(@PathVariable Long id) {
         return ResponseEntity.ok(formService.toggleFormStatus(id));

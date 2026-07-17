@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class CampaignLeadController {
                     content = @Content(schema = @Schema(implementation = CampaignLeadResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Yanlış request body", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<CampaignLeadResponseDTO> createLead(
             @Valid @RequestBody CampaignLeadRequestDTO requestDTO) {
@@ -57,6 +59,7 @@ public class CampaignLeadController {
                     content = @Content(schema = @Schema(implementation = CampaignLeadResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "Lead tapılmadı", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<CampaignLeadResponseDTO> updateLead(
             @PathVariable Long id,
@@ -69,6 +72,7 @@ public class CampaignLeadController {
             @ApiResponse(responseCode = "204", description = "Lead uğurla silindi", content = @Content),
             @ApiResponse(responseCode = "404", description = "Lead tapılmadı", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLead(@PathVariable Long id) {
         campaignLeadService.deleteLead(id);

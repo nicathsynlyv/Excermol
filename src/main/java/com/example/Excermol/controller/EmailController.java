@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,6 +55,7 @@ public class EmailController {
             @ApiResponse(responseCode = "201", description = "Email uğurla yaradıldı"),
             @ApiResponse(responseCode = "400", description = "Yanlış request body")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<EmailResponseDto> createEmail(@Valid @RequestBody EmailRequestDto dto) {
         return ResponseEntity.status(201).body(emailService.createEmail(dto));
@@ -65,6 +67,7 @@ public class EmailController {
             @ApiResponse(responseCode = "404", description = "Email tapılmadı"),
             @ApiResponse(responseCode = "400", description = "Yanlış request body")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<EmailResponseDto> updateEmail(@PathVariable Long id,
                                                         @Valid @RequestBody EmailRequestDto dto) {
@@ -76,6 +79,7 @@ public class EmailController {
             @ApiResponse(responseCode = "204", description = "Email uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Email tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmail(@PathVariable Long id) {
         emailService.deleteById(id);
@@ -134,6 +138,7 @@ public class EmailController {
             @ApiResponse(responseCode = "200", description = "Email oxunmuş kimi işarələndi"),
             @ApiResponse(responseCode = "404", description = "Email tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PatchMapping("/{id}/read")
     public ResponseEntity<EmailResponseDto> markAsRead(@PathVariable Long id) {
         return ResponseEntity.ok(emailService.markAsRead(id));

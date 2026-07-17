@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class PersonController {
                     content = @Content(schema = @Schema(implementation = PersonResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Yanlış request body", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<PersonResponseDTO> createPerson(
             @Valid @RequestBody PersonRequestDTO requestDTO) {
@@ -66,6 +68,7 @@ public class PersonController {
                     content = @Content(schema = @Schema(implementation = PersonResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "Person tapılmadı", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<PersonResponseDTO> updatePerson(
             @PathVariable Long id,
@@ -78,6 +81,7 @@ public class PersonController {
             @ApiResponse(responseCode = "204", description = "Person uğurla silindi", content = @Content),
             @ApiResponse(responseCode = "404", description = "Person tapılmadı", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePerson(@PathVariable Long id) {
         personService.deletePerson(id);

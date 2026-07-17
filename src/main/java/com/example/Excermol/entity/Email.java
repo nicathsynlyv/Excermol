@@ -3,6 +3,7 @@ package com.example.Excermol.entity;
 import com.example.Excermol.enums.EmailStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -40,6 +41,7 @@ public class Email {
             inverseJoinColumns = @JoinColumn(name = "person_id"))
     private Set<Person> recipients;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EmailStatus status; // INBOX, IMPORTANT, SENT, DRAFT, SPAM, TRASH
@@ -80,6 +82,7 @@ public class Email {
     }
 
     // String əvəzinə:
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
     private User sender;

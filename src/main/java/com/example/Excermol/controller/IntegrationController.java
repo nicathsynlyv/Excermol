@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class IntegrationController {
             @ApiResponse(responseCode = "404", description = "Workspace tapılmadı"),
             @ApiResponse(responseCode = "400", description = "Bu tip integration artıq mövcuddur")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<IntegrationResponseDTO> createIntegration(
             @Valid @RequestBody IntegrationCreateRequestDTO dto) {
@@ -91,6 +93,7 @@ public class IntegrationController {
             @ApiResponse(responseCode = "200", description = "Integration uğurla yeniləndi"),
             @ApiResponse(responseCode = "404", description = "Integration tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<IntegrationResponseDTO> updateIntegration(
             @PathVariable Long id,
@@ -104,6 +107,7 @@ public class IntegrationController {
             @ApiResponse(responseCode = "200", description = "Toggle uğurla edildi"),
             @ApiResponse(responseCode = "404", description = "Integration tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PatchMapping("/{id}/toggle")
     public ResponseEntity<IntegrationResponseDTO> toggleIntegration(@PathVariable Long id) {
         return ResponseEntity.ok(integrationService.toggleIntegration(id));
@@ -115,6 +119,7 @@ public class IntegrationController {
             @ApiResponse(responseCode = "204", description = "Integration uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Integration tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteIntegration(@PathVariable Long id) {
         integrationService.deleteIntegration(id);

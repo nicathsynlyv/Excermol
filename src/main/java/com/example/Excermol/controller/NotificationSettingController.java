@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class NotificationSettingController {
             @ApiResponse(responseCode = "404", description = "Workspace və ya User tapılmadı"),
             @ApiResponse(responseCode = "400", description = "Bu user üçün artıq setting mövcuddur")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<NotificationSettingResponseDTO> createNotificationSetting(
            @Valid @RequestBody NotificationSettingCreateRequestDTO dto) {
@@ -84,6 +86,7 @@ public class NotificationSettingController {
             @ApiResponse(responseCode = "200", description = "Setting uğurla yeniləndi"),
             @ApiResponse(responseCode = "404", description = "Setting tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<NotificationSettingResponseDTO> updateSetting(
             @PathVariable Long id,
@@ -96,6 +99,7 @@ public class NotificationSettingController {
             @ApiResponse(responseCode = "204", description = "Setting uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Setting tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSetting(@PathVariable Long id) {
         notificationSettingService.deleteSetting(id);

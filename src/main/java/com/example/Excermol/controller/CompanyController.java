@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class CompanyController {
             @ApiResponse(responseCode = "409", description = "Domain artıq mövcuddur"),
             @ApiResponse(responseCode = "400", description = "Validation xətası")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<CompanyResponseDTO> createCompany(
             @Valid @RequestBody CompanyRequestDTO requestDTO) {
@@ -66,6 +68,7 @@ public class CompanyController {
             @ApiResponse(responseCode = "404", description = "Şirkət tapılmadı"),
             @ApiResponse(responseCode = "409", description = "Domain artıq mövcuddur")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<CompanyResponseDTO> updateCompany(
             @PathVariable Long id,
@@ -78,6 +81,7 @@ public class CompanyController {
             @ApiResponse(responseCode = "204", description = "Silindi"),
             @ApiResponse(responseCode = "404", description = "Şirkət tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCompany(@PathVariable Long id) {
         companyService.deleteCompany(id);

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class TaskController {
             @ApiResponse(responseCode = "200", description = "Task uğurla yaradıldı"),
             @ApiResponse(responseCode = "400", description = "Validation xətası")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<TaskResponseDto> createTask(
             @Valid @RequestBody TaskRequestDto dto
@@ -73,6 +75,7 @@ public class TaskController {
             @ApiResponse(responseCode = "200", description = "Task yeniləndi"),
             @ApiResponse(responseCode = "404", description = "Task tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponseDto> update(
             @PathVariable Long id,
@@ -89,6 +92,7 @@ public class TaskController {
             @ApiResponse(responseCode = "204", description = "Task silindi"),
             @ApiResponse(responseCode = "404", description = "Task tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         taskService.delete(id);

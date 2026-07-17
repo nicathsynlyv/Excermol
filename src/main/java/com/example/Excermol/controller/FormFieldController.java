@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class FormFieldController {
             @ApiResponse(responseCode = "200", description = "Field uğurla yaradıldı"),
             @ApiResponse(responseCode = "404", description = "Form tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','USER')")
     @PostMapping
     public ResponseEntity<FormFieldResponseDTO> createField(
             @Valid @RequestBody FormFieldCreateRequestDTO dto) {
@@ -63,6 +65,7 @@ public class FormFieldController {
             @ApiResponse(responseCode = "200", description = "Field uğurla yeniləndi"),
             @ApiResponse(responseCode = "404", description = "Field tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER','USER')")
     @PutMapping("/{id}")
     public ResponseEntity<FormFieldResponseDTO> updateField(
             @PathVariable Long id,
@@ -75,6 +78,7 @@ public class FormFieldController {
             @ApiResponse(responseCode = "204", description = "Field uğurla silindi"),
             @ApiResponse(responseCode = "404", description = "Field tapılmadı")
     })
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteField(@PathVariable Long id) {
         formFieldService.deleteField(id);

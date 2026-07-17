@@ -11,15 +11,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/organizations")
-@Tag(
-        name = "Organization Controller",
-        description = "Organization CRUD əməliyyatları"
+@Tag(name = "Organization Controller", description = "Organization CRUD əməliyyatları"
 )
 public class OrganizationController {
 
@@ -36,6 +35,7 @@ public class OrganizationController {
                     content = @Content(schema = @Schema(implementation = OrganizationResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Yanlış request body", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<OrganizationResponseDTO> createOrganization(
             @Valid @RequestBody OrganizationRequestDTO requestDTO) {
@@ -67,6 +67,7 @@ public class OrganizationController {
                     content = @Content(schema = @Schema(implementation = OrganizationResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "Organization tapılmadı", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PutMapping("/{id}")
     public ResponseEntity<OrganizationResponseDTO> updateOrganization(
             @PathVariable Long id,
@@ -79,6 +80,7 @@ public class OrganizationController {
             @ApiResponse(responseCode = "204", description = "Organization uğurla silindi", content = @Content),
             @ApiResponse(responseCode = "404", description = "Organization tapılmadı", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrganization(@PathVariable Long id) {
         organizationService.deleteOrganization(id);

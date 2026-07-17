@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class WorkspaceMemberController {
             @ApiResponse(responseCode = "404", description = "Workspace və ya User tapılmadı"),
             @ApiResponse(responseCode = "400", description = "User artıq bu workspace-dədir")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PostMapping
     public ResponseEntity<WorkspaceMemberResponseDTO> addMember(
             @Valid @RequestBody WorkspaceMemberCreateRequestDTO dto) {
@@ -69,6 +71,7 @@ public class WorkspaceMemberController {
             @ApiResponse(responseCode = "404", description = "Üzv tapılmadı"),
             @ApiResponse(responseCode = "400", description = "Owner-in rolu dəyişdirilə bilməz")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PutMapping("/{id}/role")
     public ResponseEntity<WorkspaceMemberResponseDTO> updateMemberRole(
             @PathVariable Long id,
@@ -83,6 +86,7 @@ public class WorkspaceMemberController {
             @ApiResponse(responseCode = "404", description = "Üzv tapılmadı"),
             @ApiResponse(responseCode = "400", description = "Owner silinə bilməz")
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeMember(@PathVariable Long id) {
         workspaceMemberService.removeMember(id);
