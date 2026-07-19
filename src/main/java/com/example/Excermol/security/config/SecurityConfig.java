@@ -60,21 +60,21 @@ public class SecurityConfig {
     }
 
 
-//    BCryptPasswordEncoder istifadəçilərin şifrələrini təhlükəsiz şəkildə hash etmək üçün istifadə olunur.
-//    Şifrələr açıq mətn kimi deyil, hash olunmuş formada databasedə saxlanılır.
-//    Login zamanı isə daxil edilən şifrə matches() metodu ilə hash olunmuş dəyərlə müqayisə edilir.
-//    BCrypt təsadüfi salt istifadə etdiyi üçün eyni şifrə hər dəfə fərqli hash yaradır
-//    və bu da rainbow table və brute-force hücumlarına qarşı daha yüksək təhlükəsizlik təmin edir.
+    //    BCryptPasswordEncoder istifadəçilərin şifrələrini təhlükəsiz şəkildə hash etmək üçün istifadə olunur.
+    //    Şifrələr açıq mətn kimi deyil, hash olunmuş formada databasedə saxlanılır.
+    //    Login zamanı isə daxil edilən şifrə matches() metodu ilə hash olunmuş dəyərlə müqayisə edilir.
+    //    BCrypt təsadüfi salt istifadə etdiyi üçün eyni şifrə hər dəfə fərqli hash yaradır
+    //    və bu da rainbow table və brute-force hücumlarına qarşı daha yüksək təhlükəsizlik təmin edir.
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
 
-//    SessionCreationPolicy.STATELESS JWT əsaslı autentifikasiyada serverin HTTP Session yaratmaması üçün istifadə olunur.
-//    Bu yanaşmada istifadəçi məlumatı serverdə saxlanılmır, bütün autentifikasiya məlumatı JWT token-də olur.
-//    Hər request-də client tokeni Authorization header-i ilə göndərir, server isə tokeni yoxlayaraq istifadəçini autentifikasiya edir.
-//    Bu yanaşma REST API-lər üçün daha uyğun, daha performanslı və horizontal scaling baxımından daha əlverişlidir.
+    //    SessionCreationPolicy.STATELESS JWT əsaslı autentifikasiyada serverin HTTP Session yaratmaması üçün istifadə olunur.
+    //    Bu yanaşmada istifadəçi məlumatı serverdə saxlanılmır, bütün autentifikasiya məlumatı JWT token-də olur.
+    //    Hər request-də client tokeni Authorization header-i ilə göndərir, server isə tokeni yoxlayaraq istifadəçini autentifikasiya edir.
+    //    Bu yanaşma REST API-lər üçün daha uyğun, daha performanslı və horizontal scaling baxımından daha əlverişlidir.
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
@@ -84,19 +84,19 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
-                                        .requestMatchers("/auth/**").permitAll()
-                                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
-                                         // /api/users - yalnız ADMIN
-                                        .requestMatchers("/api/users/**").hasRole("ADMIN")
-                                        .anyRequest().authenticated()
-                        )
-                        .authenticationProvider(authenticationProvider())
-                        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                        // /api/users - yalnız ADMIN
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-                return http.build();
+        return http.build();
 
-//    evvelki
+//    evvelki en birinci hele hec bir confiqurasiya elave etmeden
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //

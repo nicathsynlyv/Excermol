@@ -1,5 +1,6 @@
 package com.example.Excermol.exception;
 
+import com.example.Excermol.security.jwt.RefreshTokenException;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -91,11 +92,13 @@ public class GlobalExceptionHandler {
 // =========================
     @ExceptionHandler({
             BadCredentialsException.class,
-            AuthenticationException.class
+            AuthenticationException.class,
+            RefreshTokenException.class  // yeni əlavə olundu
+
     })
     public ResponseEntity<Map<String, Object>> handleAuthenticationErrors(Exception ex) {
         log.warn("Authentication failed: {}", ex.getMessage());
-        return buildResponse(HttpStatus.UNAUTHORIZED, "Email və ya şifrə yanlışdır");
+        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     // =========================

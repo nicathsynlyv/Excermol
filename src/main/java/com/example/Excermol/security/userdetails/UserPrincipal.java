@@ -27,7 +27,7 @@ public class UserPrincipal implements UserDetails {
         return user.getId();
     }
 
-//    Bu metod istifadəçinin rolunu Spring Security-yə verir.
+    //    Bu metod istifadəçinin rolunu Spring Security-yə verir.
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));

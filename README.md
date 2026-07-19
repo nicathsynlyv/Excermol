@@ -157,6 +157,25 @@ mvn spring-boot:run
 
 ---
 
+security 
+com.example.Excermol
+├── security/
+│   ├── config/
+│   │   ├── SecurityConfig.java
+│   │   └── OAuth2Config.java (sonra)
+│   ├── jwt/
+│   │   ├── JwtUtil.java
+│   │   ├── JwtAuthenticationFilter.java
+│   │   └── JwtAuthenticationEntryPoint.java
+│   ├── userdetails/
+│   │   ├── UserPrincipal.java
+│   │   └── CustomUserDetailsService.java
+│   └── oauth2/ (sonra)
+│       ├── CustomOAuth2UserService.java
+│       └── OAuth2AuthenticationSuccessHandler.java
+└── controller/
+└── AuthController.java
+
 ## 👨‍💻 Author
 
 Nijat Huseynaliyev

@@ -15,11 +15,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+
 //JwtAuthenticationFilter OncePerRequestFilter-dən extend edir ki,
 // hər HTTP request üçün filter yalnız bir dəfə icra olunsun.
 // Beləliklə JWT token yalnız bir dəfə yoxlanılır, SecurityContextHolder bir dəfə doldurulur
 // və eyni request zamanı filterin təkrar işləməsinin qarşısı alınır.
-// Bu həm performans, həm də düzgün autentifikasiya baxımından vacibdir.
+// Bu həm performans, həm də düzgün autentifikasiya baxımından vacib olur.
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;

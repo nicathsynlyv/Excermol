@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.function.Function;
 
 //token yaratma/oxuma məntiqi
+
 @Component
 public class JwtUtil {
 
