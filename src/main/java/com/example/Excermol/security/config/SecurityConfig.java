@@ -3,6 +3,8 @@ package com.example.Excermol.security.config;
 import com.example.Excermol.security.jwt.CustomAccessDeniedHandler;
 import com.example.Excermol.security.jwt.JwtAuthenticationEntryPoint;
 import com.example.Excermol.security.jwt.JwtAuthenticationFilter;
+import com.example.Excermol.security.oauth2.CustomOAuth2UserService;
+import com.example.Excermol.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.example.Excermol.security.userdetails.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,20 +22,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity //role based islemek ucun annotasiyalari aktiv edir
+@EnableMethodSecurity //@EnableMethodSecurity — bu, Spring-ə deyir: "controller metodlarının üstündə @PreAuthorize, @PostAuthorize, @Secured kimi annotasiyalar axtar və onları icra et"
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final CustomAccessDeniedHandler customAccessDeniedHandler; // yeni
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;// yeni
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final PasswordEncoder passwordEncoder;
 
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthenticationFilter jwtAuthenticationFilter, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler, CustomOAuth2UserService customOAuth2UserService, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -46,7 +54,7 @@ public class SecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
 
@@ -60,15 +68,7 @@ public class SecurityConfig {
     }
 
 
-    //    BCryptPasswordEncoder istifadəçilərin şifrələrini təhlükəsiz şəkildə hash etmək üçün istifadə olunur.
-    //    Şifrələr açıq mətn kimi deyil, hash olunmuş formada databasedə saxlanılır.
-    //    Login zamanı isə daxil edilən şifrə matches() metodu ilə hash olunmuş dəyərlə müqayisə edilir.
-    //    BCrypt təsadüfi salt istifadə etdiyi üçün eyni şifrə hər dəfə fərqli hash yaradır
-    //    və bu da rainbow table və brute-force hücumlarına qarşı daha yüksək təhlükəsizlik təmin edir.
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
 
     //    SessionCreationPolicy.STATELESS JWT əsaslı autentifikasiyada serverin HTTP Session yaratmaması üçün istifadə olunur.
@@ -85,14 +85,19 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/oauth2/**","/login/oauth2/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-
                         // /api/users - yalnız ADMIN
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2 ->oauth2
+                        .userInfoEndpoint(userinfo ->userinfo.userService(customOAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                );
+
 
         return http.build();
 

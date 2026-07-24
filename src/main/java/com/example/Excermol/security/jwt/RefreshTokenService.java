@@ -69,7 +69,7 @@ public class RefreshTokenService {
     }
 
 
-    //logout ucun metod
+    // logout ucun metod
     @Transactional
     public void revokeToken(String token) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
@@ -78,6 +78,13 @@ public class RefreshTokenService {
         refreshToken.setRevoked(true);
         refreshTokenRepository.save(refreshToken);
         log.info("Refresh token revoked for user: {}", refreshToken.getUser().getEmail());
+    }
+
+    // Logout all ucun metod
+    @Transactional
+    public void revokeAllUserTokens(Long userId) {
+        refreshTokenRepository.revokeAllByUserId(userId);
+        log.info("All refresh tokens revoked for user id: {}", userId);
     }
 
 }

@@ -12,10 +12,16 @@ import java.util.Date;
 import java.util.function.Function;
 
 //token yaratma/oxuma məntiqi
-
+//JwtUtil JWT ilə işləyən bütün əməliyyatları bir yerdə toplayan köməkçi (utility) classdır.
+// O, istifadəçi uğurla login olduqda token yaradır (generateToken()), gələn tokeni oxuyur (extractAllClaims())
+// içindən lazım olan məlumatları (email, bitmə tarixi və s.) çıxarır (extractUsername(), extractExpiration())
+// və tokenin həm imzasını, həm də istifadə müddətini yoxlayaraq etibarlı olub-olmadığını müəyyən edir (isTokenValid()).
+// Bu sayədə tətbiqin digər hissələri JWT-nin daxili detallarını bilmədən sadəcə bu metodlardan istifadə edə bilir.
 @Component
 public class JwtUtil {
 
+//    Bu açar, token-in "imzalanması" üçün lazımdır
+//    yəni heç kim bu açarı bilmədən saxta token yarada bilməz
     @Value("${jwt.secret}")
     private String secret;
 
@@ -26,7 +32,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // Token yarat
+    // Token yaratmaq
     public String generateToken(UserPrincipal userPrincipal) {
         return Jwts.builder()
                 .subject(userPrincipal.getUsername())
@@ -38,8 +44,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Token-dən email (username) çıxar
-//    bu metodun isi odur ki Biz token yaratdiqdan sonra istifade yazdigi token oxuyub bu kimin acaridir deye bilir
+    // Token içindən istifadəçinin email-ni çıxarır
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -63,12 +68,13 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    // Token etibarlıdırmı?
+    // Token etibarlıdırmı yoxluyur ve username i yeni emaili eyni oldugunu yoxluyur
     public boolean isTokenValid(String token, UserPrincipal userPrincipal) {
         String username = extractUsername(token);
         return username.equals(userPrincipal.getUsername()) && !isTokenExpired(token);
     }
 
+    // Token vaxdin bitib bitmemesini yoxluyur
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }

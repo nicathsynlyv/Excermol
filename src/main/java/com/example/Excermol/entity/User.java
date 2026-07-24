@@ -1,5 +1,6 @@
 package com.example.Excermol.entity;
 
+import com.example.Excermol.enums.AuthProvider;
 import com.example.Excermol.enums.UserRole;
 import com.example.Excermol.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -113,6 +114,12 @@ public class User {
     //form ile
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Form> forms = new ArrayList<>();
+
+
+//    oauth2 elave edende bunu elave etdim cunki kim google ile kim facebook ile kim de localdan giris etdiyini bilmek ucun
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    private AuthProvider authProvider = AuthProvider.LOCAL;
 
 
 }
