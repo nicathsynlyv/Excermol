@@ -1,5 +1,6 @@
 package com.example.Excermol.exception;
 
+import com.example.Excermol.security.jwt.PasswordResetException;
 import com.example.Excermol.security.jwt.RefreshTokenException;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
@@ -138,6 +139,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgument(
             IllegalArgumentException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    // =========================
+    // 400 - Password Reset Errors
+    // =========================
+    @ExceptionHandler(PasswordResetException.class)
+    public ResponseEntity<Map<String, Object>> handlePasswordResetException(PasswordResetException ex) {
+        log.warn("Password reset error: {}", ex.getMessage());
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
