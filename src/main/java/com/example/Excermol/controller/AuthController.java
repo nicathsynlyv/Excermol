@@ -8,6 +8,7 @@ import com.example.Excermol.enums.UserRole;
 import com.example.Excermol.enums.UserStatus;
 import com.example.Excermol.security.jwt.CookieUtil;
 import com.example.Excermol.security.jwt.JwtUtil;
+import com.example.Excermol.security.jwt.PasswordResetService;
 import com.example.Excermol.security.jwt.RefreshTokenService;
 import com.example.Excermol.security.userdetails.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,17 +37,19 @@ public class AuthController {
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
     private final CookieUtil cookieUtil;
+    private final PasswordResetService passwordResetService;
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtUtil jwtUtil,
                           UserService userService,
                           RefreshTokenService refreshTokenService,
-                          CookieUtil cookieUtil) {
+                          CookieUtil cookieUtil, PasswordResetService passwordResetService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userService = userService;
         this.refreshTokenService = refreshTokenService;
         this.cookieUtil = cookieUtil;
+        this.passwordResetService = passwordResetService;
     }
 
     @Operation(summary = "Login - email və şifrə ilə giriş")
@@ -160,5 +163,27 @@ public class AuthController {
         cookieUtil.deleteCookie(response, CookieUtil.REFRESH_TOKEN_COOKIE);
 
         return ResponseEntity.noContent().build();
+    }
+
+    //forget password ucun api-lar
+    @Operation(summary = "Şifrə bərpası - OTP kodu email-ə göndər")
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO dto) {
+        passwordResetService.requestPasswordReset(dto.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "OTP kodunu doğrula")
+    @PostMapping("/verify-otp")
+    public ResponseEntity<Void> verifyOtp(@Valid @RequestBody VerifyOtpRequestDTO dto) {
+        passwordResetService.verifyOtp(dto.getEmail(), dto.getOtpCode());
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Yeni şifrə təyin et")
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody ResetPasswordRequestDTO dto) {
+        passwordResetService.resetPassword(dto.getEmail(), dto.getOtpCode(), dto.getNewPassword());
+        return ResponseEntity.ok().build();
     }
 }
