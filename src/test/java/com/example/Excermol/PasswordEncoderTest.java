@@ -9,7 +9,7 @@ public class PasswordEncoderTest {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        System.out.println("Lera123 -> " + encoder.encode("Lera123"));
+        System.out.println("Nicat123 -> " + encoder.encode("Nicat123"));
     }
 }
 

@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
+
+//    test ucun
+    List<RefreshToken> findAllByUserId(Long userId); // YENİ - əlavə olunur
+
     // token string-inə görə tapmaq (refresh zamanı istifadə olunacaq)
     Optional<RefreshToken> findByToken(String token);
 
