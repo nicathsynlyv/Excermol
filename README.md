@@ -175,7 +175,7 @@ Stop and wipe the database volume:
 docker-compose down -v
 ```
 
-### 3b. Running locally (without Docker)
+### 3b. Running locally (with Docker,and local)
 
 Make sure PostgreSQL is running and reachable at the URL in your `.env`, then:
 
