@@ -160,7 +160,11 @@
 		</dependency>
 
 
-
+<!--		tətbiqinin sağlamlığını, vəziyyətini və performansını izləmək üçün istifadə olunur.-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 
 	</dependencies>
 

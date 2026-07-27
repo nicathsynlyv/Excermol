@@ -1,0 +1,75 @@
+#----POSTGRES SERVICE----
+# services-Burada docker- compose-a deyirik: "Mənim neçə container-im olacaq?
+# environment- container daxilində environment variable yaradılır
+# ports- formatı belədir- HOST:CONTAINER(host-mənim lokalımda qaldırdığım portdur,container-postgresSql container daxilində həmişə 5432 ilə işləyir)
+# volumes- Normalda container silinsə database də silinəcək. Amma volume istifadə etdikdə Container silinsə də məlumat qalacaq.
+# healthcheck- PostgreSQL həqiqətən hazırdırmı?,yoxluyur - interval:5 saniyədən bir yoxluyacaq,timeout:5 saniyə cavab gəlməsə uğursuz olacaq,retries:əgər 5 dəfə uğursuz olsa unhealty olacaq.
+
+#----APP SERVICE----
+# build: . : burada . o demekdirki Cari qovluqdaki dockerfile oxu. docker-compose--->Dockerfile--->Image yarat--->Container yarat
+# depends_on: Bu deyir App başlamazdan əvvəl PostgreSQL hazır olsun.
+# service_healthy: Bu o deməkdir ki database container açılanda healty olmasını gözləyir sonra işliyir
+# ports: 8080:8080 - Burada birinci host mənim lokalım,ikinci isə Containerın başlayacağı portu göstərir və ya Host portunu container portu ilə əlaqələndirir.
+# wget: internetdən və ya lokal HTTP serverdən məlumat almaq üçün istifadə olunan proqramdır.Burada məqsəd fayl yükləmək deyil, sadəcə endpoint-ə sorğu göndərməkdi
+# --no-verbose: Az məlumat çap etsin.Yəni log-ları lazımsız məlumatlarla doldurmasın.
+# --tries=1: Cəmi 1 dəfə cəhd et.Əgər cavab gəlməsə, dərhal uğursuz hesab et.
+# --spider: "Faylı yükləmə, sadəcə bax gör URL işləyirmi.
+# || exit 1: Əgər soldakı komanda uğursuz olsa, exit 1 et
+# start_period: 30s: "İlk 30 saniyə ərzində uğursuz healthcheck-ləri nəzərə alma, çünki tətbiq açılması üçün də zaman lazımdır"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: excermol-postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5489:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: excermol-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/postgres
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION}
+
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID}
+      FACEBOOK_CLIENT_SECRET: ${FACEBOOK_CLIENT_SECRET}
+      OAUTH2_REDIRECT_URI: ${OAUTH2_REDIRECT_URI}
+
+      LOG_FILE_PATH: /app/logs/application.log
+    volumes:
+      - app-logs:/app/logs
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+volumes:
+  postgres-data:
+  app-logs:

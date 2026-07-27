@@ -19,29 +19,29 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.Map;
 
-//Bu, bütün integration testlərin miras alacağı bir baza class-dır. Məqsədi: PostgreSQL Testcontainer-ini bir dəfə başlatmaq və bütün testlər arasında paylaşmaq (hər test öz container-ini yaratsa, çox yavaş olar).
+//Bu, bütün integration testlərin miras alacağı bir baza class-dır
+// Məqsədi: PostgreSQL Testcontainer-ini bir dəfə başlatmaq və bütün testlər arasında paylaşmaq (hər test öz container-ini yaratsa, çox yavaş olariq).
 @Testcontainers  //JUnit 5-ə deyir ki, "bu class-da Testcontainers istifadə olunur, onları idarə et"
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)   //Bu, tam Spring Boot tətbiqini real bir HTTP portunda başladır (təsadüfi port seçərək, ki, əgər sənin development server-in də işə düşübsə, konflikt olmasın). Bu, bizə real HTTP sorğuları göndərməyə imkan verəcək (TestRestTemplate və ya MockMvc ilə)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) //Bu, tam Spring Boot tətbiqini real bir HTTP portunda başladır (təsadüfi port seçərək, ki, əgər sənin development server-in də işə düşübsə, konflikt olmasın). Bu, bizə real HTTP sorğuları göndərməyə imkan verəcək (TestRestTemplate və ya MockMvc ilə) ,yeni real axini test ede biler
 public abstract class AbstractIntegrationTest {
 
-//    1.static final PostgreSQLContainer — static olması vacibdir, çünki bu container-in bütün test class-ları arasında paylaşılmasına imkan verir (hər dəfə yeni container yaratmaq əvəzinə)
-//    2.postgres:16-alpine — yüngül, sürətli bir PostgreSQL image-i
-    static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
+    // 1.static final PostgreSQLContainer — static olması vacibdir, çünki bu container-in bütün test class-ları arasında paylaşılmasına imkan verir (hər dəfə yeni container yaratmaq əvəzinə)
+    //Bu kod test üçün Docker-da PostgreSQL 16 başladır və test zamanı sənin Excermol application-ını təmiz, ayrıca test database-i ilə işlədərək yoxlayır
+    static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")   //alpine→ Kiçik Linux image
             .withDatabaseName("excermol_test")
             .withUsername("test_user")
             .withPassword("test_pass");
 
-//    @BeforeAll startContainer() — testlər başlamazdan əvvəl, Docker container-ini işə salır
+    // @BeforeAll startContainer() — testlər başlamazdan əvvəl, Docker container-ini işə salır
     @BeforeAll
     static void startContainer() {
         postgres.start();
     }
 
-//    1.@DynamicPropertySource — bu, çox vacib bir hissədir: container təsadüfi bir portda işə düşür
-//    1.(məsələn 54321), biz bunu əvvəlcədən bilmirik. Bu metod, runtime-da container-in real JDBC URL-ini,
-//    1.istifadəçi adını, parolunu götürüb, Spring-in application.properties-indəki dəyərlərin yerinə qoyur
-//    2.ddl-auto=create-drop — hər test session-unda, DB sxemi sıfırdan yaradılır, test bitəndə silinir (təmiz, sıfırdan başlanğıc təmin edir)
-
+    //    1.@DynamicPropertySource — bu, çox vacib bir hissədir: container təsadüfi bir portda işə düşür
+    //    1.(məsələn 54321), biz bunu əvvəlcədən bilmirik. Bu metod, runtime-da container-in real JDBC URL-ini,
+    //    1.istifadəçi adını, parolunu götürüb, Spring-in application.properties-indəki dəyərlərin yerinə qoyur
+    //    2.ddl-auto=create-drop — hər test session-unda, DB sxemi sıfırdan yaradılır, test bitəndə silinir (təmiz, sıfırdan başlanğıc təmin edir)
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
@@ -50,7 +50,9 @@ public abstract class AbstractIntegrationTest {
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
     }
 
-//    Spring Boot-un test üçün verdiyi, real HTTP sorğuları göndərən bir alət (@SpringBootTest(webEnvironment = RANDOM_PORT) ilə birlikdə işləyir)
+    // Spring Boot-un test üçün verdiyi, real HTTP sorğuları göndərən bir alət (@SpringBootTest(webEnvironment = RANDOM_PORT) ilə birlikdə işləyir)
+    // TestRestTemplate — test zamanı HTTP request göndərmək üçün istifadə olunur
+    // protected — bu field-i həmin class və ondan miras alan class-lar istifadə edə bilər.
     @Autowired
     protected TestRestTemplate restTemplate;
 
@@ -61,10 +63,10 @@ public abstract class AbstractIntegrationTest {
     protected PasswordEncoder passwordEncoder;
 
     @Autowired
-    protected RefreshTokenRepository  refreshTokenRepository;
+    protected RefreshTokenRepository refreshTokenRepository;
 
     // Test üçün bir user yaradır (DB-yə birbaşa)
-//    createTestUser — hər test öz test user-ini yaratmaq üçün bu metodu çağıracaq (DB birbaşa, /auth/register-dən keçmədən — daha sürətli və sadədir)
+    // createTestUser — hər test öz test user-ini yaratmaq üçün bu metodu çağıracaq (DB birbaşa, /auth/register-dən keçmədən — daha sürətli və sadədir)
     protected User createTestUser(String email, String rawPassword, UserRole role) {
         User user = new User();
         user.setFullName("Test User");
@@ -75,18 +77,25 @@ public abstract class AbstractIntegrationTest {
         return userRepository.save(user);
     }
 
-    // Login edir, access token cookie-sini qaytarır (sonrakı sorğularda istifadə üçün)
-//    real /auth/login endpoint-ini çağırır, response-dan Set-Cookie header-ini oxuyub, accessToken=... sətrini çıxarır. Bunu sonra sorğularımızda Cookie header-i kimi göndərəcəyik
+    //  method login endpoint-inə request göndərir və response-dan accessToken cookie-sini tapır və onu String kimi qaytarır eger token tapilmasa exception atir eger taparsa return edir
     protected String loginAndGetAccessTokenCookie(String email, String rawPassword) {
 
+    //  Login request body-si yaradılır
         Map<String, String> loginRequest = Map.of("email", email, "password", rawPassword);
 
+    //  HTTP header-lər üçün obyekt yaradır
         HttpHeaders headers = new HttpHeaders();
+
+    //  Request-in body-sinin JSON olduğunu bildirir
         headers.setContentType(MediaType.APPLICATION_JSON);
+
+    //  Request body və header-ləri birləşdirir
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(loginRequest, headers);
 
+    //  /auth/login endpoint-inə POST request göndərir.Response-u ResponseEntity<String> kimi qəbul edir.
         ResponseEntity<String> response = restTemplate.postForEntity("/auth/login", requestEntity, String.class);
 
+    //  Response header-lərindən Set-Cookie məlumatını götürür.
         List<String> cookies = response.getHeaders().get(HttpHeaders.SET_COOKIE);
         if (cookies == null) {
             throw new IllegalStateException("Login uğursuz oldu, cookie qaytarılmadı");
@@ -98,6 +107,7 @@ public abstract class AbstractIntegrationTest {
                 .orElseThrow(() -> new IllegalStateException("accessToken cookie tapılmadı"));
     }
 
+    // Email-ə görə user-i tapır → həmin user-in bütün refresh token-lərini silir → sonra user-i silir
     protected void cleanupTestUser(String email) {
         userRepository.findByEmail(email).ifPresent(user -> {
             refreshTokenRepository.deleteAll(

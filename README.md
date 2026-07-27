@@ -181,3 +181,10 @@ com.example.Excermol
 Nijat Huseynaliyev
 
 Backend Developer | Java & Spring Boot
+
+
+[//]: # (Dockerfile yarat &#40;tətbiqi "image"ə çevirir&#41;)
+
+[//]: # (.dockerignore yarat &#40;lazımsız faylları image-ə salmamaq üçün&#41;)
+
+[//]: # (docker-compose.yml yarat &#40;tətbiq + PostgreSQL birlikdə işə düşsün&#41;)
