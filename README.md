@@ -180,7 +180,9 @@ docker-compose down -v
 Make sure PostgreSQL is running and reachable at the URL in your `.env`, then:
 
 ```bash
-mvn spring-boot:run
+mvn spring-boot:run  for local
+docker-compose up for docker
+
 ```
 
 ---
