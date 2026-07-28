@@ -1,8 +1,9 @@
 # ---- Build Stage ----
-#Maven və Java 21 hazır olan image istifadə et,"AS build" isə bu mərhələyə ad verir:build
+
+#Maven və Java 17 hazır olan image istifadə et,"AS build" isə bu mərhələyə ad verir:build
 FROM maven:3.9-eclipse-temurin-21 AS build
 
-#Container daxilində iş qovluğu yaradır:/app  ,Sonrakı əmrlər bu qovluqda işləyir.
+#Container daxilində iş qovluğu yaradır:/app ,Sonrakı əmrlər bu qovluqda işləyir.
 WORKDIR /app
 
 # Əvvəlcə yalnız pom.xml kopyala ki, dependency-lər cache-lənsin
@@ -26,7 +27,7 @@ RUN mvn clean package -DskipTests -B
 
 # ikinci image-Burada artıq: Maven yoxdur JDK yoxdur,Sadəcə: Java 21,JRE
 # Çünki application-ı build etmək artıq bitib,Bizə indi sadəcə JAR-ı işlətmək lazımdır.
-# Multi-stage build-in əsas üstünlüyü-Build image: Maven,JDK,Dependencies,Source code,JAR amma Runtime imagedə: JRE,JAR Yəni runtime image daha kiçik və daha təmiz olur.
+# Multi-stage build-in əsas üstünlüyü-Build image: Maven,JDK,Dependencies,Source code,JAR,amma Runtime imagedə: JRE,JAR Yəni runtime image daha kiçik və daha təmiz olur.
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 

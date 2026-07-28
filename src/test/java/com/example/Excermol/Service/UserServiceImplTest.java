@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,9 @@ public class UserServiceImplTest {
 
     @InjectMocks
     private UserServiceImpl userService;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     private User user;
     private UserRequestDto requestDto;
@@ -138,11 +142,12 @@ public class UserServiceImplTest {
     }
 
     // ---------- createUser ----------
-
     @Test
     void createUser_success() {
         when(userRepository.existsByEmail("nicat@example.com")).thenReturn(false);
         when(userMapper.toEntity(requestDto)).thenReturn(user);
+        when(passwordEncoder.encode(any(CharSequence.class)))
+                .thenReturn("encodedPassword");
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.toResponse(user)).thenReturn(responseDto);
 
@@ -150,7 +155,10 @@ public class UserServiceImplTest {
 
         assertNotNull(result);
         assertEquals(responseDto.getEmail(), result.getEmail());
-        verify(userRepository, times(1)).save(user);
+        assertEquals("encodedPassword", user.getPassword());
+
+        verify(passwordEncoder).encode("password123");
+        verify(userRepository).save(user);
     }
 
     @Test
@@ -210,17 +218,18 @@ public class UserServiceImplTest {
 
     @Test
     void updateUser_success_emailChanged_notTaken() {
-        requestDto.setEmail("new@example.com");
+        requestDto.setPassword("newPassword123");
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
+        when(passwordEncoder.encode("newPassword123"))
+                .thenReturn("encodedPassword");
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.toResponse(user)).thenReturn(responseDto);
 
         userService.updateUser(1L, requestDto);
 
-        assertEquals("new@example.com", user.getEmail());
-        verify(userRepository, times(1)).existsByEmail("new@example.com");
+        assertEquals("encodedPassword", user.getPassword());
+        verify(passwordEncoder).encode("newPassword123");
     }
 
     @Test
@@ -249,12 +258,14 @@ public class UserServiceImplTest {
         requestDto.setPassword("newPassword123");
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(passwordEncoder.encode("newPassword123")).thenReturn("encodedNewPassword");
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.toResponse(user)).thenReturn(responseDto);
 
         userService.updateUser(1L, requestDto);
 
-        assertEquals("newPassword123", user.getPassword());
+        assertEquals("encodedNewPassword", user.getPassword());
+        verify(passwordEncoder).encode("newPassword123");
     }
 
     @Test
