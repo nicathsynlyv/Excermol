@@ -62,13 +62,26 @@ jobs:
           name: test-results
           path: target/surefire-reports/
 
-  docker-build:
+  docker-build-and-push:
     needs: test
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t excermol:${{ github.sha }} .
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/excermol:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/excermol:${{ github.sha }}
