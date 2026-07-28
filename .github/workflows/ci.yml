@@ -1,3 +1,18 @@
+# 1 ---JOB TEST---
+# name: CI Pipeline: Pipeline-ın adıdır,GitHub Actions səhifəsində bunu görürük
+# jobs: Burada pipeline hansı işləri görəcəyini yazırıq.(Məs:Məndə iki jobs var test və docker-build)
+# runs-on: github mənim üçün müvəqqəti ubuntu serveri açır və kodu işlədir
+# env: Buradakı dəyişənlər pipeline işləyən zaman istifadə olunur,Github secretsdən oxunur
+# steps: jobun addımlarıdır
+# uses: GitHub repository-ni virtual maşına yükləyir,   GitHub Repo ---> Ubuntu Server
+# setup-java@v4: java quraşdırılır
+# if: always(): Bu o deməkdir ki,Test uğurlu olsada uğursuz olsada bu addım işləyəcək
+# actions/upload-artifact: Test nəticələrini Githuba yüklüyür
+
+# 2 ---JOB DOCKER-BUILD---
+# needs: test ,Əvvəl test bitməlidir. Sonra docker-build başlaya bilər,Əgər test uğursuz olsa başlamayacaq
+# docker build -t excermol:${{ github.sha }} .: Bu docker image yaradır. github.sha isə hər commit üçün unikal image yaradır.(Məs:excermol:3af7bdb1)
+
 name: CI Pipeline
 
 on:

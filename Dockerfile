@@ -1,6 +1,6 @@
 # ---- Build Stage ----
 
-#Maven və Java 17 hazır olan image istifadə et,"AS build" isə bu mərhələyə ad verir:build
+#Maven və Java 21 hazır olan image istifadə et,"AS build" isə bu mərhələyə ad verir:build
 FROM maven:3.9-eclipse-temurin-21 AS build
 
 #Container daxilində iş qovluğu yaradır:/app ,Sonrakı əmrlər bu qovluqda işləyir.
@@ -22,13 +22,13 @@ COPY src ./src
 # -B : batch mode deməkdir və Maven-in interaktiv suallar verməsinin qarşısını alır
 RUN mvn clean package -DskipTests -B
 
-
 # ---- Runtime Stage ----
 
 # ikinci image-Burada artıq: Maven yoxdur JDK yoxdur,Sadəcə: Java 21,JRE
 # Çünki application-ı build etmək artıq bitib,Bizə indi sadəcə JAR-ı işlətmək lazımdır.
 # Multi-stage build-in əsas üstünlüyü-Build image: Maven,JDK,Dependencies,Source code,JAR,amma Runtime imagedə: JRE,JAR Yəni runtime image daha kiçik və daha təmiz olur.
 FROM eclipse-temurin:21-jre-alpine
+
 WORKDIR /app
 
 # Build stage-dən yalnız jar faylını götür
@@ -38,5 +38,27 @@ COPY --from=build /app/target/*.jar app.jar
 # Bu Docker-ə bildirir:"Bu application container daxilində 8080 portunda işləyəcək."
 EXPOSE 8080
 
-# container başladıqda avtomatik bu əmr başladılır yəni:docker container start--->java -jar app.jar--->Spring Boot application başlayır
+# container başladıqda avtomatik bu əmr başladılır yəni:docker container start--->java,-jar,app.jar--->Spring Boot application başlayır
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
+
+
+
+
+
+
+
+
+
+#Image yaratmaq Dockerfile-da yazılan təlimatlar əsasında
+#tətbiqin işləməsi üçün lazım olan bütün faylları,
+#runtime mühitini və konfiqurasiyanı bir paket halına gətirməkdir.
+#Bu paket dəyişməzdir (read-only).
+#Daha sonra docker run əmri ilə həmin image-dən işləyən container yaradılır.
+#Dockerfile bir image yaradır, Docker Compose isə həmin image-lərdən yaranan container-ləri birlikdə işlədir və idarə edir.
+
+#Docker Compose bir neçə Docker container-ini birlikdə idarə etmək üçün istifadə olunur.
+#docker-compose.yml faylında hər bir service, port, environment variable, volume və network konfiqurasiyası yazılır
+#Mənim layihəmdə Docker Compose Spring Boot tətbiqini və PostgreSQL database-ni eyni anda işə salır
+#onları bir-biri ilə əlaqələndirir və bir docker compose up əmri ilə bütün sistemi ayağa qaldırır.

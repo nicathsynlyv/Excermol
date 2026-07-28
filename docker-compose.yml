@@ -1,5 +1,5 @@
 #----POSTGRES SERVICE----
-# services-Burada docker- compose-a deyirik: "Mənim neçə container-im olacaq?
+# services-Burada docker- compose-a deyirik: "Mənim neçə container-im olacaq(postgres,app)?
 # environment- container daxilində environment variable yaradılır
 # ports- formatı belədir- HOST:CONTAINER(host-mənim lokalımda qaldırdığım portdur,container-postgresSql container daxilində həmişə 5432 ilə işləyir)
 # volumes- Normalda container silinsə database də silinəcək. Amma volume istifadə etdikdə Container silinsə də məlumat qalacaq.
