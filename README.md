@@ -1,5 +1,8 @@
 ﻿# 🚀 Excermol CRM
 
+![CI Pipeline](https://github.com/nicathsynlyv/excermol/actions/workflows/ci.yml/badge.svg)
+
+
 Excermol is a production-grade **Customer Relationship Management (CRM)** backend built with **Spring Boot**, designed to manage organizations, companies, contacts, sales pipelines, campaigns, tasks, and team collaboration — with enterprise-level security, testing, and deployment practices.
 
 The project demonstrates a complete, real-world backend engineering workflow: from layered architecture and validation, through JWT/OAuth2 security and refresh-token session management, to Testcontainers-based integration testing and Docker containerization.
