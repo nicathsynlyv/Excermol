@@ -4,6 +4,7 @@ import com.example.Excermol.Service.WorkspaceService;
 import com.example.Excermol.entity.dtos.WorkspaceCreateRequestDTO;
 import com.example.Excermol.entity.dtos.WorkspaceResponseDTO;
 import com.example.Excermol.entity.dtos.WorkspaceUpdateRequestDTO;
+import com.example.Excermol.security.userdetails.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +27,8 @@ public class WorkspaceController {
     public WorkspaceController(WorkspaceService workspaceService) {
         this.workspaceService = workspaceService;
     }
-//1
+
+    //1
     @Operation(summary = "Yeni workspace yarat")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Workspace uğurla yaradıldı"),
@@ -37,7 +40,8 @@ public class WorkspaceController {
             @Valid @RequestBody WorkspaceCreateRequestDTO dto) {
         return ResponseEntity.ok(workspaceService.createWorkspace(dto));
     }
-//2
+
+    //2
     @Operation(summary = "Bütün workspace-ləri gətir")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -46,7 +50,8 @@ public class WorkspaceController {
     public ResponseEntity<List<WorkspaceResponseDTO>> getAllWorkspaces() {
         return ResponseEntity.ok(workspaceService.getAllWorkspaces());
     }
-//3
+
+    //3
     @Operation(summary = "ID ilə workspace tap")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Workspace tapıldı"),
@@ -56,7 +61,8 @@ public class WorkspaceController {
     public ResponseEntity<WorkspaceResponseDTO> getWorkspaceById(@PathVariable Long id) {
         return ResponseEntity.ok(workspaceService.getWorkspaceById(id));
     }
-//4
+
+    //4
     @Operation(summary = "Owner-a görə workspace-lər")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Uğurlu əməliyyat")
@@ -66,7 +72,8 @@ public class WorkspaceController {
             @PathVariable Long ownerId) {
         return ResponseEntity.ok(workspaceService.getWorkspacesByOwner(ownerId));
     }
-//5
+
+    //5
     @Operation(summary = "Workspace update et - General tab 'Update workspace'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Workspace uğurla yeniləndi"),
@@ -76,10 +83,11 @@ public class WorkspaceController {
     @PutMapping("/{id}")
     public ResponseEntity<WorkspaceResponseDTO> updateWorkspace(
             @PathVariable Long id,
-           @Valid @RequestBody WorkspaceUpdateRequestDTO dto) {
+            @Valid @RequestBody WorkspaceUpdateRequestDTO dto) {
         return ResponseEntity.ok(workspaceService.updateWorkspace(id, dto));
     }
-//6
+
+    //6
     @Operation(summary = "Workspace sil")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Workspace uğurla silindi"),
@@ -91,7 +99,8 @@ public class WorkspaceController {
         workspaceService.deleteWorkspace(id);
         return ResponseEntity.noContent().build();
     }
-//7
+
+    //7
     @Operation(summary = "Workspace-i reset et - General tab 'Reset workspace'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Workspace uğurla reset edildi"),
@@ -103,17 +112,19 @@ public class WorkspaceController {
         workspaceService.resetWorkspace(id);
         return ResponseEntity.noContent().build();
     }
-//8
+
+    //8 yeni duzelis
     @Operation(summary = "Workspace-dən çıx - General tab 'Leave workspace'")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Workspace-dən uğurla çıxıldı"),
             @ApiResponse(responseCode = "404", description = "Workspace tapılmadı")
     })
-    @DeleteMapping("/{workspaceId}/leave/{userId}")
+    @DeleteMapping("/{workspaceId}/leave")
     public ResponseEntity<Void> leaveWorkspace(
             @PathVariable Long workspaceId,
-            @PathVariable Long userId) {
-        workspaceService.leaveWorkspace(workspaceId, userId);
+            Authentication authentication) {
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        workspaceService.leaveWorkspace(workspaceId, principal.getId());
         return ResponseEntity.noContent().build();
     }
 }
