@@ -14,8 +14,8 @@
 # --no-verbose: Az məlumat çap etsin.Yəni log-ları lazımsız məlumatlarla doldurmasın.
 # --tries=1: Cəmi 1 dəfə cəhd et.Əgər cavab gəlməsə, dərhal uğursuz hesab et.
 # --spider: "Faylı yükləmə, sadəcə bax gör URL işləyirmi.
-# || exit 1: Əgər soldakı komanda uğursuz olsa, exit 1 et
-# start_period: 30s: "İlk 30 saniyə ərzində uğursuz healthcheck-ləri nəzərə alma, çünki tətbiq açılması üçün də zaman lazımdır"
+# || exit 1: Əgər soldakı komanda uğursuz olsa, exit 1 et.
+# start_period: 30s: "İlk 30 saniyə ərzində uğursuz healthcheck-ləri nəzərə alma, çünki tətbiq açılması üçün də zaman lazımdır".
 
 services:
   postgres:
