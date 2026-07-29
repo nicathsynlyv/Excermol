@@ -159,6 +159,17 @@
 			<scope>test</scope>
 		</dependency>
 
+<!--rate limiting ucun -->
+		<dependency>
+			<groupId>com.bucket4j</groupId>
+			<artifactId>bucket4j_jdk17-core</artifactId>
+			<version>8.14.0</version>
+		</dependency>
+<!--redis ucun -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
 
 <!--		tətbiqinin sağlamlığını, vəziyyətini və performansını izləmək üçün istifadə olunur.-->
 <!--		<dependency>-->
