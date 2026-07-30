@@ -100,20 +100,6 @@ jobs:
 
     # REDIS VƏ POSTGRES SERVİSLƏRİ BURAYA ƏLAVƏ OLUNDU
     services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_DB: excermol_ci
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
       redis:
         image: redis:7-alpine
         ports:
@@ -135,9 +121,6 @@ jobs:
       MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
       MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
       OAUTH2_REDIRECT_URI: ${{ secrets.OAUTH2_REDIRECT_URI }}
-      DB_URL: jdbc:postgresql://localhost:5432/excermol_ci
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
 
       # REDIS CI KONFIQURASIYASI
       REDIS_HOST: localhost
