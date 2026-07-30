@@ -1,6 +1,7 @@
 package com.example.Excermol.exception;
 
 import com.example.Excermol.security.jwt.PasswordResetException;
+import com.example.Excermol.security.jwt.RateLimitExceededException;
 import com.example.Excermol.security.jwt.RefreshTokenException;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
@@ -149,6 +150,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handlePasswordResetException(PasswordResetException ex) {
         log.warn("Password reset error: {}", ex.getMessage());
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    // =========================
+// 429 - Rate Limit Exceeded
+// =========================
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<Map<String, Object>> handleRateLimitExceeded(RateLimitExceededException ex) {
+        log.warn("Rate limit exceeded: {}", ex.getMessage());
+        return buildResponse(HttpStatus.TOO_MANY_REQUESTS, ex.getMessage());
     }
 
     // =========================

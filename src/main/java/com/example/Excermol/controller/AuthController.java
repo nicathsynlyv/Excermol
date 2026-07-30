@@ -6,10 +6,7 @@ import com.example.Excermol.entity.User;
 import com.example.Excermol.entity.dtos.*;
 import com.example.Excermol.enums.UserRole;
 import com.example.Excermol.enums.UserStatus;
-import com.example.Excermol.security.jwt.CookieUtil;
-import com.example.Excermol.security.jwt.JwtUtil;
-import com.example.Excermol.security.jwt.PasswordResetService;
-import com.example.Excermol.security.jwt.RefreshTokenService;
+import com.example.Excermol.security.jwt.*;
 import com.example.Excermol.security.userdetails.UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,42 +35,66 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
     private final CookieUtil cookieUtil;
     private final PasswordResetService passwordResetService;
+    private final RateLimitingService rateLimitingService;
+
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtUtil jwtUtil,
                           UserService userService,
                           RefreshTokenService refreshTokenService,
-                          CookieUtil cookieUtil, PasswordResetService passwordResetService) {
+                          CookieUtil cookieUtil, PasswordResetService passwordResetService, RateLimitingService rateLimitingService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userService = userService;
         this.refreshTokenService = refreshTokenService;
         this.cookieUtil = cookieUtil;
         this.passwordResetService = passwordResetService;
+        this.rateLimitingService = rateLimitingService;
     }
 
     @Operation(summary = "Login - email və şifrə ilə giriş")
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO dto,
-                                                 HttpServletResponse response) {
+                                                 HttpServletResponse response,
+                                                 HttpServletRequest request) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
-        );
+        String clientIp = getClientIp(request);
+        rateLimitingService.checkRateLimit(dto.getEmail(), clientIp);
 
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-        String accessToken = jwtUtil.generateToken(principal);
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(principal.getUser());
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
+            );
 
-        cookieUtil.addCookie(response, CookieUtil.ACCESS_TOKEN_COOKIE, accessToken, ACCESS_TOKEN_MAX_AGE);
-        cookieUtil.addCookie(response, CookieUtil.REFRESH_TOKEN_COOKIE, refreshToken.getToken(), REFRESH_TOKEN_MAX_AGE);
+            UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+            String accessToken = jwtUtil.generateToken(principal);
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(principal.getUser());
 
-        AuthResponseDTO responseBody = new AuthResponseDTO(
-                principal.getUsername(),
-                principal.getUser().getRole().name()
-        );
+            cookieUtil.addCookie(response, CookieUtil.ACCESS_TOKEN_COOKIE, accessToken, ACCESS_TOKEN_MAX_AGE);
+            cookieUtil.addCookie(response, CookieUtil.REFRESH_TOKEN_COOKIE, refreshToken.getToken(), REFRESH_TOKEN_MAX_AGE);
 
-        return ResponseEntity.ok(responseBody);
+            rateLimitingService.resetAttempts(dto.getEmail(), clientIp);
+
+            AuthResponseDTO responseBody = new AuthResponseDTO(
+                    principal.getUsername(),
+                    principal.getUser().getRole().name()
+            );
+
+            return ResponseEntity.ok(responseBody);
+
+        } catch (org.springframework.security.core.AuthenticationException ex) {
+            rateLimitingService.recordFailedAttempt(dto.getEmail(), clientIp);
+            throw ex;
+        }
+    }
+
+    // IP ünvanını əldə etmək üçün köməkçi metod
+    private String getClientIp(HttpServletRequest request) {
+        String xForwardedFor = request.getHeader("X-Forwarded-For");
+        if (xForwardedFor != null && !xForwardedFor.isBlank()) {
+            return xForwardedFor.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
     }
 
     @Operation(summary = "Qeydiyyat - yeni istifadəçi yaratmaq")
