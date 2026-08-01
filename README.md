@@ -247,5 +247,6 @@ Integration tests require Docker to be running locally (Testcontainers spins up 
 
 ## 👨‍💻 Author
 
+[//]: # ()
 **Nijat Huseynaliyev**
 Backend Developer | Java & Spring Boot
