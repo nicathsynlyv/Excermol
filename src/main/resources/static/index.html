@@ -1,8 +1,8 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Excermol CRM</title>
 
   <style>
@@ -12,32 +12,36 @@
       box-sizing: border-box;
     }
 
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+    }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3e 50%, #0f1f3f 100%);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      min-height: 100dvh;
       color: #fff;
     }
 
     .container {
       position: relative;
       width: 100%;
-      height: 100vh;
+      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
+      padding: 24px 16px 100px; /* alt padding status-bar üçün yer saxlayır */
     }
 
     .orbs {
       position: absolute;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       overflow: hidden;
+      pointer-events: none;
     }
 
     .orb {
@@ -49,29 +53,29 @@
     }
 
     .orb1 {
-      width: 300px;
-      height: 300px;
+      width: min(300px, 60vw);
+      height: min(300px, 60vw);
       background: rgba(100, 200, 255, 0.5);
-      top: -100px;
-      left: -100px;
+      top: -80px;
+      left: -80px;
       animation: float 20s ease-in-out infinite;
     }
 
     .orb2 {
-      width: 200px;
-      height: 200px;
+      width: min(200px, 45vw);
+      height: min(200px, 45vw);
       background: rgba(200, 100, 255, 0.5);
-      bottom: -50px;
-      right: -50px;
+      bottom: -40px;
+      right: -40px;
       animation: float 25s ease-in-out infinite reverse;
     }
 
     .orb3 {
-      width: 250px;
-      height: 250px;
+      width: min(250px, 50vw);
+      height: min(250px, 50vw);
       background: rgba(100, 255, 200, 0.5);
-      top: 50%;
-      right: 10%;
+      top: 45%;
+      right: 5%;
       animation: float 18s ease-in-out infinite;
     }
 
@@ -85,13 +89,14 @@
       position: relative;
       z-index: 10;
       text-align: center;
-      padding: 40px;
+      width: 100%;
+      max-width: 900px;
     }
 
     .logo {
-      font-size: 48px;
+      font-size: clamp(28px, 7vw, 48px);
       font-weight: bold;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
       background: linear-gradient(135deg, #64c8ff, #c864ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -99,67 +104,136 @@
     }
 
     .subtitle {
-      font-size: 24px;
+      font-size: clamp(14px, 3.5vw, 22px);
       color: #b0b0c0;
-      margin-bottom: 40px;
+      margin-bottom: 28px;
+      padding: 0 8px;
     }
+
+    /* ✅ LIVE STATUS ROW */
+    .live-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: #c9c9e0;
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+    }
+
+    .pill .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #666;
+      flex-shrink: 0;
+    }
+
+    .pill .dot.ok { background: #4ade80; animation: pulse 2s infinite; }
+    .pill .dot.fail { background: #f87171; }
 
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      max-width: 900px;
-      margin: 40px 0;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+      width: 100%;
+      margin: 0 0 32px;
     }
 
     .card {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
-      padding: 24px;
+      padding: 18px 12px;
       backdrop-filter: blur(10px);
     }
 
     .card-icon {
-      font-size: 32px;
-      margin-bottom: 12px;
+      font-size: 28px;
+      margin-bottom: 10px;
     }
 
     .card-title {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
     }
 
     .card-text {
-      font-size: 12px;
+      font-size: 11px;
       color: #999;
+      margin-top: 2px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
     }
 
     .button {
-      margin-top: 40px;
-      padding: 14px 40px;
-      background: linear-gradient(135deg, #64c8ff, #c864ff);
-      border: none;
+      padding: 12px 28px;
       border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       cursor: pointer;
+      border: none;
+      transition: transform 0.15s ease, opacity 0.15s ease;
     }
+
+    .button:active { transform: scale(0.97); }
+
+    .button.primary {
+      background: linear-gradient(135deg, #64c8ff, #c864ff);
+      color: #0f0f1e;
+    }
+
+    .button.secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff;
+    }
+
+    .button.secondary:hover { background: rgba(255, 255, 255, 0.12); }
 
     /* ✅ STATUS BAR */
     .status-bar {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(100, 200, 255, 0.15);
-      border: 1px solid rgba(100, 200, 255, 0.3);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 12px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 15, 30, 0.85);
+      border-top: 1px solid rgba(100, 200, 255, 0.25);
+      padding: 10px 16px;
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
+      font-size: 11px;
       color: #64c8ff;
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px 16px;
       backdrop-filter: blur(10px);
+      z-index: 20;
     }
+
+    .status-bar span { white-space: nowrap; }
 
     .pulse {
       width: 8px;
@@ -167,6 +241,12 @@
       background: #64c8ff;
       border-radius: 50%;
       animation: pulse 2s infinite;
+      flex-shrink: 0;
+    }
+
+    #clock {
+      font-family: monospace;
+      color: #fff;
     }
 
     @keyframes pulse {
@@ -174,15 +254,20 @@
       50% { opacity: 0.3; }
     }
 
-    #clock {
-      font-family: monospace;
-      color: #fff;
-      margin-left: 8px;
-    }
-
     @keyframes glow {
       0%, 100% { text-shadow: 0 0 20px rgba(100, 200, 255, 0.5); }
       50% { text-shadow: 0 0 40px rgba(200, 100, 255, 0.8); }
+    }
+
+    /* ✅ Kiçik telefonlar üçün əlavə sıxlaşdırma */
+    @media (max-width: 380px) {
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .status-bar { font-size: 10px; gap: 6px 10px; }
+      .button { padding: 11px 20px; font-size: 13px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .orb, .pulse, .dot.ok, .logo { animation: none; }
     }
   </style>
 </head>
@@ -199,6 +284,12 @@
   <div class="content">
     <div class="logo">✨ EXCERMOL</div>
     <div class="subtitle">Customer Relationship Management</div>
+
+    <div class="live-row">
+      <div class="pill"><span class="dot ok"></span><span>Backend API Ready</span></div>
+      <div class="pill"><span class="dot ok"></span><span id="versionText">Spring Boot</span></div>
+      <div class="pill"><span class="dot ok"></span><span id="uptimeText">Uptime: —</span></div>
+    </div>
 
     <div class="cards-grid">
       <div class="card">
@@ -226,10 +317,12 @@
       </div>
     </div>
 
-    <button class="button" onclick="alert('Coming soon!')">Get Started</button>
+    <div class="actions">
+      <a class="button primary" href="/swagger-ui/index.html">📖 Swagger UI</a>
+      <a class="button secondary" href="https://github.com/nicathsynlyv/Excermol" target="_blank" rel="noopener">⭐ GitHub</a>
+    </div>
   </div>
 
-  <!-- ✅ STATUS BAR + CLOCK -->
   <div class="status-bar">
     <div class="pulse"></div>
     <span>Backend API Ready</span>
@@ -237,20 +330,29 @@
   </div>
 </div>
 
-<!-- ✅ CLOCK SCRIPT -->
 <script>
+  // Saat
   function updateClock() {
     const now = new Date();
-
-    let h = String(now.getHours()).padStart(2, '0');
-    let m = String(now.getMinutes()).padStart(2, '0');
-    let s = String(now.getSeconds()).padStart(2, '0');
-
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = String(now.getSeconds()).padStart(2, '0');
     document.getElementById("clock").innerText = `${h}:${m}:${s}`;
   }
-
   setInterval(updateClock, 1000);
   updateClock();
+
+  // Uptime hesablama (səhifə açılan andan etibarən — sadə göstərici)
+  const startTime = Date.now();
+  function updateUptime() {
+    const diff = Math.floor((Date.now() - startTime) / 1000);
+    const h = String(Math.floor(diff / 3600)).padStart(2, '0');
+    const m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+    const s = String(diff % 60).padStart(2, '0');
+    document.getElementById("uptimeText").innerText = `Session: ${h}:${m}:${s}`;
+  }
+  setInterval(updateUptime, 1000);
+  updateUptime();
 </script>
 
 </body>
