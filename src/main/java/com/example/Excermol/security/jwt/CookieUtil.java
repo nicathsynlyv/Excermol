@@ -20,7 +20,7 @@ public class CookieUtil {
     public void addCookie(HttpServletResponse response, String name, String value, int maxAgeSeconds) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);   // JavaScript bu cookie-ni oxuya bilməz (XSS-dən qorunma)
-        cookie.setSecure(secureCookie);    // Development üçün false, production-da HTTPS ilə true olmalıd
+        cookie.setSecure(secureCookie);    // Development üçün false, production-da HTTPS ilə true olmalıd,indi true elemek yerine hem locaklda hemde serverde islek etdim
         cookie.setPath("/");        // Bütün path-lar üçün etibarlıdır
         cookie.setMaxAge(maxAgeSeconds);
         cookie.setAttribute("SameSite", "Strict");
