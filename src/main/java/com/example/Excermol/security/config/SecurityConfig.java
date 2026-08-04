@@ -84,7 +84,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/index.html").permitAll()
+                        .requestMatchers("/","/index.html","/favicon.png").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/oauth2/**","/login/oauth2/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
