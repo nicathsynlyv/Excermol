@@ -104,6 +104,27 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/excermol:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/excermol:${{ github.sha }}
 
+  deploy:
+    needs: docker-build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+       - name: Deploy to server via SSH
+         uses: appleboy/ssh-action@v1.0.3
+         with:
+           host: ${{ secrets.SERVER_IP }}
+           username: ${{ secrets.SERVER_USER }}
+           key: ${{ secrets.SSH_PRIVATE_KEY }}
+           script: |
+             cd /opt/excermol
+             docker compose pull
+             docker compose up -d
+             docker image prune -f
+
+
+
+
 
 
 
