@@ -135,7 +135,7 @@ https://nicathsynlyv.com/swagger-ui/index.html
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/excermol.git
+git clone https://github.com/nicathsynlyv/excermol.git
 cd excermol
 ```
 
