@@ -37,7 +37,7 @@ public class TaskRequestDto {
 
 
     @Min(value = 0, message = "Sort order mənfi ola bilməz")
-    private Integer sortOrder;
+    private Integer sortOrder;   //Kanban-da task-ın sırasını müəyyən edir.
 
 
     @Min(value = 0, message = "Ümumi subtask sayı mənfi ola bilməz")
@@ -47,13 +47,10 @@ public class TaskRequestDto {
     private Integer completedSubtasks;
 
     // RELATION IDS
-
+    // Burada entity-lərin özünü yox, ID-lərini qəbul edirik
     private Long companyId;
-
     private Long leadId;
-
     private Set<Long> assigneeIds;
-
     private Set<Long> tagIds;
 
 }
