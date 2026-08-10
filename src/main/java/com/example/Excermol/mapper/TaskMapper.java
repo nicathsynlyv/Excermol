@@ -19,16 +19,11 @@ public class TaskMapper {
 
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
-
         task.setDueDate(dto.getDueDate());
-
         task.setPriority(dto.getPriority());
         task.setStatus(dto.getStatus());
-
         task.setProgress(dto.getProgress());
-
         task.setSortOrder(dto.getSortOrder());
-
         task.setTotalSubtasks(dto.getTotalSubtasks());
         task.setCompletedSubtasks(dto.getCompletedSubtasks());
 
@@ -40,20 +35,15 @@ public class TaskMapper {
 
         TaskResponseDto dto = new TaskResponseDto();
 
+        // Entity-də database tərəfindən yaradılan ID Response DTO-ya qoyulur. Request-də ID yox idi. Çünki yeni Task yaradarkən ID-ni client müəyyən etmir. Amma response-da client ID-ni bilməlidir.
         dto.setId(task.getId());
-
         dto.setTitle(task.getTitle());
         dto.setDescription(task.getDescription());
-
         dto.setDueDate(task.getDueDate());
-
         dto.setPriority(task.getPriority());
         dto.setStatus(task.getStatus());
-
         dto.setProgress(task.getProgress());
-
         dto.setSortOrder(task.getSortOrder());
-
         dto.setTotalSubtasks(task.getTotalSubtasks());
         dto.setCompletedSubtasks(task.getCompletedSubtasks());
 
@@ -113,7 +103,7 @@ public class TaskMapper {
 
         return dto;
     }
-    // ➕ ƏLAVƏ EDİLƏN METOD: List<Entity> -> List<ResponseDto>
+    // List<Entity> -> List<ResponseDto>
     public List<TaskResponseDto> toResponseList(List<Task> tasks) {
         if (tasks == null) {
             return java.util.Collections.emptyList();
@@ -123,3 +113,9 @@ public class TaskMapper {
                 .collect(Collectors.toList());
     }
 }
+
+
+// TaskMapper DTO və Entity arasında mapping etmək üçün istifadə olunur
+// toEntity() metodu TaskRequestDto-nu Task entity-sinə çevirir,
+// toResponse() isə Task entity-sini TaskResponseDto-ya çevirir.
+// Relation-larda isə entity-lərin özünü response-a çıxarmaq əvəzinə yalnız client üçün lazım olan məlumatları, məsələn companyName, leadName, assigneeNames və tagNames-i qaytarıram

@@ -1,14 +1,12 @@
 package com.example.Excermol.Service;
 
-import com.example.Excermol.entity.Task;
 import com.example.Excermol.entity.dtos.TaskRequestDto;
 import com.example.Excermol.entity.dtos.TaskResponseDto;
 import com.example.Excermol.enums.TaskPriority;
 import com.example.Excermol.enums.TaskStatus;
 
-import java.time.LocalDate;
 import java.util.List;
-
+//TaskService burada müqavilə (contract) rolunu oynayır.
 public interface TaskService {
     TaskResponseDto createTask(TaskRequestDto dto);
 
@@ -32,3 +30,14 @@ public interface TaskService {
 
 
 }
+
+// Service interface-i abstraction və loose coupling üçün yazmışam. Controller konkret TaskServiceImpl-dən yox, TaskService interface-dən asılıdır. Beləliklə implementation ilə istifadə edən tərəf bir-birindən ayrılır
+// test yazmaq və gələcəkdə başqa implementation əlavə etmək daha rahat olur
+
+
+
+
+//TaskService Task modulunun biznes əməliyyatlarını müəyyən edən service interface-dir
+// Burada create, update, get, search, filter və delete
+// kimi əməliyyatların müqaviləsi müəyyən olunur.
+// Konkret biznes məntiqi isə TaskServiceImpl-də implement edilir.

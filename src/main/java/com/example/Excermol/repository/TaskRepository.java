@@ -27,7 +27,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     // 5. Tag filter — UI-da Tags button var
     List<Task> findByTags_Id(Long tagId);
 
-
-
-
 }
+
+
+//TaskRepository JpaRepository-dən extend olunur və Task entity-si ilə database əməliyyatlarını
+// idarə edir. Spring Data JPA-nın derived query mexanizmindən istifadə edərək status, assignee
+// , title, priority və tag üzrə xüsusi axtarış və filter metodları yaratmışam.
