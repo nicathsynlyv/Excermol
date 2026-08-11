@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-@Service
+@Service  //Bu class service layer-ə aiddir və Spring Bean kimi idarə olunmalıdır
 @Transactional
-@Slf4j
+@Slf4j  //Lombok avtomatik log obyekti yaradır
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
@@ -27,6 +27,8 @@ public class TaskServiceImpl implements TaskService {
     private final TagRepository tagRepository;
     private final TaskMapper taskMapper;
 
+
+    // Constructor Injection
     public TaskServiceImpl(
             TaskRepository taskRepository,
             CompanyRepository companyRepository,
