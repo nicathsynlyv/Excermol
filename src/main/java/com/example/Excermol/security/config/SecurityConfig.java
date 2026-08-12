@@ -84,7 +84,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/index.html","/favicon.ico","/favicon-16x16.png","/favicon-32x32.png","/apple-touch-icon.png","/robots.txt").permitAll()
+                        .requestMatchers("/","/index.html","/favicon.ico","/favicon-16x16.png","/favicon-32x32.png","/apple-touch-icon.png","android-chrome-192x192.png","android-chrome-512x512.png","/robots.txt").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/oauth2/**","/login/oauth2/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
