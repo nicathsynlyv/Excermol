@@ -15,9 +15,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@RestController
-@RequestMapping("/api/tasks")
-@Tag(name = "Task Controller", description = "Task CRUD və filter əməliyyatları")
+@RestController  //Spring-ə deyir ki, bu class REST API Controller-dir,həmçinin qaytarılan obyektləri avtomatik JSON-a çevirir.
+@RequestMapping("/api/tasks")   // Bu Controller-dəki bütün endpoint-lərin əsas URL-i olur
+@Tag(name = "Task Controller", description = "Task CRUD və filter əməliyyatları")  //Swagger UI-da bu Controller-i qruplaşdırmaq üçündür.
+//Controller-in işi: Request qəbul et → Service çağır → Response qaytar.
 public class TaskController {
 
     private final TaskService taskService;
@@ -26,9 +27,7 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    // =========================
     // CREATE
-    // =========================
     @Operation(summary = "Yeni task yarat")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Task uğurla yaradıldı"),
@@ -37,14 +36,12 @@ public class TaskController {
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @PostMapping
     public ResponseEntity<TaskResponseDto> createTask(
-            @Valid @RequestBody TaskRequestDto dto
+            @Valid @RequestBody TaskRequestDto dto   //    @RequestBody-JSON request body-ni:TaskRequestDto obyektinə çevirir
     ) {
         return ResponseEntity.ok(taskService.createTask(dto));
     }
 
-    // =========================
     // GET ALL
-    // =========================
     @Operation(summary = "Bütün taskları gətir")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tasklar uğurla qaytarıldı")
@@ -133,3 +130,12 @@ public class TaskController {
         return ResponseEntity.ok(taskService.findByTag(tagId));
     }
 }
+
+
+//Controller request-i qəbul edir → DTO məlumatı daşıyır → Service biznes məntiqini idarə edir → Repository database ilə danışır → Entity database strukturunu təmsil edir → Mapper Entity və DTO arasında çevirmə edir.
+
+//TaskController Task modulu üçün REST endpoint-ləri təqdim edir.
+// Controller client-dən HTTP request-ləri qəbul edir,
+// validation və authorization tətbiq edir və biznes məntiqinin icrası üçün TaskService-i çağırır.
+// Database əməliyyatlarını isə birbaşa Controller yox, Service və Repository layer-ləri həyata keçirir.
+// Response-lar TaskResponseDto şəklində qaytarılır.

@@ -6,7 +6,9 @@ import com.example.Excermol.enums.TaskPriority;
 import com.example.Excermol.enums.TaskStatus;
 
 import java.util.List;
-//TaskService burada müqavilə (contract) rolunu oynayır.
+// TaskService burada müqavilə (contract) rolunu oynayır.
+// "Service layer-də abstraction yaratmaq, controller-i konkret implementation-dan ayırmaq və gələcəkdə " +
+// "implementation-u dəyişməyi və test zamanı mock etməyi asanlaşdırmaq üçün interface istifadə etmişəm."
 public interface TaskService {
     TaskResponseDto createTask(TaskRequestDto dto);
 
