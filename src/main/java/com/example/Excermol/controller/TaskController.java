@@ -40,7 +40,7 @@ public class TaskController {
     ) {
         return ResponseEntity.ok(taskService.createTask(dto));
     }
-
+ 
     // GET ALL
     @Operation(summary = "Bütün taskları gətir")
     @ApiResponses(value = {
