@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -70,6 +71,19 @@ public class SecurityConfig {
 
 
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(
+                "/favicon.ico",
+                "/*.ico",
+                "/*.png",
+                "/*.svg",
+                "/robots.txt",
+                "/site.webmanifest",
+                "/static/**"
+        );
+    }
+
 
     //    SessionCreationPolicy.STATELESS JWT əsaslı autentifikasiyada serverin HTTP Session yaratmaması üçün istifadə olunur.
     //    Bu yanaşmada istifadəçi məlumatı serverdə saxlanılmır, bütün autentifikasiya məlumatı JWT token-də olur.
@@ -84,7 +98,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/index.html","/*.ico","/*.png","/*.svg","/robots.txt","/static/**","/site.webmanifest").permitAll()
+                        .requestMatchers("/","/index.html").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/oauth2/**","/login/oauth2/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
