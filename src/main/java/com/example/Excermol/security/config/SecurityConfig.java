@@ -69,8 +69,6 @@ public class SecurityConfig {
     }
 
 
-
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(
