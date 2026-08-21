@@ -69,20 +69,6 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(
-                "/favicon.ico",
-                "/*.ico",
-                "/*.png",
-                "/*.svg",
-                "/robots.txt",
-                "/site.webmanifest",
-                "/static/**"
-        );
-    }
-
-
     //    SessionCreationPolicy.STATELESS JWT əsaslı autentifikasiyada serverin HTTP Session yaratmaması üçün istifadə olunur.
     //    Bu yanaşmada istifadəçi məlumatı serverdə saxlanılmır, bütün autentifikasiya məlumatı JWT token-də olur.
     //    Hər request-də client tokeni Authorization header-i ilə göndərir, server isə tokeni yoxlayaraq istifadəçini autentifikasiya edir.
@@ -96,7 +82,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/index.html").permitAll()
+                        .requestMatchers("/","/index.html","/favicon.ico","/*.png","/*.ico","/*.svg","/robots.txt","/site.webmanifest").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/oauth2/**","/login/oauth2/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
