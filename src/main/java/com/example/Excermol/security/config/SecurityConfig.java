@@ -82,7 +82,7 @@ public class SecurityConfig {
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/index.html","/favicon.ico","/apple-touch-icon-57x57.png","/apple-touch-icon-114x114.png","/apple-touch-icon-120x120.png","/apple-touch-icon-180x180.png","/genfavicon-16.png","/genfavicon-32.png","/genfavicon-48.png","/genfavicon-57.png","/genfavicon-64.png","/genfavicon-96.png","/genfavicon-114.png","/genfavicon-120.png","/genfavicon-128.png","/genfavicon-180.png","/genfavicon-192.png","/genfavicon-256.png","/genfavicon-512.png").permitAll()
+                        .requestMatchers("/","/index.html","/favicon.ico","/apple-touch-icon-57x57.png","/apple-touch-icon-114x114.png","/apple-touch-icon-120x120.png","/apple-touch-icon-180x180.png","/genfavicon-16.png","/genfavicon-32.png","/genfavicon-48.png","/genfavicon-57.png","/genfavicon-64.png","/genfavicon-96.png","/genfavicon-114.png","/genfavicon-120.png","/genfavicon-128.png","/genfavicon-180.png","/genfavicon-192.png","/genfavicon-256.png","/genfavicon-512.png","/robots.txt","/site.webmanifest").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/oauth2/**","/login/oauth2/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
