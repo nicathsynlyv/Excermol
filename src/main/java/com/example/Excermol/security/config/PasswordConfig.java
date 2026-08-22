@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 //    Login zamanı isə daxil edilən şifrə matches() metodu ilə hash olunmuş dəyərlə müqayisə edilir.
 //    BCrypt təsadüfi salt istifadə etdiyi üçün eyni şifrə hər dəfə fərqli hash yaradır
 //    və bu da rainbow table və brute-force hücumlarına qarşı daha yüksək təhlükəsizlik təmin edir.
-
 @Component
 public class PasswordConfig {
 
