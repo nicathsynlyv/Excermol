@@ -62,8 +62,8 @@ public class Email {
     private List<Attachment> attachments = new ArrayList<>();
 
     //email ve compaign ile
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id")
+    @ManyToOne(fetch = FetchType.LAZY) // niye lazy?Campaign məlumatını Email-i gətirən kimi avtomatik yükləmə,emailRepository.findById(1) edəndə əsas Email gəlir. Campaign yalnız lazım olanda yüklənir.sistemlərdə performans üçün faydalıdır ,FetchType.EAGER olsaydı əlaqəli Campaign avtomatik yüklənərdi.
+    @JoinColumn(name = "campaign_id") //Database-də emails table-də: campaign_id foreign key olacaq.
     private Campaign campaign;
 
 
@@ -73,25 +73,28 @@ public class Email {
     private List<String> labels; // Client, Work, Contest, Social media
 
 
+    //Bu JPA lifecycle callback-dir. Entity database-ə ilk dəfə insert edilməzdən əvvəl işləyir.
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
+    //Entity update olunmazdan əvvəl çağırılır.Hibernate update etməzdən əvvəl: updatedAt = LocalDateTime.now(); olur.
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
     // String əvəzinə:
+    // Email-in kim tərəfindən göndərildiyini göstərir.
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) //Bir User çox email göndərə bilər
     @JoinColumn(name = "sender_id")
     private User sender;
 
     //company ile
-    // Düzgünü:
-    @ManyToOne(fetch = FetchType.LAZY)
+    // Email hansı şirkətlə bağlıdır onu göstərir
+    @ManyToOne(fetch = FetchType.LAZY) //Bir cox email bir company-yə bağlı ola bilər.
     @JoinColumn(name = "company_id")
     private Company company;
 
@@ -101,3 +104,12 @@ public class Email {
     private List<FormRouting> routings = new ArrayList<>();
 
 }
+
+
+//Email entity-si sistemdə email məlumatlarını modelləşdirir. Subject və body əsas email məlumatlarıdır.
+//Email-in statusu enum vasitəsilə saxlanılır və STRING olaraq database-ə yazılır.
+//Sender User ilə Many-to-One əlaqədədir, çünki bir user çoxlu email göndərə bilər.
+//Recipients isə Person-larla Many-to-Many əlaqədədir, çünki bir email bir neçə şəxsə göndərilə bilər və bir şəxs də bir çox email qəbul edə bilər.
+//Attachments One-to-Many əlaqədədir və cascade və orphanRemoval istifadə olunur ki, email ilə attachment-lərin lifecycle-ı əlaqəli idarə olunsun.
+//Campaign və Company ilə Many-to-One əlaqələr var. Labels ayrıca entity olmadığı üçün ElementCollection kimi ayrıca cədvəldə saxlanılır.
+//@PrePersist və @PreUpdate isə yaradılma və yenilənmə tarixlərini avtomatik idarə edir.
