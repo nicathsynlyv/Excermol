@@ -10,6 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+//backend-in frontend-ə/client-ə Email haqqında geri qaytardığı məlumat modelidir.
 public class EmailResponseDto {
 
     private Long id;
