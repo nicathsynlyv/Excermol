@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class EmailSenderService {
 
-//    Spring Mail tərəfindən verilən interfeysdir və SMTP server vasitəsilə email göndərmək üçün istifadə olunur.
+    //Spring Mail tərəfindən verilən interfeysdir və SMTP server vasitəsilə email göndərmək üçün istifadə olunur.
     private final JavaMailSender mailSender;
 
     public EmailSenderService(JavaMailSender mailSender) {
