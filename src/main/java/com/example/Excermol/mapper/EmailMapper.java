@@ -11,8 +11,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Component  //Spring bu class-ı özü yaradır və Spring container-ə bean kimi əlavə edir.
 public class EmailMapper {
+
     public Email toEntity(EmailRequestDto dto) {
         Email email = new Email();
         email.setSubject(dto.getSubject());
