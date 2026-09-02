@@ -24,6 +24,7 @@ import java.util.List;
 @Slf4j
 public class EmailServiceImpl implements EmailService {
 
+    //dependencies
     private final EmailRepository emailRepository;
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
@@ -33,6 +34,7 @@ public class EmailServiceImpl implements EmailService {
     private final EmailSenderService emailSenderService;
 
 
+    //constructor injection
     public EmailServiceImpl(EmailRepository emailRepository, UserRepository userRepository, CompanyRepository companyRepository, CampaignRepository campaignRepository, PersonRepository personRepository, EmailMapper emailMapper, EmailSenderService emailSenderService) {
         this.emailRepository = emailRepository;
         this.userRepository = userRepository;

@@ -19,23 +19,27 @@ public class EmailSenderService {
     }
 
     // Sadə email göndər
+    // Bu metod sadə, yəni plain-text email göndərmək üçündür.  (to → kimə göndərilir, subject → emailin mövzusu ,body → emailin məzmunu)
     public void sendSimpleEmail(String to, String subject, String body) {
         log.info("Sending email to {}", to);
-        SimpleMailMessage message = new SimpleMailMessage();
+
+        SimpleMailMessage message = new SimpleMailMessage();  //SimpleMailMessage sadə text üçündür.
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
         mailSender.send(message);
         log.info("Email sent successfully");
     }
+
     // HTML email göndər
     public void sendHtmlEmail(String to, String subject, String htmlBody) throws Exception {
         log.info("Sending HTML email to {}", to);
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        MimeMessage message = mailSender.createMimeMessage();  //MimeMessage isə daha kompleks email üçün istifadə olunur.
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);  //true,multipart dəstəyini aktiv edir.
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setText(htmlBody, true); // true = HTML
+        helper.setText(htmlBody, true); // true = HTML,Bu mətn HTML kimi qəbul edilsin.
         mailSender.send(message);
         log.info("HTML email sent successfully");
     }
