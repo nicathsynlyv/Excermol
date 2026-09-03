@@ -19,9 +19,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
-@Service
-@Transactional
-@Slf4j
+@Service  //Bu class biznes məntiqi qatıdır.
+@Transactional //Database əməliyyatlarının transaction daxilində icra olunmasına imkan verir.
+@Slf4j //Log yazmaq üçün.i
 public class EmailServiceImpl implements EmailService {
 
     //dependencies
