@@ -58,7 +58,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public EmailResponseDto getById(Long id) {
-
         log.info("Fetching email with id: {}", id);
 
         Email email = emailRepository.findById(id)
